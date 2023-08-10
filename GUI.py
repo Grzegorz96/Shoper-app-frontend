@@ -460,10 +460,11 @@ def init_shopper_page_frame(root, search_engine=None, search_location=None, curr
                             from_search_engine=False):
     if from_search_engine:
         # Update all_announcements list from download_from_search_engine
-        config_page = My_functions.download_from_search_engine(search_engine, search_location, current_var, categories)
+        config_page = My_functions.download_announcements(from_search_engine, search_engine, search_location,
+                                                          current_var, categories)
     else:
         # Update all_announcements list from download_all_announcements
-        config_page = My_functions.download_all_announcements()
+        config_page = My_functions.download_announcements(from_search_engine)
 
     if config_page:
         if isinstance(Config_data.current_page, Frame):

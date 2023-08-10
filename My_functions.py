@@ -5,6 +5,8 @@ from re import match
 from User_Class import LoggedUser, UserAnnouncement, Announcement, UserFavoriteAnnouncement, Message, Conversation
 import Config_data
 from Database_connection import database_connect
+import Backend_requests
+from requests import codes
 
 
 # User registration function
@@ -22,43 +24,23 @@ def register_user(first_name_entry, last_name_entry, email_entry, login_entry, p
                                 and combobox_month_var.get() in combobox_month_birthday["values"] \
                                 and combobox_day_var.get() in combobox_day_birthday["values"]:
 
-                            try:
-                                connection = database_connect()
-                                cur = connection.cursor()
-                                first_name = first_name_entry.get()
-                                last_name = last_name_entry.get()
-                                email = email_entry.get()
-                                login = login_entry.get()
-                                password = password_entry.get()
-                                date_of_birth = (f"{combobox_day_var.get()}-{combobox_month_var.get()}-"
-                                                 f"{combobox_year_var.get()}")
-                                street = street_entry.get()
-                                zip_code = zip_code_entry.get()
-                                city = city_entry.get()
+                            first_name = first_name_entry.get()
+                            last_name = last_name_entry.get()
+                            email = email_entry.get()
+                            login = login_entry.get()
+                            password = password_entry.get()
+                            date_of_birth = (f"{combobox_day_var.get()}-{combobox_month_var.get()}-"
+                                             f"{combobox_year_var.get()}")
+                            street = street_entry.get()
+                            zip_code = zip_code_entry.get()
+                            city = city_entry.get()
 
-                                query = f"""INSERT INTO users(first_name, last_name, email, login, password, 
-                                            date_of_birth, street, zip_code, city, active_flag)
-                                            VALUES("{first_name}","{last_name}","{email}","{login}","{password}",
-                                            "{date_of_birth}","{street}","{zip_code}","{city}", True)"""
-
-                                cur.execute(query)
-                                connection.commit()
-                                cur.close()
-                                connection.close()
-
-                            except mysql.connector.Error as message:
-                                if "email_UNIQUE" in message.args[1]:
-                                    messagebox.showerror("Nie udało sie utworzyć konta",
-                                                         "Użytkownik o podanym emailu jest już zarejestowany")
-                                elif "login_UNIQUE" in message.args[1]:
-                                    messagebox.showerror("Nie udało sie utworzyć konta",
-                                                         "Użytkownik o podanym loginie jest już zarejestowany")
-                                else:
-                                    messagebox.showerror("Nie udało sie utworzyć konta",
-                                                         "Wystąpił błąd podczas rejestracji")
-
-                            else:
-                                messagebox.showinfo("Pomyślna rejestracja konta", "Możesz sie zalogować")
+                            response_for_register_user = Backend_requests.register_user_request(first_name, last_name,
+                                                                                                email, login, password,
+                                                                                                date_of_birth, street,
+                                                                                                zip_code, city)
+                            if response_for_register_user.status_code == codes.created:
+                                messagebox.showinfo("Pomyślna rejestracja konta.", "Możesz sie zalogować.")
                                 first_name_entry.delete(0, END)
                                 last_name_entry.delete(0, END)
                                 email_entry.delete(0, END)
@@ -70,18 +52,31 @@ def register_user(first_name_entry, last_name_entry, email_entry, login_entry, p
                                 street_entry.delete(0, END)
                                 zip_code_entry.delete(0, END)
                                 city_entry.delete(0, END)
+
+                            elif response_for_register_user.status_code == codes.bad_request:
+                                if "login_error" in response_for_register_user.json():
+                                    messagebox.showwarning("Nie udało sie utworzyć konta.",
+                                                           "Użytkownik o podanym loginie jest już zarejestowany.")
+                                else:
+                                    messagebox.showwarning("Nie udało sie utworzyć konta.",
+                                                           "Użytkownik o podanym emailu jest już zarejestowany.")
+
+                            else:
+                                messagebox.showerror("Nie udało sie utworzyć konta.",
+                                                     "Wystąpił błąd podczas rejestracji, spróbuj ponownie później.")
+
                         else:
-                            messagebox.showerror("Wybierz date urodzenia", "Nie wybrano daty urodzenia")
+                            messagebox.showwarning("Wybierz date urodzenia.", "Nie wybrano daty urodzenia.")
                     else:
-                        messagebox.showerror("Niepoprawne hasło", "Wprowadzono niepoprawne dane hasła")
+                        messagebox.showwarning("Niepoprawne hasło.", "Wprowadzono niepoprawne dane hasła.")
                 else:
-                    messagebox.showerror("Niepoprawny login", "Wprowadzono niepoprawne dane loginu")
+                    messagebox.showwarning("Niepoprawny login.", "Wprowadzono niepoprawne dane loginu.")
             else:
-                messagebox.showerror("Niepoprawny email", "Wprowadzono niepoprawne dane email")
+                messagebox.showwarning("Niepoprawny email.", "Wprowadzono niepoprawne dane email.")
         else:
-            messagebox.showerror("Niepoprawne nazwisko", "Wprowadzono niepoprawne dane nazwiska")
+            messagebox.showwarning("Niepoprawne nazwisko.", "Wprowadzono niepoprawne dane nazwiska.")
     else:
-        messagebox.showerror("Niepoprawne imię", "Wprowadzono niepoprawne dane imienia")
+        messagebox.showwarning("Niepoprawne imię.", "Wprowadzono niepoprawne dane imienia.")
 
 
 # User login function
@@ -91,54 +86,46 @@ def login_user(entry_login_or_email, entry_password, login_window, top_panel_fra
             entry_login_or_email.get()):
 
         if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń0-9!@#$%^&*]{7,45}$", entry_password.get()):
+            login_or_email = entry_login_or_email.get()
+            password = entry_password.get()
 
-            try:
-                connection = database_connect()
-                cur = connection.cursor()
-                query = f"""SELECT user_id, first_name, last_name, email, login, password, date_of_birth, street, 
-                            zip_code, city FROM users WHERE 
-                            ((login="{entry_login_or_email.get()}" AND password="{entry_password.get()}") 
-                            OR (email="{entry_login_or_email.get()}" 
-                            AND password="{entry_password.get()}")) AND users.active_flag=True"""
+            response_for_login_user = Backend_requests.login_user_request(login_or_email, password)
 
-                cur.execute(query)
-                is_not_user_info_empty = cur.fetchall()
-                if is_not_user_info_empty:
-                    Config_data.is_user_logged_in = True
-                    Config_data.logged_in_user_info = LoggedUser(is_not_user_info_empty[0][0],
-                                                                 is_not_user_info_empty[0][1],
-                                                                 is_not_user_info_empty[0][2],
-                                                                 is_not_user_info_empty[0][3],
-                                                                 is_not_user_info_empty[0][4],
-                                                                 is_not_user_info_empty[0][5],
-                                                                 is_not_user_info_empty[0][6],
-                                                                 is_not_user_info_empty[0][7],
-                                                                 is_not_user_info_empty[0][8],
-                                                                 is_not_user_info_empty[0][9])
+            if response_for_login_user.status_code == codes.ok:
+                user_info = response_for_login_user.json()["result"]
+                Config_data.is_user_logged_in = True
+                Config_data.logged_in_user_info = LoggedUser(
+                    user_info["user_id"],
+                    user_info["first_name"],
+                    user_info["last_name"],
+                    user_info["email"],
+                    user_info["login"],
+                    user_info["password"],
+                    user_info["date_of_birth"],
+                    user_info["street"],
+                    user_info["zip_code"],
+                    user_info["city"]
+                )
 
-                    user_name = Config_data.logged_in_user_info.first_name
-                    messagebox.showinfo("Pomyślnie zalogowano", f"Użytkownik {user_name} pomyślnie zalogowany")
-                    logout_button = Button(top_panel_frame, text="Wyloguj", font=("Arial", 8), borderwidth=0,
-                                           bg="#D3D3D3", command=lambda: logout_user(logout_button, user_name,
-                                                                                     init_shopper_page_frame, root))
-                    logout_button.place(x=1196, y=60, height=18, width=56)
+                user_name = Config_data.logged_in_user_info.first_name
+                messagebox.showinfo("Pomyślnie zalogowano.", f"Użytkownik {user_name} pomyślnie zalogowany.")
+                logout_button = Button(top_panel_frame, text="Wyloguj", font=("Arial", 8), borderwidth=0,
+                                       bg="#D3D3D3", command=lambda: logout_user(logout_button, user_name,
+                                                                                 init_shopper_page_frame, root))
+                logout_button.place(x=1196, y=60, height=18, width=56)
+                login_window.destroy()
 
-                    login_window.destroy()
-
-                else:
-                    messagebox.showerror("Nie ma takiego użytkownika", "Użytkownik o podanych danych nie istnieje")
-
-                cur.close()
-                connection.close()
-
-            except mysql.connector.Error as m:
-                messagebox.showerror("Nie udało sie zalogować spróbuj później",
-                                     f"Nie udało sie zalogować\nKod błędu: {m}")
-
+            elif response_for_login_user.status_code == codes.bad_request:
+                messagebox.showwarning("Nie ma takiego użytkownika.",
+                                       "Użytkownik o podanych danych nie istnieje.")
+            else:
+                messagebox.showerror("Błąd podczas logowania.",
+                                     "W chwili obecnej nie możemy Cię zalogować, spróbuj ponownie później.")
         else:
-            messagebox.showerror("Niepoprawne hasło", "Wprowadzono niepoprawne dane hasła")
+            messagebox.showwarning("Niepoprawne hasło.", "Wprowadzono niepoprawne dane hasła.")
     else:
-        messagebox.showerror("Niepoprawny login lub email", "Wprowadzono niepoprawne dane loginu lub emaila")
+        messagebox.showwarning("Niepoprawny login lub email.",
+                               "Wprowadzono niepoprawne dane loginu lub emaila.")
 
 
 # User logout function
@@ -149,7 +136,7 @@ def logout_user(logout_button, user_name, init_shopper_page_frame, root):
     Config_data.user_favorite_announcements = []
     init_shopper_page_frame(root)
     logout_button.destroy()
-    messagebox.showinfo("Pomyślnie wylogowano", f"Użytkownik {user_name} został pomyślnie wylogowany")
+    messagebox.showinfo("Pomyślnie wylogowano.", f"Użytkownik {user_name} został pomyślnie wylogowany.")
 
 
 def change_announcement_data(list_of_entries, description_text, user_active_announcement_object, init_user_page_frame,
@@ -177,87 +164,68 @@ def change_announcement_data(list_of_entries, description_text, user_active_anno
                         description_text.get("1.0", "end-1c")) <= 400):
                     description = description_text.get("1.0", "end-1c")
 
-                    try:
-                        connection = database_connect()
-                        cur = connection.cursor()
-                        query = f"""UPDATE announcements 
-                                    SET announcements.title="{title}", announcements.description="{description}",
-                                    announcements.price={price}, announcements.location="{location}"
-                                    WHERE announcements.announcement_id=
-                                    {user_active_announcement_object.announcement_id} """
-
-                        cur.execute(query)
-                        connection.commit()
-                        cur.close()
-                        connection.close()
-
-                    except mysql.connector.Error as m:
-                        messagebox.showerror("Nie udało sie zaktualizować ogłoszenia spróbuj później",
-                                             f"Kod błędu: {m}")
-
-                    else:
+                    response_for_updating_announcement \
+                        = Backend_requests.update_announcement_request(title, description, price, location,
+                                                                       user_active_announcement_object.announcement_id)
+                    if response_for_updating_announcement.status_code == codes.ok:
                         messagebox.showinfo(
-                            f"Pomyślnie zaktualizowano twoje ogłoszenie, {Config_data.logged_in_user_info.first_name}",
+                            f"Pomyślnie zaktualizowano Twoje ogłoszenie, {Config_data.logged_in_user_info.first_name}.",
                             f"Twoje ogłoszenie \"{title}\" zostało zaktualizowane!")
                         init_user_page_frame(root)
 
+                    else:
+                        messagebox.showerror("Błąd podczas aktualizacji ogłoszenia.",
+                                             "Nie udało sie zaktualizować ogłoszenia, spróbuj później.")
+
                 else:
-                    messagebox.showwarning("Błędny opis ogłoszenia",
-                                           "Długość opisu ogłoszenia powinna zawierać od 80 do 400 znaków")
+                    messagebox.showwarning("Błędny opis ogłoszenia.",
+                                           "Opis ogłoszenia powinien zawierać od 80 do 400 znaków.")
             else:
-                messagebox.showwarning("Błędna cena",
-                                       "Cena powinna zawierać tylko cyfry od 0 do 9 oraz maksymalna"
-                                       " kwota ogłoszenia to 9 999 999")
+                messagebox.showwarning("Błędna cena ogłoszenia.",
+                                       "Cena ogłoszenia powinna zawierać tylko cyfry od 0 do 9, maksymalna kwota "
+                                       "ogłoszenia to 9 999 999 zł.")
 
         else:
-            messagebox.showwarning("Błędna lokalizacja",
-                                   "Długość lokalizacji powinna zawierać od 3 do 45 znaków, podaj jedynie miasto lub "
-                                   "miejscowość")
+            messagebox.showwarning("Błędna lokalizacja ogłoszenia.",
+                                   "Lokalizacja ogłoszenia powinna zawierać od 3 do 45 znaków, podaj jedynie "
+                                   "miasto lub miejscowość.")
     else:
-        messagebox.showwarning("Błędny tytuł ogłoszenia", "Tytuł ogłoszenia powinien zawierać od 10 do 45 znaków")
+        messagebox.showwarning("Błędny tytuł ogłoszenia.", "Tytuł ogłoszenia powinien zawierać od 10 do 45 znaków.")
 
 
 def download_user_announcements():
-    try:
-        connection = database_connect()
-        cur = connection.cursor()
-        query = f""" SELECT announcements.announcement_id, users.first_name, 
-                     announcements.seller_id, categories.name_category,  
-                     announcements.category_id, announcements.title,
-                     announcements.description, announcements.price, announcements.location,
-                     announcements.active_flag
-                     FROM announcements 
-                     JOIN categories ON announcements.category_id=categories.category_id
-                     JOIN users ON announcements.seller_id=users.user_id
-                     WHERE announcements.seller_id={Config_data.logged_in_user_info.user_id} 
-                     AND (announcements.active_flag=True OR announcements.completed_flag=True)
-                     ORDER BY announcements.announcement_id DESC
-                     LIMIT 16"""
-        cur.execute(query)
-        list_of_user_announcements = cur.fetchall()
-        cur.close()
-        connection.close()
+    response_for_getting_user_announcements = Backend_requests.get_user_announcements_request()
+    if response_for_getting_user_announcements.status_code == codes.ok:
 
-    except mysql.connector.Error as m:
-        messagebox.showerror("Błąd podczas wczytywania ogłoszeń",
-                             f"Nie udalo sie wczytać Twoich ogłoszeń, spróbuj później\nKod błędu: {m}")
-
-    else:
         list_of_objects_user_announcements = []
-        for (announcement_id, first_name, seller_id, name_category, category_id, title, description, price, location,
-             active_flag) in list_of_user_announcements:
-            user_announcement_object = UserAnnouncement(announcement_id, first_name, seller_id, name_category,
-                                                        category_id, title, description, price, location, active_flag)
+        for announcement in response_for_getting_user_announcements.json()["result"]:
+            user_announcement_object = UserAnnouncement(
+                announcement["announcement_id"],
+                announcement["first_name"],
+                announcement["seller_id"],
+                announcement["name_category"],
+                announcement["category_id"],
+                announcement["title"],
+                announcement["description"],
+                announcement["price"],
+                announcement["location"],
+                announcement["active_flag"]
+            )
             list_of_objects_user_announcements.append(user_announcement_object)
 
         Config_data.user_announcements = list_of_objects_user_announcements
+
+    else:
+        Config_data.user_announcements = []
+        messagebox.showerror("Błąd podczas wczytywania ogłoszeń.",
+                             f"Nie udalo sie wczytać Twoich ogłoszeń, spróbuj później.")
 
 
 def add_announcement(title_entry, location_entry, current_var_category, price_entry, description_text,
                      select_categories):
     if match("^.{10,45}$", title_entry.get()):
         if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń ]{3,45}$", location_entry.get()):
-            if current_var_category.get() != "" and current_var_category.get() in select_categories["values"]:
+            if current_var_category.get() in select_categories["values"]:
                 if match("^[0-9]+$", price_entry.get()) and len(price_entry.get()) <= 7:
                     if len(description_text.get("1.0", "end-1c")) >= 80 and len(
                             description_text.get("1.0", "end-1c")) <= 400:
@@ -268,90 +236,77 @@ def add_announcement(title_entry, location_entry, current_var_category, price_en
                         price = int(price_entry.get())
                         description = description_text.get("1.0", "end-1c")
 
-                        try:
-                            connection = database_connect()
-                            cur = connection.cursor()
-                            query = f"""INSERT INTO announcements(seller_id, category_id, title, description, price,
-                                        location, active_flag, completed_flag, deleted_flag)
-                                        VALUES({Config_data.logged_in_user_info.user_id}, {category_id}, "{title}",
-                                         "{description}", {price}, "{location}", True, False, False)"""
-                            cur.execute(query)
-                            connection.commit()
-                            cur.close()
-                            connection.close()
+                        response_for_adding_announcement = Backend_requests.add_announcement_request(title, location,
+                                                                                                     category_id, price,
+                                                                                                     description)
 
-                        except mysql.connector.Error as m:
-                            messagebox.showerror("Nie udało sie dodać ogłoszenia spróbuj później", f"Kod błędu: {m}")
-
-                        else:
+                        if response_for_adding_announcement.status_code == codes.created:
                             title_entry.delete(0, END)
                             location_entry.delete(0, END)
                             price_entry.delete(0, END)
                             description_text.delete("1.0", END)
                             current_var_category.set("")
-                            messagebox.showinfo("Pomyślnie dodano ogłoszenie",
-                                                f"Twoje ogłoszenie \"{title}\" zostało dodane, możesz dodać kolejne "
-                                                f"ogłoszenia")
+                            messagebox.showinfo("Pomyślnie dodano ogłoszenie.",
+                                                f"Twoje ogłoszenie \"{title}\" zostało dodane, możesz dodać "
+                                                f"kolejne ogłoszenia.")
 
+                        else:
+                            messagebox.showerror("Błąd podczas dodawania ogłoszenia.",
+                                                 "Nie udało sie dodać ogłoszenia, spróbuj później.")
                     else:
-                        messagebox.showwarning("Błędny opis ogłoszenia",
-                                               "Długość opisu ogłoszenia powinna zawierać od 80 do 400 znaków")
+                        messagebox.showwarning("Błędny opis ogłoszenia.",
+                                               "Opis ogłoszenia powinien zawierać od 80 do 400 znaków.")
                 else:
-                    messagebox.showwarning("Błędna cena",
-                                           "Cena powinna zawierać tylko cyfry od 0 do 9 oraz maksymalna"
-                                           " kwota ogłoszenia to 9 999 999")
+                    messagebox.showwarning("Błędna cena ogłoszenia.",
+                                           "Cena ogłoszenia powinna zawierać tylko cyfry od 0 do 9, maksymalna "
+                                           "kwota ogłoszenia to 9 999 999 zł.")
             else:
-                messagebox.showwarning("Błędna kategoria", "Nie wybrano kategorii produktu")
+                messagebox.showwarning("Błędna kategoria ogłoszenia.", "Nie wybrano kategorii ogłoszenia.")
         else:
-            messagebox.showwarning("Błędna lokalizacja",
-                                   "Długość lokalizacji powinna zawierać od 3 do 45 znaków, podaj jedynie miasto lub "
-                                   "miejscowość")
+            messagebox.showwarning("Błędna lokalizacja ogłoszenia.",
+                                   "Lokalizacja ogłoszenia powinna zawierać od 3 do 45 znaków, podaj jedynie "
+                                   "miasto lub miejscowość.")
     else:
-        messagebox.showwarning("Błędny tytuł ogłoszenia", "Tytuł ogłoszenia powinien zawierać od 10 do 45 znaków")
+        messagebox.showwarning("Błędny tytuł ogłoszenia.",
+                               "Tytuł ogłoszenia powinien zawierać od 10 do 45 znaków.")
 
 
 def verify_login(login_entry):
     if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń0-9]{5,45}$", login_entry.get()):
-        try:
-            connection = database_connect()
-            cur = connection.cursor()
-            query = f"""SELECT user_id FROM users WHERE login="{login_entry.get()}" """
+        response_for_login_verification = Backend_requests.verify_login_request(login_entry.get())
 
-            cur.execute(query)
-            login_used = cur.fetchall()
-            if login_used:
-                messagebox.showinfo("Podany login jest już zajęty",
-                                    f"Istnieje już zarejestrowany użytkownik o loginie {login_entry.get()}")
+        if response_for_login_verification.status_code == codes.ok:
+            messagebox.showinfo("Podany login jest dostępny.",
+                                f"Nie istnieje jeszcze użytkownik o loginie \"{login_entry.get()}\".")
+        elif response_for_login_verification.status_code == codes.bad_request:
+            messagebox.showinfo("Podany login jest już zajęty.",
+                                f"Istnieje zarejestrowany użytkownik o loginie \"{login_entry.get()}\".")
+        else:
+            messagebox.showerror("Błąd podczas weryfikacji loginu.",
+                                 "Nie udało się zweryfikować loginu, spróbuj później.")
 
-            else:
-                messagebox.showinfo("Podany login jest dostępny",
-                                    f"Nie istnieje jeszcze użytkownik o loginie {login_entry.get()}")
-
-            cur.close()
-            connection.close()
-
-        except mysql.connector.Error:
-            pass
     else:
-        messagebox.showinfo("Niepoprawny login", "Nie możesz użyć tego loginu do rejestracji\nSprawdź wzór loginu")
+        messagebox.showwarning("Niepoprawny login",
+                               "Nie możesz użyć tego loginu do rejestracji. Sprawdź wzór loginu")
 
 
 def verify_password(password_entry):
     if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń0-9!@#$%^&*]{7,45}$", password_entry.get()):
-        messagebox.showinfo("Poprawne hasło", "Możesz użyć tego hasła do rejestracji")
+        messagebox.showinfo("Poprawne hasło.", "Możesz użyć tego hasła do rejestracji.")
     else:
-        messagebox.showinfo("Niepoprawne hasło", "Nie możesz użyć tego hasła do rejestracji\nSprawdź wzór hasła")
+        messagebox.showinfo("Niepoprawne hasło.",
+                            "Nie możesz użyć tego hasła do rejestracji. Sprawdź wzór hasła.")
 
 
 def show_pattern(arg):
     if arg == "Wzór loginu":
-        messagebox.showinfo("Wymogi dotyczące loginu",
-                            "- musi zawierać minimum 5 znaków\n- może zawierać wielkie oraz małe litery\n- może "
-                            "zawierać cyfry\n- nie może zawierać znaków specjalnych")
+        messagebox.showinfo("Wymogi dotyczące loginu:",
+                            "- musi zawierać minimum 5 znaków,\n- może zawierać wielkie oraz małe litery,"
+                            "\n- może zawierać cyfry,\n- nie może zawierać znaków specjalnych.")
     elif arg == "Wzór hasła":
-        messagebox.showinfo("Wymogi dotyczące hasła",
-                            "- musi zawierać minimum 7 znaków\n- może zawierać wielkie oraz małe litery\n- może "
-                            "zawierać cyfry\n- może zawierać znaki specjalne")
+        messagebox.showinfo("Wymogi dotyczące hasła:",
+                            "- musi zawierać minimum 7 znaków,\n- może zawierać wielkie oraz małe litery,"
+                            "\n- może zawierać cyfry,\n- może zawierać znaki specjalne.")
 
 
 def delete_text(entry_object):
@@ -516,31 +471,33 @@ def delete_from_completed_announcements(user_completed_announcement_object, init
         init_user_page_frame(root)
 
 
-def download_all_announcements():
-    try:
-        connection = database_connect()
-        cur = connection.cursor()
-        query = f""" SELECT announcements.announcement_id, users.first_name,
-                     announcements.seller_id, categories.name_category, 
-                     announcements.title, announcements.description, 
-                     announcements.price, announcements.location
-                     FROM announcements 
-                     JOIN categories ON announcements.category_id=categories.category_id
-                     JOIN users ON announcements.seller_id=users.user_id
-                     WHERE announcements.active_flag=True
-                     ORDER BY announcements.announcement_id DESC """
+def download_announcements(from_search_engine, search_engine=None, search_location=None, current_var=None,
+                           categories=None):
+    if from_search_engine:
+        content_to_search = search_engine.get()
+        location = search_location.get()
+        category_id = ""
+        if current_var.get() in categories["values"]:
+            category_id = categories["values"].index(current_var.get()) + 1
 
-        cur.execute(query)
-        list_of_announcements = cur.fetchall()
-        cur.close()
-        connection.close()
+        response_for_getting_announcements = Backend_requests.get_announcements_request(from_search_engine,
+                                                                                        content_to_search, location,
+                                                                                        category_id)
+    else:
+        response_for_getting_announcements = Backend_requests.get_announcements_request(from_search_engine)
 
-    except mysql.connector.Error as m:
-        messagebox.showerror("Błąd podczas wczytywania wszystkich ogłoszeń",
-                             f"Nie udalo sie wczytać ogłoszeń wszystkich użytkowników\nKod błędu: {m}")
+    if response_for_getting_announcements.status_code == codes.ok:
+        if response_for_getting_announcements.json()["result"]:
+            making_list_of_pages(response_for_getting_announcements.json()["result"])
+            return True
+        else:
+            messagebox.showwarning("Nie znaleźliśmy żadnych ogłoszeń.",
+                                   "Nie znaleźliśmy żadnych wyników dla Twoich kryteriów wyszukiwania.")
 
     else:
-        making_list_of_pages(list_of_announcements)
+        Config_data.all_announcements = []
+        messagebox.showerror("Błąd podczas wczytywania ogłoszeń.",
+                             "Nie udalo sie pobrać ogłoszeń, spróbuj ponownie później.")
         return True
 
 
@@ -637,79 +594,15 @@ def delete_announcement_from_favorite(user_fav_announcement_object, init_favorit
         init_favorite_page_frame(root)
 
 
-def download_from_search_engine(search_engine, search_location, current_var, categories):
-    search_field = search_engine.get()
-    location_filed = search_location.get()
-
-    query = f""" SELECT announcements.announcement_id, users.first_name,
-                 announcements.seller_id, categories.name_category,
-                 announcements.title, announcements.description, 
-                 announcements.price, announcements.location
-                 FROM announcements 
-                 JOIN categories ON announcements.category_id=categories.category_id
-                 JOIN users ON announcements.seller_id=users.user_id
-                 WHERE announcements.active_flag=True """
-
-    # Init query for search field
-    query = making_query(search_field, query, "announcements.title")
-    # Init query for location field
-    query = making_query(location_filed, query, "announcements.location")
-    # Init query for category id
-    if current_var.get() in categories["values"]:
-        category_id = categories["values"].index(current_var.get()) + 1
-        query += f"""AND categories.category_id={category_id} """
-
-    query += "ORDER BY announcements.announcement_id DESC"
-
-    try:
-        connection = database_connect()
-        cur = connection.cursor()
-        cur.execute(query)
-        list_of_searched_announcements = cur.fetchall()
-        cur.close()
-        connection.close()
-
-    except mysql.connector.Error as m:
-        messagebox.showerror("Błąd podczas wyszukiwania ogłoszeń",
-                             f"Nie udalo sie wyszukać ogłoszeń\nKod błędu: {m}")
-
-    else:
-        if list_of_searched_announcements:
-            making_list_of_pages(list_of_searched_announcements)
-            return True
-        else:
-            messagebox.showwarning(
-                "Znaleźliśmy 0 ogłoszeń",
-                "Nie znaleźliśmy żadnych wyników dla Twoich kryteriów wyszukiwania")
-            return False
-
-
-def making_query(field, query, column):
-    collection = []
-    for element in field.split(" "):
-        if element != "":
-            collection.append(element)
-
-    for i in range(len(collection)):
-        if len(collection) == 1:
-            query += f"""AND {column} LIKE "%{collection[i]}%" """
-        else:
-            if i == 0:
-                query += f"""AND ({column} LIKE "%{collection[i]}%" """
-            elif i < (len(collection) - 1):
-                query += f"""OR {column} LIKE "%{collection[i]}%" """
-            else:
-                query += f"""OR {column} LIKE "%{collection[i]}%") """
-    return query
-
-
 def making_list_of_pages(list_of_announcements):
     # Making list of announcements objects
     list_of_objects_announcements = []
-    for (announcement_id, first_name, seller_id, name_category, title, description, price,
-         location) in list_of_announcements:
-        announcement_object = Announcement(announcement_id, first_name, seller_id, name_category, title,
-                                           description, price, location)
+    for announcement in list_of_announcements:
+        announcement_object = Announcement(announcement["announcement_id"], announcement["first_name"],
+                                           announcement["seller_id"], announcement["name_category"],
+                                           announcement["title"], announcement["description"], announcement["price"],
+                                           announcement["location"])
+
         list_of_objects_announcements.append(announcement_object)
 
     # Grouping list of announcements by announcements on page
