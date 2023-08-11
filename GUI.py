@@ -307,7 +307,7 @@ def init_user_page_frame(root):
                          highlightthickness=2)
     account_page.pack()
 
-    # Init account_page separatos
+    # Init account_page separates
     ttk.Separator(account_page).place(x=640, y=0, height=635)
     ttk.Separator(account_page).place(x=960, y=15, height=600)
     Label(account_page, text="Aktywne ogłoszenia", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=720, y=10)
@@ -339,15 +339,15 @@ def init_user_page_frame(root):
         else:
             entry.insert("0", "Zmień dane, enter aby zatwierdzić")
             entry.bind("<Button-1>", lambda event, e=entry: My_functions.delete_text(e))
-            entry.bind("<Return>", lambda event, e=entry, l=label: My_functions.change_user_info(e, l))
+            entry.bind("<Return>", lambda event, e=entry, l=label: My_functions.change_user_data(e, l))
         i += 1
         y += 1
 
     # update user active announcements and completed announcements
-    My_functions.download_user_announcements()
+    user_announcements = My_functions.download_user_announcements()
     user_active_announcements = []
     user_completed_announcements = []
-    for announcement in Config_data.user_announcements:
+    for announcement in user_announcements:
         if announcement.active_flag == 1:
             user_active_announcements.append(announcement)
         else:
@@ -460,11 +460,11 @@ def init_shopper_page_frame(root, search_engine=None, search_location=None, curr
                             from_search_engine=False):
     if from_search_engine:
         # Update all_announcements list from download_from_search_engine
-        config_page = My_functions.download_announcements(from_search_engine, search_engine, search_location,
-                                                          current_var, categories)
+        announcements, config_page = My_functions.download_announcements(from_search_engine, search_engine,
+                                                                         search_location, current_var, categories)
     else:
         # Update all_announcements list from download_all_announcements
-        config_page = My_functions.download_announcements(from_search_engine)
+        announcements, config_page = My_functions.download_announcements(from_search_engine)
 
     if config_page:
         if isinstance(Config_data.current_page, Frame):
@@ -475,14 +475,17 @@ def init_shopper_page_frame(root, search_engine=None, search_location=None, curr
         ttk.Separator(main_page).place(x=427, y=15, height=600)
         ttk.Separator(main_page).place(x=854, y=15, height=600)
 
-        def config_pages_of_announcement(actual_page, number_of_pages, list_of_objects):
-            if 0 <= actual_page < number_of_pages:
-                for element in list_of_objects:
-                    element.destroy()
+        def config_pages_of_announcement(actual_page=0, list_of_objects=None):
+            if 0 <= actual_page < len(announcements):
+                if list_of_objects:
+                    for element in list_of_objects:
+                        element.destroy()
+
+                list_of_objects = []
 
                 columns = 0
                 rows = 0
-                for announcement_object in Config_data.all_announcements[actual_page]:
+                for announcement_object in announcements[actual_page]:
                     title_button = Button(main_page, text=f"{announcement_object.title}", anchor=W, font=("Arial", 10),
                                           borderwidth=1, bg="#D3D3D3",
                                           command=lambda announcement=announcement_object:
@@ -517,17 +520,17 @@ def init_shopper_page_frame(root, search_engine=None, search_location=None, curr
                         rows = 0
                         columns += 1
                 Button(main_page, text="Następna", font=("Arial", 8), borderwidth=0, bg="#D3D3D3",
-                       command=lambda: config_pages_of_announcement(actual_page + 1, number_of_pages,
+                       command=lambda: config_pages_of_announcement(actual_page + 1,
                                                                     list_of_objects)).place(x=1200, y=600, width=60,
                                                                                             height=32)
 
                 Button(main_page, text="Poprzednia", font=("Arial", 8), borderwidth=0, bg="#D3D3D3",
-                       command=lambda: config_pages_of_announcement(actual_page - 1, number_of_pages,
+                       command=lambda: config_pages_of_announcement(actual_page - 1,
                                                                     list_of_objects)).place(x=15, y=600, width=60,
                                                                                             height=32)
 
-        if len(Config_data.all_announcements) > 0:
-            config_pages_of_announcement(0, len(Config_data.all_announcements), [])
+        if len(announcements) > 0:
+            config_pages_of_announcement()
 
         Config_data.current_page = main_page
 
@@ -666,7 +669,7 @@ def init_messages_page_frame(root):
 
         Config_data.current_page = messages_page
     else:
-        messagebox.showwarning("Nie jesteś zalogowany", "Aby zobaczyć wiadomości musisz sie zalogować")
+        messagebox.showwarning("Nie jesteś zalogowany.", "Aby zobaczyć wiadomości musisz sie zalogować.")
 
 
 def init_favorite_page_frame(root):
@@ -681,10 +684,10 @@ def init_favorite_page_frame(root):
         Label(favorite_page, text="Ulubione", font=("Arial", 27), borderwidth=0, bg="#A9A9A9").place(x=15, y=15)
         Label(favorite_page, text="Zakończone", font=("Arial", 27), borderwidth=0, bg="#A9A9A9").place(x=900, y=15)
 
-        My_functions.download_user_favorite_announcements()
+        user_favorite_announcements = My_functions.download_user_favorite_announcements()
         user_fav_active_announcements = []
         user_fav_completed_announcements = []
-        for element in Config_data.user_favorite_announcements:
+        for element in user_favorite_announcements:
             if element.active_flag == 1:
                 user_fav_active_announcements.append(element)
             else:
@@ -751,7 +754,8 @@ def init_favorite_page_frame(root):
         Config_data.current_page = favorite_page
 
     else:
-        messagebox.showwarning("Nie jesteś zalogowany", "Aby zobaczyć ulubione musisz sie zalogować")
+        messagebox.showwarning("Nie jesteś zalogowany.",
+                               "Aby zobaczyć ulubione ogłoszenia musisz sie zalogować.")
 
 
 def init_message_window(announcement_object):
