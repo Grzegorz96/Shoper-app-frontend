@@ -269,3 +269,71 @@ def request_to_delete_announcement_from_favorite(favorite_announcement_id):
     # If everything ok from frontend then just return the response from GET method.
     else:
         return response
+
+
+def request_to_get_messages(announcement_id=None, conversation_id=None):
+    # Creating endpoint and calling GET method on this endpoint.
+    try:
+        url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/messages"
+        if conversation_id:
+            request_body = {
+                "conversation_id": conversation_id
+            }
+        else:
+            request_body = {
+                "announcement_id": announcement_id
+            }
+        response = get(url, json=request_body)
+
+    # If cant connect with endpoint, making response object with 404 status code and return response.
+    except RequestException:
+        response = Response()
+        response.status_code = 404
+        return response
+    # If everything ok from frontend then just return the response from GET method.
+    else:
+        return response
+
+
+def request_to_send_message(content, is_user_customer, conversation_id=None, announcement_id=None):
+    # Creating endpoint and calling GET method on this endpoint.
+    try:
+        url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/messages"
+        if conversation_id:
+            request_body = {
+                "conversation_id": conversation_id,
+                "content": content,
+                "customer_flag": is_user_customer
+            }
+        else:
+            request_body = {
+                "announcement_id": announcement_id,
+                "content": content,
+                "customer_flag": is_user_customer
+            }
+        response = post(url, json=request_body)
+
+    # If cant connect with endpoint, making response object with 404 status code and return response.
+    except RequestException:
+        response = Response()
+        response.status_code = 404
+        return response
+    # If everything ok from frontend then just return the response from GET method.
+    else:
+        return response
+
+
+def request_to_get_conversations():
+    # Creating endpoint and calling GET method on this endpoint.
+    try:
+        url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/conversations"
+        response = get(url)
+
+    # If cant connect with endpoint, making response object with 404 status code and return response.
+    except RequestException:
+        response = Response()
+        response.status_code = 404
+        return response
+    # If everything ok from frontend then just return the response from GET method.
+    else:
+        return response

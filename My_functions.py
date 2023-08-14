@@ -1,10 +1,8 @@
 from tkinter import *
 from tkinter import messagebox
-import mysql.connector
 from re import match
 from User_Class import LoggedUser, UserAnnouncement, Announcement, UserFavoriteAnnouncement, Message, Conversation
 import Config_data
-from Database_connection import database_connect
 import Backend_requests
 from requests import codes
 
@@ -580,160 +578,92 @@ def making_list_of_pages(list_of_announcements):
     return list_of_objects_announcements_grouped_by_page
 
 
-def download_messages(announcement_object):
-    try:
-        connection = database_connect()
-        cur = connection.cursor()
-        query_check = f"""SELECT conversation_id FROM conversations
-                          WHERE conversations.announcement_id={announcement_object.announcement_id}
-                          AND conversations.user_id={Config_data.logged_in_user_info.user_id}"""
-        cur.execute(query_check)
-        is_conversation_exists = cur.fetchall()
-        if is_conversation_exists:
-            query_download = f"""SELECT messages.conversation_id, messages.message_id,
-                                 messages.customer_flag, messages.content, DATE(date) as date,
-                                 TIME(date) as time, messages.user_id, users.first_name
-                                 FROM messages
-                                 JOIN users ON messages.user_id=users.user_id
-                                 WHERE messages.conversation_id={is_conversation_exists[0][0]}
-                                 ORDER BY messages.message_id DESC"""
+def download_messages(announcement_object=None, conversation_object=None):
+    if conversation_object:
+        response_for_getting_messages\
+            = Backend_requests.request_to_get_messages(conversation_id=conversation_object.conversation_id)
+    else:
+        response_for_getting_messages\
+            = Backend_requests.request_to_get_messages(announcement_id=announcement_object.announcement_id)
+    if response_for_getting_messages.status_code == codes.ok:
+        list_of_messages_objects = []
+        for message in response_for_getting_messages.json()["result"]:
+            message_object = Message(
+                message["conversation_id"],
+                message["message_id"],
+                message["customer_flag"],
+                message["content"],
+                message["date"],
+                message["time"],
+                message["user_id"],
+                message["first_name"]
+            )
+            list_of_messages_objects.append(message_object)
 
-            cur.execute(query_download)
-            list_of_messages = cur.fetchall()
-            list_of_messages_objects = []
-            for conv_id, mess_id, customer_flag, content, date, time, user_id, first_name in list_of_messages:
-                message_object = Message(conv_id, mess_id, customer_flag, content, date, time, user_id, first_name)
-                list_of_messages_objects.append(message_object)
-
-        else:
-            list_of_messages_objects = []
-
-        cur.close()
-        connection.close()
-
-    except mysql.connector.Error as m:
-        messagebox.showerror("Błąd podczas wczytywania wiadomości",
-                             f"Nie udalo sie wczytać wiadomości\nKod błędu: {m}")
+        return list_of_messages_objects
 
     else:
-        return list_of_messages_objects
+        messagebox.showerror("Błąd podczas wczytywania wiadomości.",
+                             "Nie udalo sie wczytać wiadomości, spróbuj później.")
+        return []
 
 
 def send_message(list_of_message_objects, message_entry, refresh_messages, is_user_customer, announcement_object=None):
     if message_entry.get() != "":
         if message_entry.get() != "Napisz wiadomość...":
-            try:
-                connection = database_connect()
-                cur = connection.cursor()
-                if list_of_message_objects:
-                    query = f"""INSERT INTO messages(conversation_id, user_id, customer_flag, content, date)
-                            VALUES({list_of_message_objects[0].conversation_id}, 
-                            {Config_data.logged_in_user_info.user_id}, {is_user_customer},
-                            "{message_entry.get()}", now())"""
-                    cur.execute(query)
-                    connection.commit()
 
-                else:
-                    query_make_conv = f"""INSERT INTO conversations(announcement_id, user_id)
-                                          VALUES({announcement_object.announcement_id}, 
-                                {Config_data.logged_in_user_info.user_id})"""
-                    cur.execute(query_make_conv)
-                    query_check_conv_id = f"""SELECT conversation_id FROM conversations
-                                              WHERE conversations.announcement_id={announcement_object.announcement_id}
-                                              AND conversations.user_id={Config_data.logged_in_user_info.user_id}"""
-                    cur.execute(query_check_conv_id)
-                    conversation_id = cur.fetchall()
-                    query_add_message = f"""INSERT INTO messages(conversation_id, user_id, customer_flag, content, date)
-                                            VALUES({conversation_id[0][0]}, {Config_data.logged_in_user_info.user_id},
-                                            True, "{message_entry.get()}", now())"""
-                    cur.execute(query_add_message)
-                    connection.commit()
-                connection.close()
-                cur.close()
+            if list_of_message_objects:
+                conversation_id = list_of_message_objects[0].conversation_id
+                response_for_sending_message = Backend_requests.request_to_send_message(message_entry.get(),
+                                                                                        is_user_customer,
+                                                                                        conversation_id=conversation_id)
 
-            except mysql.connector.Error as m:
-                messagebox.showerror("Błąd podczas wysyłania wiadomości",
-                                     f"Nie udalo sie wysłać wiadomości\nKod błędu: {m}")
             else:
+                announcement_id = announcement_object.announcement_id
+                response_for_sending_message = Backend_requests.request_to_send_message(message_entry.get(),
+                                                                                        is_user_customer,
+                                                                                        announcement_id=announcement_id)
+
+            if response_for_sending_message.status_code == codes.created:
                 message_entry.delete(0, END)
                 refresh_messages()
+
+            else:
+                messagebox.showerror("Błąd podczas wysyłania wiadomości.",
+                                     "Nie udalo sie wysłać wiadomości, spróbuj później.")
+
         else:
-            messagebox.showwarning("Błąd wiadomości", "Aby wysłać, najpierw napisz wiadomość")
+            messagebox.showwarning("Błądna wiadomość.", "Aby wysłać, najpierw napisz wiadomość.")
     else:
-        messagebox.showwarning("Błąd wiadomości", "Aby wysłać, najpierw napisz wiadomość")
+        messagebox.showwarning("Błędna wiadomość.", "Nie możesz wysłać pustej wiadomości.")
 
 
 def download_conversations():
-    try:
-        connection = database_connect()
-        cur = connection.cursor()
-        query_download_conversations_as_customer = f"""SELECT conversations.conversation_id, 
-                                                       conversations.announcement_id, announcements.title,
-                                                       users.first_name FROM conversations 
-                                                       JOIN announcements ON conversations.announcement_id=
-                                                       announcements.announcement_id
-                                                       JOIN users ON announcements.seller_id=users.user_id
-                                                       WHERE conversations.user_id=
-                                                       {Config_data.logged_in_user_info.user_id}"""
-        cur.execute(query_download_conversations_as_customer)
-        list_of_conversations_as_customer = cur.fetchall()
-        if list_of_conversations_as_customer:
-            list_of_conversations_as_customer_objects = []
-            for conv_id, ann_id, title, seller_name in list_of_conversations_as_customer:
-                conv_object = Conversation(conv_id, ann_id, title, seller_name)
-                list_of_conversations_as_customer_objects.append(conv_object)
-        else:
-            list_of_conversations_as_customer_objects = []
+    response_for_getting_conversations = Backend_requests.request_to_get_conversations()
+    if response_for_getting_conversations.status_code == codes.ok:
+        list_of_conversations_as_customer_objects = []
+        for conversation_as_customer in response_for_getting_conversations.json()["as_customer"]:
+            conv_object = Conversation(
+                conversation_as_customer["conversation_id"],
+                conversation_as_customer["announcement_id"],
+                conversation_as_customer["title"],
+                conversation_as_customer["first_name"]
+            )
+            list_of_conversations_as_customer_objects.append(conv_object)
 
-        query_download_conversations_as_seller = f"""SELECT conversations.conversation_id, 
-                                                     conversations.announcement_id, announcements.title,
-                                                     users.first_name FROM conversations
-                                                     JOIN announcements ON conversations.announcement_id=
-                                                     announcements.announcement_id
-                                                     JOIN users ON conversations.user_id=users.user_id
-                                                     WHERE announcements.seller_id=
-                                                     {Config_data.logged_in_user_info.user_id}"""
-        cur.execute(query_download_conversations_as_seller)
-        list_of_conversations_as_seller = cur.fetchall()
-        if list_of_conversations_as_seller:
-            list_of_conversations_as_seller_objects = []
-            for conv_id, ann_id, title, customer_name in list_of_conversations_as_seller:
-                conv_object = Conversation(conv_id, ann_id, title, customer_name)
-                list_of_conversations_as_seller_objects.append(conv_object)
-        else:
-            list_of_conversations_as_seller_objects = []
+        list_of_conversations_as_seller_objects = []
+        for conversation_as_seller in response_for_getting_conversations.json()["as_seller"]:
+            conv_object = Conversation(
+                conversation_as_seller["conversation_id"],
+                conversation_as_seller["announcement_id"],
+                conversation_as_seller["title"],
+                conversation_as_seller["first_name"]
+            )
+            list_of_conversations_as_seller_objects.append(conv_object)
 
-    except mysql.connector.Error as m:
-        messagebox.showerror("Błąd podczas wczytywania konwersacji",
-                             f"Nie udalo sie wczytać konwersacji\nKod błędu: {m}")
-
-    else:
         return list_of_conversations_as_customer_objects, list_of_conversations_as_seller_objects
 
-
-def download_messages_from_conv_object(conversation_object):
-    try:
-        connection = database_connect()
-        cur = connection.cursor()
-        query = f"""SELECT messages.conversation_id, messages.message_id,
-                    messages.customer_flag, messages.content, DATE(date) as date,
-                    TIME(date) as time, messages.user_id, users.first_name
-                    FROM messages
-                    JOIN users ON messages.user_id=users.user_id
-                    WHERE messages.conversation_id={conversation_object.conversation_id}
-                    ORDER BY messages.message_id DESC"""
-        cur.execute(query)
-        list_of_messages = cur.fetchall()
-        list_of_messages_objects = []
-        for conv_id, mess_id, customer_flag, content, date, time, user_id, first_name in list_of_messages:
-            message_object = Message(conv_id, mess_id, customer_flag, content, date, time, user_id, first_name)
-            list_of_messages_objects.append(message_object)
-
-        cur.close()
-        connection.close()
-
-    except mysql.connector.Error as m:
-        messagebox.showerror("Błąd podczas wczytywania wiadomości",
-                             f"Nie udalo sie wczytać wiadomości\nKod błędu: {m}")
     else:
-        return list_of_messages_objects
+        messagebox.showerror("Błąd podczas wczytywania konwersacji.",
+                             "Nie udalo sie wczytać konwersacji, spróbuj później.")
+        return [], []

@@ -298,7 +298,7 @@ def init_add_announcement_page_frame(root):
         Config_data.current_page = add_announcement_page
 
     else:
-        messagebox.showwarning("Nie jesteś zalogowany", "Aby dodać ogłoszenie musisz sie zalogować")
+        messagebox.showwarning("Nie jesteś zalogowany.", "Aby dodać ogłoszenie musisz sie zalogować.")
 
 
 def init_user_page_frame(root):
@@ -584,10 +584,11 @@ def init_messages_page_frame(root):
         Label(messages_page, text="Kupujesz", font=("Arial", 14), bg="#A9A9A9").place(x=120, y=10)
         Label(messages_page, text="Sprzedajesz", font=("Arial", 14), bg="#A9A9A9").place(x=420, y=10)
 
-        (lists_of_customer_conversation_objects,
-         lists_of_seller_conversation_objects) = My_functions.download_conversations()
+        (list_of_conversations_as_customer_objects,
+         list_of_conversations_as_seller_objects) = My_functions.download_conversations()
+
         y = 0
-        for customer_conversation_object in lists_of_customer_conversation_objects:
+        for customer_conversation_object in list_of_conversations_as_customer_objects:
             Button(messages_page, text=f"{customer_conversation_object.title}", bg="#D3D3D3",
                    font=("Arial", 10), anchor=W, borderwidth=1,
                    command=lambda conversation_object=customer_conversation_object:
@@ -600,7 +601,7 @@ def init_messages_page_frame(root):
             y += 1
 
         y = 0
-        for seller_conversation_object in lists_of_seller_conversation_objects:
+        for seller_conversation_object in list_of_conversations_as_seller_objects:
             Button(messages_page, text=f"{seller_conversation_object.title}", bg="#D3D3D3",
                    font=("Arial", 10), anchor=W, borderwidth=1,
                    command=lambda conversation_object=seller_conversation_object:
@@ -644,7 +645,7 @@ def init_messages_page_frame(root):
             message_entry.bind("<Button-1>", lambda event: My_functions.delete_text(message_entry))
 
             def refresh_messages():
-                list_of_message_objects = My_functions.download_messages_from_conv_object(conversation_object)
+                list_of_message_objects = My_functions.download_messages(conversation_object=conversation_object)
 
                 text["state"] = "normal"
                 text.delete("1.0", END)
@@ -796,7 +797,7 @@ def init_message_window(announcement_object):
         message_entry.bind("<Button-1>", lambda event: My_functions.delete_text(message_entry))
 
         def refresh_messages():
-            list_of_message_objects = My_functions.download_messages(announcement_object)
+            list_of_message_objects = My_functions.download_messages(announcement_object=announcement_object)
             text["state"] = "normal"
             text.delete("1.0", END)
             i = 1
@@ -818,5 +819,5 @@ def init_message_window(announcement_object):
         refresh_messages()
 
     else:
-        messagebox.showwarning("Nie jesteś zalogowany", f"Aby wysłać wiadomość do użytkownika "
-                                                        f"{announcement_object.first_name} musisz sie zalogować")
+        messagebox.showwarning("Nie jesteś zalogowany.", f"Aby wysłać wiadomość do użytkownika"
+                                                         f" {announcement_object.first_name}, musisz sie zalogować.")
