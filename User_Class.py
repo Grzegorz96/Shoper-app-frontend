@@ -49,7 +49,8 @@ class UserAnnouncement:
 
 
 class Announcement:
-    def __init__(self, announcement_id, first_name, seller_id, name_category, title, description, price, location):
+    def __init__(self, announcement_id, first_name, seller_id, name_category, title, description, price, location,
+                 main_photo):
         self.announcement_id = announcement_id
         self.first_name = first_name
         self.seller_id = seller_id
@@ -58,6 +59,7 @@ class Announcement:
         self.description = description
         self.price = price
         self.location = location
+        self.main_photo = main_photo
 
 
 class UserFavoriteAnnouncement:

@@ -5,6 +5,8 @@ from User_Class import LoggedUser, UserAnnouncement, Announcement, UserFavoriteA
 import Config_data
 import Backend_requests
 from requests import codes
+from PIL import Image, ImageTk
+# from urllib3 import HTTPResponse
 
 
 # User registration function
@@ -551,8 +553,17 @@ def making_list_of_pages(list_of_announcements):
             announcement["title"],
             announcement["description"],
             announcement["price"],
-            announcement["location"]
+            announcement["location"],
+            announcement["main_photo"]
         )
+
+        if announcement_object.main_photo:
+            response_for_getting_photo = Backend_requests.request_to_get_photo(announcement_object.main_photo)
+            if response_for_getting_photo.status == codes.ok:
+                main_photo = ImageTk.PhotoImage(Image.open(response_for_getting_photo).resize((80, 80)))
+                announcement_object.main_photo = main_photo
+            else:
+                announcement_object.main_photo = None
 
         list_of_objects_announcements.append(announcement_object)
 
@@ -667,3 +678,21 @@ def download_conversations():
         messagebox.showerror("Błąd podczas wczytywania konwersacji.",
                              "Nie udalo sie wczytać konwersacji, spróbuj później.")
         return [], []
+
+
+def download_path(announcement_id):
+    response_for_getting_paths = Backend_requests.request_to_get_paths(announcement_id)
+    if response_for_getting_paths.status_code == codes.ok:
+        list_of_photos = []
+        for dictionary in response_for_getting_paths.json()["result"]:
+            response_for_getting_photo = Backend_requests.request_to_get_photo(dictionary["path"])
+            if response_for_getting_photo.status == codes.ok:
+                photo = ImageTk.PhotoImage(Image.open(response_for_getting_photo).resize((450, 300)))
+                list_of_photos.append(photo)
+
+        return list_of_photos
+
+    else:
+        messagebox.showerror("Błąd podczas wczytywania zdjęć.",
+                             "Nie udalo sie wczytać zdjęć do ogłoszenia, spróbuj później.")
+        return []

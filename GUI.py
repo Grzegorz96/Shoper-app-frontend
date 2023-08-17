@@ -69,7 +69,7 @@ def init_top_panel(root):
         "Elektronika", "Do domu", "Do ogrodu", "Sport i turystyka", "Motoryzacja", "Zdrowie i uroda", "Dla dzieci",
         "Rolnictwo", "Nieruchomości", "Moda", "Kultura i rozrywka", "Oddam za darmo")
 
-    # Init serach button for top panel
+    # Init search button for top panel
     search_button = Button(top_panel_frame, text="Wyszukaj produkt", borderwidth=0, bg="#D3D3D3",
                            command=lambda: init_shopper_page_frame(root, search_engine, search_location,
                                                                    current_var, categories, True))
@@ -486,48 +486,50 @@ def init_shopper_page_frame(root, search_engine=None, search_location=None, curr
                 columns = 0
                 rows = 0
                 for announcement_object in announcements[actual_page]:
+                    photo_label = Label(main_page, bg="#D3D3D3", image=announcement_object.main_photo)
+                    photo_label.place(x=15 + (columns * 425), y=(rows * 120) + 30, width=80, height=80)
+                    list_of_objects.append(photo_label)
                     title_button = Button(main_page, text=f"{announcement_object.title}", anchor=W, font=("Arial", 10),
                                           borderwidth=1, bg="#D3D3D3",
                                           command=lambda announcement=announcement_object:
                                           init_announcement_page_frame(main_page, announcement, False,
                                                                        False))
-                    title_button.place(x=30 + (columns * 450), y=(rows * 120) + 40, width=300, height=22)
+                    title_button.place(x=100 + (columns * 425), y=(rows * 120) + 40, width=300, height=22)
                     list_of_objects.append(title_button)
                     category_label = Label(main_page, text=f"{announcement_object.name_category}", anchor=W,
                                            font=("Arial", 8), bg="#D3D3D3")
-                    category_label.place(x=30 + (columns * 450), y=(rows * 120) + 64, width=100, height=15)
+                    category_label.place(x=100 + (columns * 425), y=(rows * 120) + 64, width=100, height=15)
                     list_of_objects.append(category_label)
                     location_label = Label(main_page, text=f"{announcement_object.location}", anchor=W,
                                            font=("Arial", 8), bg="#D3D3D3")
-                    location_label.place(x=30 + (columns * 450), y=(rows * 120) + 81, width=100, height=15)
+                    location_label.place(x=100 + (columns * 425), y=(rows * 120) + 81, width=100, height=15)
                     list_of_objects.append(location_label)
                     price_label = Label(main_page, text=f"{announcement_object.price} ZŁ", anchor=E, font=("Arial", 10),
                                         bg="#D3D3D3")
-                    price_label.place(x=132 + (columns * 450), y=(rows * 120) + 64, width=70, height=32)
+                    price_label.place(x=202 + (columns * 425), y=(rows * 120) + 64, width=70, height=32)
                     list_of_objects.append(price_label)
-                    check_button = Button(main_page, text="Wiadomość", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
-                                          command=lambda announcement=announcement_object:
-                                          init_message_window(announcement))
-                    check_button.place(x=206 + (columns * 450), y=(rows * 120) + 64, width=60, height=32)
-                    list_of_objects.append(check_button)
+                    message_button = Button(main_page, text="Wiadomość", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
+                                            command=lambda announcement=announcement_object:
+                                            init_message_window(announcement))
+                    message_button.place(x=340 + (columns * 425), y=(rows * 120) + 64, width=60, height=32)
+                    list_of_objects.append(message_button)
                     like_button = Button(main_page, text="Lubię to", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
                                          command=lambda announcement=announcement_object:
                                          My_functions.add_announcement_to_favorite(announcement))
-                    like_button.place(x=270 + (columns * 450), y=(rows * 120) + 64, width=60, height=32)
+                    like_button.place(x=276 + (columns * 425), y=(rows * 120) + 64, width=60, height=32)
                     list_of_objects.append(like_button)
                     rows += 1
                     if rows == 5:
                         rows = 0
                         columns += 1
-                Button(main_page, text="Następna", font=("Arial", 8), borderwidth=0, bg="#D3D3D3",
-                       command=lambda: config_pages_of_announcement(actual_page + 1,
-                                                                    list_of_objects)).place(x=1200, y=600, width=60,
-                                                                                            height=32)
-
-                Button(main_page, text="Poprzednia", font=("Arial", 8), borderwidth=0, bg="#D3D3D3",
-                       command=lambda: config_pages_of_announcement(actual_page - 1,
-                                                                    list_of_objects)).place(x=15, y=600, width=60,
-                                                                                            height=32)
+                button_next = Button(main_page, text="Następna", font=("Arial", 8), borderwidth=0, bg="#D3D3D3",
+                                     command=lambda: config_pages_of_announcement(actual_page + 1, list_of_objects))
+                button_next.place(x=1200, y=600, width=60, height=32)
+                list_of_objects.append(button_next)
+                button_previous = Button(main_page, text="Poprzednia", font=("Arial", 8), borderwidth=0, bg="#D3D3D3",
+                                         command=lambda: config_pages_of_announcement(actual_page - 1, list_of_objects))
+                button_previous.place(x=15, y=600, width=60, height=32)
+                list_of_objects.append(button_previous)
 
         if len(announcements) > 0:
             config_pages_of_announcement()
@@ -536,6 +538,7 @@ def init_shopper_page_frame(root, search_engine=None, search_location=None, curr
 
 
 def init_announcement_page_frame(page, announcement_object, block_fav, block_mess):
+    photos = My_functions.download_path(announcement_object.announcement_id)
     tmp_page = Frame(page, bg="#A9A9A9", width=1276, height=636)
     tmp_page.pack()
 
@@ -551,8 +554,6 @@ def init_announcement_page_frame(page, announcement_object, block_fav, block_mes
           width=65, bg="#A9A9A9").place(x=520, y=120)
     Label(tmp_page, text=f"Użytkownik: {announcement_object.first_name}", font=("Arial", 14), borderwidth=0, anchor=E,
           width=65, bg="#A9A9A9").place(x=520, y=150)
-    Label(tmp_page, text=f"Galeria ogłoszenia: {announcement_object.announcement_id}", font=("Arial", 14),
-          borderwidth=3, bg="#00CED1", height=23, width=40).place(x=15, y=63)
 
     description_text = Text(tmp_page, width=65, height=18, font=("Arial", 14), borderwidth=0)
     description_text.insert(INSERT, f"{announcement_object.description}")
@@ -569,6 +570,29 @@ def init_announcement_page_frame(page, announcement_object, block_fav, block_mes
     button_fav["state"] = "disabled" if block_fav else "normal"
     Button(tmp_page, text="Wróć", font=("Arial", 12), borderwidth=0, bg="#D3D3D3", width=10,
            command=lambda: tmp_page.destroy()).place(x=1141, y=594)
+
+    photo_label = Label(tmp_page, text="Brak zdjęć do ogłoszenia.", font=("Arial", 12), borderwidth=3, bg="#D3D3D3")
+    photo_label.place(x=20, y=180, width=480, height=398)
+
+    def switch_photo(actual_photo=0, list_of_buttons=None):
+        if 0 <= actual_photo < len(photos):
+            if list_of_buttons:
+                for element in list_of_buttons:
+                    element.destroy()
+            list_of_buttons = []
+            photo_label.config(image=photos[actual_photo])
+            button_next = Button(tmp_page, text="Poprzednie", font=("Arial", 12), borderwidth=0, bg="#D3D3D3", width=10,
+                                 command=lambda: switch_photo(actual_photo-1, list_of_buttons))
+            button_next.place(x=20, y=594)
+            list_of_buttons.append(button_next)
+
+            button_previous = Button(tmp_page, text="Następne", font=("Arial", 12), borderwidth=0, bg="#D3D3D3",
+                                     width=10, command=lambda: switch_photo(actual_photo+1, list_of_buttons))
+            button_previous.place(x=404, y=594)
+            list_of_buttons.append(button_previous)
+
+    if len(photos) > 0:
+        switch_photo()
 
 
 def init_messages_page_frame(root):

@@ -1,3 +1,4 @@
+import urllib3
 from requests import get, post, put, patch, delete, RequestException, Response
 import Config_data
 
@@ -327,6 +328,42 @@ def request_to_get_conversations():
     # Creating endpoint and calling GET method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/conversations"
+        response = get(url)
+
+    # If cant connect with endpoint, making response object with 404 status code and return response.
+    except RequestException:
+        response = Response()
+        response.status_code = 404
+        return response
+    # If everything ok from frontend then just return the response from GET method.
+    else:
+        return response
+
+
+def request_to_get_photo(path):
+    # Creating endpoint and calling GET method on this endpoint.
+    try:
+        url = "http://127.0.0.1:5000/media/download"
+        request_body = {
+            "path": path
+        }
+        # response = get(url, json=request_body, stream=True).raw
+        response = get(url, json=request_body, stream=True).raw
+
+    # If cant connect with endpoint, making response object with 404 status code and return response.
+    except urllib3.exceptions.HTTPError:
+        response = urllib3.response.HTTPResponse()
+        response.status = 404
+        return response
+    # If everything ok from frontend then just return the response from GET method.
+    else:
+        return response
+
+
+def request_to_get_paths(announcement_id):
+    # Creating endpoint and calling GET method on this endpoint.
+    try:
+        url = f"http://127.0.0.1:5000/announcements/{announcement_id}/media/paths"
         response = get(url)
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
