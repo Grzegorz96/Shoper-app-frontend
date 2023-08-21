@@ -1,12 +1,11 @@
 from tkinter import *
 from tkinter import messagebox
 from re import match
-from User_Class import LoggedUser, UserAnnouncement, Announcement, UserFavoriteAnnouncement, Message, Conversation
+from User_Class import LoggedUser, Announcement, UserFavoriteAnnouncement, Message, Conversation
 import Config_data
 import Backend_requests
 from requests import codes
 from PIL import Image, ImageTk
-# from urllib3 import HTTPResponse
 
 
 # User registration function
@@ -196,13 +195,13 @@ def change_announcement_data(list_of_entries, description_text, user_active_anno
         messagebox.showwarning("Błędny tytuł ogłoszenia.", "Tytuł ogłoszenia powinien zawierać od 10 do 45 znaków.")
 
 
-def download_user_announcements():
-    response_for_getting_user_announcements = Backend_requests.request_to_get_user_announcements()
+def download_user_announcements(field, page):
+    response_for_getting_user_announcements = Backend_requests.request_to_get_user_announcements(field, page)
     if response_for_getting_user_announcements.status_code == codes.ok:
 
         list_of_objects_user_announcements = []
         for announcement in response_for_getting_user_announcements.json()["result"]:
-            user_announcement_object = UserAnnouncement(
+            user_announcement_object = Announcement(
                 announcement["announcement_id"],
                 announcement["first_name"],
                 announcement["seller_id"],
@@ -212,8 +211,16 @@ def download_user_announcements():
                 announcement["description"],
                 announcement["price"],
                 announcement["location"],
-                announcement["active_flag"]
+                announcement["main_photo"]
             )
+            if user_announcement_object.main_photo:
+                response_for_getting_photo = Backend_requests.request_to_get_photo(user_announcement_object.main_photo)
+                if response_for_getting_photo.status == codes.ok:
+                    main_photo = ImageTk.PhotoImage(Image.open(response_for_getting_photo).resize((90, 67)))
+                    user_announcement_object.main_photo = main_photo
+                else:
+                    user_announcement_object.main_photo = None
+
             list_of_objects_user_announcements.append(user_announcement_object)
 
         return list_of_objects_user_announcements
@@ -446,8 +453,8 @@ def delete_from_completed_announcements(user_completed_announcement_object, init
                              f"\"{user_completed_announcement_object.title}\", spróbuj później.")
 
 
-def download_announcements(from_search_engine, search_engine=None, search_location=None, current_var=None,
-                           categories=None):
+def download_announcements(from_search_engine, page, first_init, search_engine=None, search_location=None,
+                           current_var=None, categories=None):
     if from_search_engine:
         content_to_search = search_engine.get()
         location = search_location.get()
@@ -455,29 +462,57 @@ def download_announcements(from_search_engine, search_engine=None, search_locati
         if current_var.get() in categories["values"]:
             category_id = categories["values"].index(current_var.get()) + 1
 
-        response_for_getting_announcements = Backend_requests.request_to_get_announcements(from_search_engine,
+        response_for_getting_announcements = Backend_requests.request_to_get_announcements(from_search_engine, page,
                                                                                            content_to_search, location,
                                                                                            category_id)
     else:
-        response_for_getting_announcements = Backend_requests.request_to_get_announcements(from_search_engine)
+        response_for_getting_announcements = Backend_requests.request_to_get_announcements(from_search_engine, page)
 
     if response_for_getting_announcements.status_code == codes.ok:
+
         if response_for_getting_announcements.json()["result"]:
-            return making_list_of_pages(response_for_getting_announcements.json()["result"]), True
+            list_of_objects_announcements = []
+            for announcement in response_for_getting_announcements.json()["result"]:
+                announcement_object = Announcement(
+                    announcement["announcement_id"],
+                    announcement["first_name"],
+                    announcement["seller_id"],
+                    announcement["name_category"],
+                    announcement["category_id"],
+                    announcement["title"],
+                    announcement["description"],
+                    announcement["price"],
+                    announcement["location"],
+                    announcement["main_photo"]
+                )
+
+                if announcement_object.main_photo:
+                    response_for_getting_photo = Backend_requests.request_to_get_photo(announcement_object.main_photo)
+                    if response_for_getting_photo.status == codes.ok:
+                        main_photo = ImageTk.PhotoImage(Image.open(response_for_getting_photo).resize((90, 67)))
+                        announcement_object.main_photo = main_photo
+                    else:
+                        announcement_object.main_photo = None
+
+                list_of_objects_announcements.append(announcement_object)
+
+            return list_of_objects_announcements
 
         else:
-            messagebox.showwarning("Nie znaleźliśmy żadnych ogłoszeń.",
-                                   "Nie znaleźliśmy żadnych wyników dla Twoich kryteriów wyszukiwania.")
-            return [], False
+            if first_init:
+                messagebox.showwarning("Nie znaleźliśmy żadnych ogłoszeń.",
+                                       "Przykro nam, nie znaleźliśmy wyników dla Twoich kryteriów wyszukiwania.")
+            return []
 
     else:
         messagebox.showerror("Błąd podczas wczytywania ogłoszeń.",
                              "Nie udalo sie pobrać ogłoszeń, spróbuj ponownie później.")
-        return [], True
+        return []
 
 
-def download_user_favorite_announcements():
-    response_for_getting_user_favorite_announcements = Backend_requests.request_to_get_user_favorite_announcements()
+def download_user_favorite_announcements(field, page, per_page):
+    response_for_getting_user_favorite_announcements = Backend_requests.request_to_get_user_favorite_announcements(
+        field, page, per_page)
 
     if response_for_getting_user_favorite_announcements.status_code == codes.ok:
         # Making list of fav_announcements objects
@@ -493,8 +528,18 @@ def download_user_favorite_announcements():
                 favorite_announcement["name_category"],
                 favorite_announcement["price"],
                 favorite_announcement["location"],
-                favorite_announcement["active_flag"]
+                favorite_announcement["main_photo"]
             )
+
+            if user_fav_announcement_object.main_photo:
+                response_for_getting_photo = Backend_requests.request_to_get_photo(user_fav_announcement_object.
+                                                                                   main_photo)
+                if response_for_getting_photo.status == codes.ok:
+                    main_photo = ImageTk.PhotoImage(Image.open(response_for_getting_photo).resize((90, 67)))
+                    user_fav_announcement_object.main_photo = main_photo
+                else:
+                    user_fav_announcement_object.main_photo = None
+
             list_of_user_fav_announcement_objects.append(user_fav_announcement_object)
 
         return list_of_user_fav_announcement_objects
@@ -539,54 +584,6 @@ def delete_announcement_from_favorite(user_fav_announcement_object, init_favorit
     else:
         messagebox.showerror("Błąd podczas usuwania z ulubionych.",
                              "Nie udalo sie usunąć z ulubionych.")
-
-
-def making_list_of_pages(list_of_announcements):
-    # Making list of announcements objects
-    list_of_objects_announcements = []
-    for announcement in list_of_announcements:
-        announcement_object = Announcement(
-            announcement["announcement_id"],
-            announcement["first_name"],
-            announcement["seller_id"],
-            announcement["name_category"],
-            announcement["title"],
-            announcement["description"],
-            announcement["price"],
-            announcement["location"],
-            announcement["main_photo"]
-        )
-
-        if announcement_object.main_photo:
-            response_for_getting_photo = Backend_requests.request_to_get_photo(announcement_object.main_photo)
-            if response_for_getting_photo.status == codes.ok:
-                main_photo = ImageTk.PhotoImage(Image.open(response_for_getting_photo).resize((80, 80)))
-                announcement_object.main_photo = main_photo
-            else:
-                announcement_object.main_photo = None
-
-        list_of_objects_announcements.append(announcement_object)
-
-    # Grouping list of announcements by announcements on page
-    full_pages = len(list_of_objects_announcements) // 15
-    object_of_last_page = len(list_of_objects_announcements) % 15
-    list_of_objects_announcements_grouped_by_page = []
-    for i in range(full_pages):
-        tmp2 = []
-        for j in range(15):
-            index = i * 15 + j
-            tmp2.append(list_of_objects_announcements[index])
-
-        list_of_objects_announcements_grouped_by_page.append(tmp2)
-
-    if object_of_last_page > 0:
-        tmp3 = []
-        for k in range((15 * full_pages), (15 * full_pages + object_of_last_page)):
-            tmp3.append(list_of_objects_announcements[k])
-
-        list_of_objects_announcements_grouped_by_page.append(tmp3)
-
-    return list_of_objects_announcements_grouped_by_page
 
 
 def download_messages(announcement_object=None, conversation_object=None):
@@ -649,35 +646,25 @@ def send_message(list_of_message_objects, message_entry, refresh_messages, is_us
         messagebox.showwarning("Błędna wiadomość.", "Nie możesz wysłać pustej wiadomości.")
 
 
-def download_conversations():
-    response_for_getting_conversations = Backend_requests.request_to_get_conversations()
+def download_conversations(on_field, where_field, page):
+    response_for_getting_conversations = Backend_requests.request_to_get_conversations(on_field, where_field, page)
     if response_for_getting_conversations.status_code == codes.ok:
-        list_of_conversations_as_customer_objects = []
-        for conversation_as_customer in response_for_getting_conversations.json()["as_customer"]:
+        list_of_conversations = []
+        for conversation in response_for_getting_conversations.json()["result"]:
             conv_object = Conversation(
-                conversation_as_customer["conversation_id"],
-                conversation_as_customer["announcement_id"],
-                conversation_as_customer["title"],
-                conversation_as_customer["first_name"]
+                conversation["conversation_id"],
+                conversation["announcement_id"],
+                conversation["title"],
+                conversation["first_name"]
             )
-            list_of_conversations_as_customer_objects.append(conv_object)
+            list_of_conversations.append(conv_object)
 
-        list_of_conversations_as_seller_objects = []
-        for conversation_as_seller in response_for_getting_conversations.json()["as_seller"]:
-            conv_object = Conversation(
-                conversation_as_seller["conversation_id"],
-                conversation_as_seller["announcement_id"],
-                conversation_as_seller["title"],
-                conversation_as_seller["first_name"]
-            )
-            list_of_conversations_as_seller_objects.append(conv_object)
-
-        return list_of_conversations_as_customer_objects, list_of_conversations_as_seller_objects
+        return list_of_conversations
 
     else:
         messagebox.showerror("Błąd podczas wczytywania konwersacji.",
                              "Nie udalo sie wczytać konwersacji, spróbuj później.")
-        return [], []
+        return []
 
 
 def download_path(announcement_id):
@@ -687,7 +674,7 @@ def download_path(announcement_id):
         for dictionary in response_for_getting_paths.json()["result"]:
             response_for_getting_photo = Backend_requests.request_to_get_photo(dictionary["path"])
             if response_for_getting_photo.status == codes.ok:
-                photo = ImageTk.PhotoImage(Image.open(response_for_getting_photo).resize((450, 300)))
+                photo = ImageTk.PhotoImage(Image.open(response_for_getting_photo).resize((600, 400)))
                 list_of_photos.append(photo)
 
         return list_of_photos
@@ -696,3 +683,8 @@ def download_path(announcement_id):
         messagebox.showerror("Błąd podczas wczytywania zdjęć.",
                              "Nie udalo sie wczytać zdjęć do ogłoszenia, spróbuj później.")
         return []
+
+
+def loading_images():
+    Config_data.images["arrows"] = [ImageTk.PhotoImage(Image.open("Photos/left.png").resize((50, 50))),
+                                    ImageTk.PhotoImage(Image.open("Photos/right.png").resize((50, 50)))]

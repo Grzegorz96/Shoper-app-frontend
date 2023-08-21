@@ -308,12 +308,17 @@ def init_user_page_frame(root):
     account_page.pack()
 
     # Init account_page separates
-    ttk.Separator(account_page).place(x=640, y=0, height=635)
-    ttk.Separator(account_page).place(x=960, y=15, height=600)
-    Label(account_page, text="Aktywne ogłoszenia", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=720, y=10)
-    Label(account_page, text="Zakończone ogłoszenia", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=1020,
-                                                                                                             y=10)
-    Label(account_page, text="Dane użytkownika", font=("Arial", 32), borderwidth=0, bg="#A9A9A9").place(x=15, y=10)
+    ttk.Separator(account_page).place(x=427, y=15, height=600)
+    ttk.Separator(account_page).place(x=854, y=15, height=600)
+
+    ttk.Separator(account_page).place(x=40, y=85, width=350)
+    ttk.Separator(account_page).place(x=465, y=85, width=350)
+    ttk.Separator(account_page).place(x=890, y=85, width=350)
+
+    Label(account_page, text="Dane użytkownika", font=("Arial", 27), borderwidth=0, bg="#A9A9A9").place(x=70, y=30)
+    Label(account_page, text="Aktywne ogłoszenia", font=("Arial", 27), borderwidth=0, bg="#A9A9A9").place(x=485, y=30)
+    Label(account_page, text="Zakończone ogłoszenia", font=("Arial", 27), borderwidth=0, bg="#A9A9A9").place(x=875,
+                                                                                                             y=30)
 
     list_of_texts_and_user_info = [("Imie:", Config_data.logged_in_user_info.first_name),
                                    ("Nazwisko:", Config_data.logged_in_user_info.last_name),
@@ -328,10 +333,10 @@ def init_user_page_frame(root):
     y = 0
     i = 0
     for text, user_info in list_of_texts_and_user_info:
-        label = Label(account_page, text=f"{text} {user_info}", anchor=W, font=("Arial", 13), bg="#D3D3D3")
-        label.place(x=10, y=(y * 60) + 100, width=280, height=30)
-        entry = Entry(account_page, font=("Arial", 10))
-        entry.place(x=320, y=(y * 60) + 100, width=280, height=30)
+        label = Label(account_page, text=f"{text} {user_info}", anchor=W, font=("Arial", 10), bg="#D3D3D3")
+        label.place(x=10, y=(y * 60) + 100, width=200, height=30)
+        entry = Entry(account_page, font=("Arial", 9))
+        entry.place(x=220, y=(y * 60) + 100, width=200, height=30)
         if i == 3 or i == 5:
             entry.insert("0", "Nie możesz zmienić tych danych")
             entry["state"] = "disabled"
@@ -343,69 +348,156 @@ def init_user_page_frame(root):
         i += 1
         y += 1
 
-    # update user active announcements and completed announcements
-    user_announcements = My_functions.download_user_announcements()
-    user_active_announcements = []
-    user_completed_announcements = []
-    for announcement in user_announcements:
-        if announcement.active_flag == 1:
-            user_active_announcements.append(announcement)
+    def config_page_of_user_active_announcements(actual_page=1, list_of_objects=None):
+        user_active_announcements = My_functions.download_user_announcements("active_flag", actual_page)
+
+        if list_of_objects:
+
+            for element in list_of_objects:
+                element.destroy()
+
+        list_of_objects = []
+
+        rows = 0
+        # Init user active announcements
+        for user_active_announcement_object in user_active_announcements:
+            photo_label = Label(account_page, bg="#D3D3D3", image=user_active_announcement_object.main_photo)
+            photo_label.place(x=465, y=(rows * 120) + 164, width=115, height=66)
+            list_of_objects.append(photo_label)
+
+            title_button = Button(account_page, text=user_active_announcement_object.title, anchor=W,
+                                  font=("Arial", 10), bg="#D3D3D3", borderwidth=1,
+                                  command=lambda announcement_object=user_active_announcement_object:
+                                  init_announcement_page_frame(account_page, announcement_object, True,
+                                                               True))
+            title_button.place(x=465, y=(rows * 120) + 140, width=350, height=22)
+            list_of_objects.append(title_button)
+
+            category_label = Label(account_page, text=user_active_announcement_object.name_category, anchor=W,
+                                   font=("Arial", 8), bg="#D3D3D3")
+            category_label.place(x=583, y=(rows * 120) + 164, width=114, height=15)
+            list_of_objects.append(category_label)
+
+            location_label = Label(account_page, text=user_active_announcement_object.location, anchor=W,
+                                   font=("Arial", 8), bg="#D3D3D3")
+            location_label.place(x=583, y=(rows * 120) + 181, width=114, height=15)
+            list_of_objects.append(location_label)
+
+            price_label = Label(account_page, text=f"{user_active_announcement_object.price} ZŁ", anchor=E,
+                                font=("Arial", 10), bg="#D3D3D3")
+            price_label.place(x=700, y=(rows * 120) + 164, width=114, height=32)
+            list_of_objects.append(price_label)
+
+            edit_button = Button(account_page, text="Edytuj", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
+                                 command=lambda announcement_object=user_active_announcement_object:
+                                 init_edit_user_announcement_page_frame(announcement_object, root))
+            edit_button.place(x=700, y=(rows * 120) + 198, width=115, height=32)
+            list_of_objects.append(edit_button)
+
+            complete_button = Button(account_page, text="Zakończ", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
+                                     command=lambda announcement_object=user_active_announcement_object:
+                                     My_functions.move_active_announcement_to_completed_announcements(
+                                         announcement_object, init_user_page_frame, root))
+            complete_button.place(x=583, y=(rows * 120) + 198, width=115, height=32)
+            list_of_objects.append(complete_button)
+
+            rows += 1
+            if rows == 4:
+                break
+
+        if 1 < actual_page:
+            button_previous_active.config(command=lambda: config_page_of_user_active_announcements(actual_page - 1,
+                                                                                                   list_of_objects))
         else:
-            user_completed_announcements.append(announcement)
+            button_previous_active.config(command=lambda: None)
 
-    y = 0
-    # Init user active announcements
-    for user_active_announcement_object in user_active_announcements:
-        Button(account_page, text=f"{user_active_announcement_object.title}", anchor=W, font=("Arial", 10),
-               bg="#D3D3D3", borderwidth=1,
-               command=lambda announcement_object=user_active_announcement_object:
-               init_announcement_page_frame(account_page, announcement_object, True,
-                                            True)).place(x=650, y=(y * 75) + 40, width=300, height=22)
-        Label(account_page, text=f"{user_active_announcement_object.name_category}", anchor=W, font=("Arial", 8),
-              bg="#D3D3D3").place(x=650, y=(y * 75) + 64, width=100, height=15)
-        Label(account_page, text=f"{user_active_announcement_object.location}", anchor=W, font=("Arial", 8),
-              bg="#D3D3D3").place(x=650, y=(y * 75) + 81, width=100, height=15)
-        Label(account_page, text=f"{user_active_announcement_object.price} ZŁ", anchor=E, font=("Arial", 10),
-              bg="#D3D3D3").place(x=752, y=(y * 75) + 64, width=70, height=32)
-        Button(account_page, text="Edytuj", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
-               command=lambda announcement_object=user_active_announcement_object:
-               init_edit_user_announcement_page_frame(announcement_object, root)).place(x=826, y=(y * 75) + 64,
-                                                                                        width=60,
-                                                                                        height=32)
-        Button(account_page, text="Zakończ", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
-               command=lambda announcement_object=user_active_announcement_object:
-               My_functions.move_active_announcement_to_completed_announcements(announcement_object,
-                                                                                init_user_page_frame,
-                                                                                root)).place(x=890, y=(y * 75) + 64,
-                                                                                             width=60, height=32)
-        y += 1
+        if len(user_active_announcements) == 4:
+            button_next_active.config(command=lambda: config_page_of_user_active_announcements(actual_page + 1,
+                                                                                               list_of_objects))
+        else:
+            button_next_active.config(command=lambda: None)
 
-    y = 0
-    # Init user completed announcements
-    for user_completed_announcement_object in user_completed_announcements:
-        Button(account_page, text=f"{user_completed_announcement_object.title}", anchor=W, font=("Arial", 10),
-               bg="#D3D3D3", borderwidth=1,
-               command=lambda announcement_object=user_completed_announcement_object:
-               init_announcement_page_frame(account_page, announcement_object,
-                                            True, True)).place(x=970, y=(y * 75) + 40, width=300,
-                                                               height=22)
-        Label(account_page, text=f"{user_completed_announcement_object.name_category}", anchor=W, font=("Arial", 8),
-              bg="#D3D3D3").place(x=970, y=(y * 75) + 64, width=100, height=15)
-        Label(account_page, text=f"{user_completed_announcement_object.location}", anchor=W, font=("Arial", 8),
-              bg="#D3D3D3").place(x=970, y=(y * 75) + 81, width=100, height=15)
-        Label(account_page, text=f"{user_completed_announcement_object.price} ZŁ", anchor=E, font=("Arial", 10),
-              bg="#D3D3D3").place(x=1072, y=(y * 75) + 64, width=70, height=32)
-        Button(account_page, text="Aktywuj", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
-               command=lambda announcement_object=user_completed_announcement_object:
-               My_functions.move_completed_announcement_to_active_announcements(announcement_object,
-                                                                                init_user_page_frame, root)).place(
-            x=1146, y=(y * 75) + 64, width=60, height=32)
-        Button(account_page, text="Usuń", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
-               command=lambda announcement_object=user_completed_announcement_object:
-               My_functions.delete_from_completed_announcements(announcement_object, init_user_page_frame,
-                                                                root)).place(x=1210, y=(y * 75) + 64, width=60,
-                                                                             height=32)
-        y += 1
+    def config_page_of_user_completed_announcements(actual_page=1, list_of_objects=None):
+        user_completed_announcements = My_functions.download_user_announcements("completed_flag", actual_page)
+
+        if list_of_objects:
+
+            for element in list_of_objects:
+                element.destroy()
+
+        list_of_objects = []
+
+        rows = 0
+        # Init user completed announcements
+        for user_completed_announcement_object in user_completed_announcements:
+            photo_label = Label(account_page, bg="#D3D3D3", image=user_completed_announcement_object.main_photo)
+            photo_label.place(x=890, y=(rows * 120) + 164, width=115, height=66)
+            list_of_objects.append(photo_label)
+
+            title_button = Button(account_page, text=user_completed_announcement_object.title, anchor=W,
+                                  font=("Arial", 10), bg="#D3D3D3", borderwidth=1,
+                                  command=lambda announcement_object=user_completed_announcement_object:
+                                  init_announcement_page_frame(account_page, announcement_object, True, True))
+            title_button.place(x=890, y=(rows * 120) + 140, width=350, height=22)
+            list_of_objects.append(title_button)
+
+            category_label = Label(account_page, text=user_completed_announcement_object.name_category, anchor=W,
+                                   font=("Arial", 8), bg="#D3D3D3")
+            category_label.place(x=1008, y=(rows * 120) + 164, width=114, height=15)
+            list_of_objects.append(category_label)
+
+            location_label = Label(account_page, text=user_completed_announcement_object.location, anchor=W,
+                                   font=("Arial", 8), bg="#D3D3D3")
+            location_label.place(x=1008, y=(rows * 120) + 181, width=114, height=15)
+            list_of_objects.append(location_label)
+
+            price_label = Label(account_page, text=f"{user_completed_announcement_object.price} ZŁ", anchor=E,
+                                font=("Arial", 10), bg="#D3D3D3")
+            price_label.place(x=1125, y=(rows * 120) + 164, width=114, height=32)
+            list_of_objects.append(price_label)
+
+            activate_button = Button(account_page, text="Aktywuj", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
+                                     command=lambda announcement_object=user_completed_announcement_object:
+                                     My_functions.move_completed_announcement_to_active_announcements(
+                                         announcement_object, init_user_page_frame, root))
+            activate_button.place(x=1125, y=(rows * 120) + 198, width=115, height=32)
+            list_of_objects.append(activate_button)
+
+            delete_button = Button(account_page, text="Usuń", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
+                                   command=lambda announcement_object=user_completed_announcement_object:
+                                   My_functions.delete_from_completed_announcements(
+                                       announcement_object, init_user_page_frame, root))
+            delete_button.place(x=1008, y=(rows * 120) + 198, width=115, height=32)
+            list_of_objects.append(delete_button)
+
+            rows += 1
+            if rows == 4:
+                break
+
+        if 1 < actual_page:
+            button_previous_completed.config(command=lambda: config_page_of_user_completed_announcements(
+                actual_page - 1, list_of_objects))
+        else:
+            button_previous_completed.config(command=lambda: None)
+
+        if len(user_completed_announcements) == 4:
+            button_next_completed.config(command=lambda: config_page_of_user_completed_announcements(actual_page + 1,
+                                                                                                     list_of_objects))
+        else:
+            button_next_completed.config(command=lambda: None)
+
+    button_previous_active = Button(account_page, text="Poprzednia", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
+    button_previous_active.place(x=438, y=600, width=60, height=32)
+    button_next_active = Button(account_page, text="Następna", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
+    button_next_active.place(x=785, y=600, width=60, height=32)
+
+    button_previous_completed = Button(account_page, text="Poprzednia", font=("Arial", 8), borderwidth=0,
+                                       bg="#D3D3D3")
+    button_previous_completed.place(x=865, y=600, width=60, height=32)
+    button_next_completed = Button(account_page, text="Następna", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
+    button_next_completed.place(x=1200, y=600, width=60, height=32)
+    config_page_of_user_active_announcements()
+    config_page_of_user_completed_announcements()
 
     Config_data.current_page = account_page
 
@@ -415,18 +507,19 @@ def init_edit_user_announcement_page_frame(user_active_announcement_object, root
     edit_user_announcement_page = Frame(root, bg="#A9A9A9", width=1280, height=640, highlightbackground="black",
                                         highlightthickness=2)
     edit_user_announcement_page.pack()
-    y = 70
+
     list_of_texts = [user_active_announcement_object.title, user_active_announcement_object.location,
                      user_active_announcement_object.price]
     list_of_entries = []
+    y = 70
     for i in range(3):
         if i != 2:
-            Label(edit_user_announcement_page, text=f"{list_of_texts[i]}", font=("Arial", 14), borderwidth=0,
+            Label(edit_user_announcement_page, text=list_of_texts[i], font=("Arial", 14), borderwidth=0,
                   anchor=E, width=31, bg="#A9A9A9").place(x=22, y=y)
             obj_entry = Entry(edit_user_announcement_page, font=("Arial", 14), borderwidth=0, bg="#D3D3D3")
             obj_entry.place(x=15, y=y + 30, width=350)
         else:
-            Label(edit_user_announcement_page, text=f"{list_of_texts[i]}", font=("Arial", 14),
+            Label(edit_user_announcement_page, text=list_of_texts[i], font=("Arial", 14),
                   borderwidth=0, anchor=E, width=13, bg="#A9A9A9").place(x=220, y=y)
             Label(edit_user_announcement_page, text="ZŁ", font=("Arial", 14), borderwidth=0,
                   bg="#A9A9A9").place(x=370, y=y + 30)
@@ -443,7 +536,7 @@ def init_edit_user_announcement_page_frame(user_active_announcement_object, root
     Label(edit_user_announcement_page, text="Wpisz minimum 80 znaków", borderwidth=0, font=("Arial", 11),
           bg="#A9A9A9").place(x=1035, y=47)
     description_text = Text(edit_user_announcement_page, width=70, height=22, font=("Arial", 14), borderwidth=0)
-    description_text.insert(INSERT, f"{user_active_announcement_object.description}")
+    description_text.insert(INSERT, user_active_announcement_object.description)
     description_text.place(x=450, y=70)
 
     edit_announcement_button = Button(edit_user_announcement_page, bg="#00BFFF", text="Zmień ogłoszenie!", width=30,
@@ -458,83 +551,98 @@ def init_edit_user_announcement_page_frame(user_active_announcement_object, root
 
 def init_shopper_page_frame(root, search_engine=None, search_location=None, current_var=None, categories=None,
                             from_search_engine=False):
-    if from_search_engine:
-        # Update all_announcements list from download_from_search_engine
-        announcements, config_page = My_functions.download_announcements(from_search_engine, search_engine,
-                                                                         search_location, current_var, categories)
-    else:
-        # Update all_announcements list from download_all_announcements
-        announcements, config_page = My_functions.download_announcements(from_search_engine)
 
-    if config_page:
-        if isinstance(Config_data.current_page, Frame):
-            Config_data.current_page.destroy()
+    if isinstance(Config_data.current_page, Frame):
+        Config_data.current_page.destroy()
 
-        main_page = Frame(root, bg="#A9A9A9", width=1280, height=640, highlightbackground="black", highlightthickness=2)
-        main_page.pack()
-        ttk.Separator(main_page).place(x=427, y=15, height=600)
-        ttk.Separator(main_page).place(x=854, y=15, height=600)
+    main_page = Frame(root, bg="#A9A9A9", width=1280, height=640, highlightbackground="black", highlightthickness=2)
+    main_page.pack()
+    ttk.Separator(main_page).place(x=427, y=15, height=600)
+    ttk.Separator(main_page).place(x=854, y=15, height=600)
 
-        def config_pages_of_announcement(actual_page=0, list_of_objects=None):
-            if 0 <= actual_page < len(announcements):
-                if list_of_objects:
-                    for element in list_of_objects:
-                        element.destroy()
+    def config_page_of_announcements(actual_page=1, list_of_objects=None, first_init=False):
 
-                list_of_objects = []
+        if from_search_engine:
+            # Update all_announcements list from download_from_search_engine
+            announcements = My_functions.download_announcements(from_search_engine, actual_page, first_init,
+                                                                search_engine, search_location, current_var, categories)
+        else:
+            # Update all_announcements list from download_all_announcements
+            announcements = My_functions.download_announcements(from_search_engine, actual_page, first_init)
 
-                columns = 0
+        if list_of_objects:
+
+            for element in list_of_objects:
+                element.destroy()
+
+        list_of_objects = []
+
+        columns = 0
+        rows = 0
+        for announcement_object in announcements:
+            photo_label = Label(main_page, bg="#D3D3D3", image=announcement_object.main_photo)
+            photo_label.place(x=40 + (columns * 425), y=(rows * 120) + 44, width=115, height=66)
+            list_of_objects.append(photo_label)
+
+            title_button = Button(main_page, text=announcement_object.title, anchor=W, font=("Arial", 10),
+                                  borderwidth=1, bg="#D3D3D3",
+                                  command=lambda announcement=announcement_object:
+                                  init_announcement_page_frame(main_page, announcement, False,
+                                                               False))
+            title_button.place(x=40 + (columns * 425), y=(rows * 120) + 20, width=350, height=22)
+            list_of_objects.append(title_button)
+
+            category_label = Label(main_page, text=announcement_object.name_category, anchor=W,
+                                   font=("Arial", 8), bg="#D3D3D3")
+            category_label.place(x=158 + (columns * 425), y=(rows * 120) + 44, width=114, height=15)
+            list_of_objects.append(category_label)
+
+            location_label = Label(main_page, text=announcement_object.location, anchor=W,
+                                   font=("Arial", 8), bg="#D3D3D3")
+            location_label.place(x=158 + (columns * 425), y=(rows * 120) + 61, width=114, height=15)
+            list_of_objects.append(location_label)
+
+            price_label = Label(main_page, text=f"{announcement_object.price} ZŁ", anchor=E, font=("Arial", 10),
+                                bg="#D3D3D3")
+            price_label.place(x=275 + (columns * 425), y=(rows * 120) + 44, width=114, height=32)
+            list_of_objects.append(price_label)
+
+            message_button = Button(main_page, text="Wiadomość", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
+                                    command=lambda announcement=announcement_object:
+                                    init_message_window(announcement))
+            message_button.place(x=275 + (columns * 425), y=(rows * 120) + 78, width=115, height=32)
+            list_of_objects.append(message_button)
+
+            like_button = Button(main_page, text="Lubię to", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
+                                 command=lambda announcement=announcement_object:
+                                 My_functions.add_announcement_to_favorite(announcement))
+            like_button.place(x=158 + (columns * 425), y=(rows * 120) + 78, width=115, height=32)
+            list_of_objects.append(like_button)
+
+            rows += 1
+            if rows == 5:
                 rows = 0
-                for announcement_object in announcements[actual_page]:
-                    photo_label = Label(main_page, bg="#D3D3D3", image=announcement_object.main_photo)
-                    photo_label.place(x=15 + (columns * 425), y=(rows * 120) + 30, width=80, height=80)
-                    list_of_objects.append(photo_label)
-                    title_button = Button(main_page, text=f"{announcement_object.title}", anchor=W, font=("Arial", 10),
-                                          borderwidth=1, bg="#D3D3D3",
-                                          command=lambda announcement=announcement_object:
-                                          init_announcement_page_frame(main_page, announcement, False,
-                                                                       False))
-                    title_button.place(x=100 + (columns * 425), y=(rows * 120) + 40, width=300, height=22)
-                    list_of_objects.append(title_button)
-                    category_label = Label(main_page, text=f"{announcement_object.name_category}", anchor=W,
-                                           font=("Arial", 8), bg="#D3D3D3")
-                    category_label.place(x=100 + (columns * 425), y=(rows * 120) + 64, width=100, height=15)
-                    list_of_objects.append(category_label)
-                    location_label = Label(main_page, text=f"{announcement_object.location}", anchor=W,
-                                           font=("Arial", 8), bg="#D3D3D3")
-                    location_label.place(x=100 + (columns * 425), y=(rows * 120) + 81, width=100, height=15)
-                    list_of_objects.append(location_label)
-                    price_label = Label(main_page, text=f"{announcement_object.price} ZŁ", anchor=E, font=("Arial", 10),
-                                        bg="#D3D3D3")
-                    price_label.place(x=202 + (columns * 425), y=(rows * 120) + 64, width=70, height=32)
-                    list_of_objects.append(price_label)
-                    message_button = Button(main_page, text="Wiadomość", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
-                                            command=lambda announcement=announcement_object:
-                                            init_message_window(announcement))
-                    message_button.place(x=340 + (columns * 425), y=(rows * 120) + 64, width=60, height=32)
-                    list_of_objects.append(message_button)
-                    like_button = Button(main_page, text="Lubię to", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
-                                         command=lambda announcement=announcement_object:
-                                         My_functions.add_announcement_to_favorite(announcement))
-                    like_button.place(x=276 + (columns * 425), y=(rows * 120) + 64, width=60, height=32)
-                    list_of_objects.append(like_button)
-                    rows += 1
-                    if rows == 5:
-                        rows = 0
-                        columns += 1
-                button_next = Button(main_page, text="Następna", font=("Arial", 8), borderwidth=0, bg="#D3D3D3",
-                                     command=lambda: config_pages_of_announcement(actual_page + 1, list_of_objects))
-                button_next.place(x=1200, y=600, width=60, height=32)
-                list_of_objects.append(button_next)
-                button_previous = Button(main_page, text="Poprzednia", font=("Arial", 8), borderwidth=0, bg="#D3D3D3",
-                                         command=lambda: config_pages_of_announcement(actual_page - 1, list_of_objects))
-                button_previous.place(x=15, y=600, width=60, height=32)
-                list_of_objects.append(button_previous)
+                columns += 1
+                if rows == 0 and columns == 3:
+                    break
 
-        if len(announcements) > 0:
-            config_pages_of_announcement()
+        if 1 < actual_page:
+            button_previous.config(command=lambda: config_page_of_announcements(actual_page - 1, list_of_objects))
+        else:
+            button_previous.config(command=lambda: None)
 
-        Config_data.current_page = main_page
+        if len(announcements) == 15:
+            button_next.config(command=lambda: config_page_of_announcements(actual_page + 1, list_of_objects))
+        else:
+            button_next.config(command=lambda: None)
+
+    button_previous = Button(main_page, text="Poprzednia", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
+    button_previous.place(x=15, y=600, width=60, height=32)
+    button_next = Button(main_page, text="Następna", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
+    button_next.place(x=1200, y=600, width=60, height=32)
+    config_page_of_announcements(first_init=True)
+
+    Config_data.current_page = main_page
 
 
 def init_announcement_page_frame(page, announcement_object, block_fav, block_mess):
@@ -543,21 +651,23 @@ def init_announcement_page_frame(page, announcement_object, block_fav, block_mes
     tmp_page.pack()
 
     Label(tmp_page, text=f"ID OGŁOSZENIA: {announcement_object.announcement_id}",
-          font=("Arial", 10), borderwidth=0, bg="#A9A9A9").place(x=15, y=15)
-    Label(tmp_page, text=announcement_object.title, font=("Arial", 20), borderwidth=0, anchor=E,
-          width=65, bg="#A9A9A9").place(x=195, y=15)
-    Label(tmp_page, text=announcement_object.name_category, font=("Arial", 9), borderwidth=0, anchor=E,
-          width=40, bg="#A9A9A9").place(x=955, y=50)
+          font=("Arial", 10), borderwidth=0, bg="#A9A9A9").place(x=20, y=15)
+    Label(tmp_page, text=announcement_object.first_name, font=("Arial", 14), borderwidth=0, anchor=E,
+          width=45, bg="#A9A9A9").place(x=740, y=15)
+    Label(tmp_page, text=announcement_object.title, font=("Arial", 20), borderwidth=0, anchor=W,
+          width=55, bg="#A9A9A9").place(x=20, y=60)
     Label(tmp_page, text=f"{announcement_object.price} ZŁ", font=("Arial", 14), borderwidth=0, anchor=E,
           width=15, bg="#A9A9A9").place(x=1070, y=90)
     Label(tmp_page, text=announcement_object.location, font=("Arial", 14), borderwidth=0, anchor=E,
-          width=65, bg="#A9A9A9").place(x=520, y=120)
-    Label(tmp_page, text=f"Użytkownik: {announcement_object.first_name}", font=("Arial", 14), borderwidth=0, anchor=E,
-          width=65, bg="#A9A9A9").place(x=520, y=150)
+          width=45, bg="#A9A9A9").place(x=740, y=120)
+    Label(tmp_page, text=announcement_object.name_category, font=("Arial", 9), borderwidth=0, anchor=E,
+          width=40, bg="#A9A9A9").place(x=955, y=155)
+    ttk.Separator(tmp_page).place(x=987, y=50, width=250)
+    ttk.Separator(tmp_page).place(x=987, y=150, width=250)
 
-    description_text = Text(tmp_page, width=65, height=18, font=("Arial", 14), borderwidth=0)
+    description_text = Text(tmp_page, width=45, height=18, font=("Arial", 14), borderwidth=0)
     description_text.insert(INSERT, f"{announcement_object.description}")
-    description_text.place(x=520, y=180)
+    description_text.place(x=740, y=180)
     description_text["state"] = "disabled"
 
     button_mess = Button(tmp_page, text="Wyślij wiadomość", font=("Arial", 12), borderwidth=0, bg="#D3D3D3", width=15,
@@ -572,27 +682,20 @@ def init_announcement_page_frame(page, announcement_object, block_fav, block_mes
            command=lambda: tmp_page.destroy()).place(x=1141, y=594)
 
     photo_label = Label(tmp_page, text="Brak zdjęć do ogłoszenia.", font=("Arial", 12), borderwidth=3, bg="#D3D3D3")
-    photo_label.place(x=20, y=180, width=480, height=398)
+    photo_label.place(x=20, y=112, width=700, height=466)
 
-    def switch_photo(actual_photo=0, list_of_buttons=None):
+    def init_photo(actual_photo=0):
         if 0 <= actual_photo < len(photos):
-            if list_of_buttons:
-                for element in list_of_buttons:
-                    element.destroy()
-            list_of_buttons = []
             photo_label.config(image=photos[actual_photo])
-            button_next = Button(tmp_page, text="Poprzednie", font=("Arial", 12), borderwidth=0, bg="#D3D3D3", width=10,
-                                 command=lambda: switch_photo(actual_photo-1, list_of_buttons))
-            button_next.place(x=20, y=594)
-            list_of_buttons.append(button_next)
-
-            button_previous = Button(tmp_page, text="Następne", font=("Arial", 12), borderwidth=0, bg="#D3D3D3",
-                                     width=10, command=lambda: switch_photo(actual_photo+1, list_of_buttons))
-            button_previous.place(x=404, y=594)
-            list_of_buttons.append(button_previous)
+            button_previous.config(command=lambda: init_photo(actual_photo-1))
+            button_next.config(command=lambda: init_photo(actual_photo+1))
 
     if len(photos) > 0:
-        switch_photo()
+        button_previous = Button(tmp_page, image=Config_data.images["arrows"][0], borderwidth=0, bg="#D3D3D3")
+        button_previous.place(x=20, y=325, width=50, height=50)
+        button_next = Button(tmp_page, image=Config_data.images["arrows"][1], borderwidth=0, bg="#D3D3D3")
+        button_next.place(x=670, y=325, width=50, height=50)
+        init_photo()
 
 
 def init_messages_page_frame(root):
@@ -603,39 +706,120 @@ def init_messages_page_frame(root):
                               highlightthickness=2)
         messages_page.pack()
 
+        ttk.Separator(messages_page).place(x=40, y=85, width=240)
+        ttk.Separator(messages_page).place(x=360, y=85, width=240)
+
         ttk.Separator(messages_page).place(x=320, y=15, height=600)
         ttk.Separator(messages_page).place(x=640, y=15, height=600)
-        Label(messages_page, text="Kupujesz", font=("Arial", 14), bg="#A9A9A9").place(x=120, y=10)
-        Label(messages_page, text="Sprzedajesz", font=("Arial", 14), bg="#A9A9A9").place(x=420, y=10)
 
-        (list_of_conversations_as_customer_objects,
-         list_of_conversations_as_seller_objects) = My_functions.download_conversations()
+        Label(messages_page, text="Kupujesz", font=("Arial", 27), bg="#A9A9A9").place(x=85, y=30)
+        Label(messages_page, text="Sprzedajesz", font=("Arial", 27), bg="#A9A9A9").place(x=378, y=30)
 
-        y = 0
-        for customer_conversation_object in list_of_conversations_as_customer_objects:
-            Button(messages_page, text=f"{customer_conversation_object.title}", bg="#D3D3D3",
-                   font=("Arial", 10), anchor=W, borderwidth=1,
-                   command=lambda conversation_object=customer_conversation_object:
-                   update_text_and_name_label(conversation_object, True)).place(x=15, y=(y * 75) + 50,
-                                                                                width=300, height=22)
-            Label(messages_page, text=f"ID: {customer_conversation_object.announcement_id}", anchor=E,
-                  bg="#D3D3D3", font=("Arial", 9)).place(x=244, y=(y * 75) + 73, width=70, height=15)
-            Label(messages_page, text=f"Sprzedający: {customer_conversation_object.first_name}", anchor=W,
-                  bg="#D3D3D3", font=("Arial", 9)).place(x=15, y=(y * 75) + 73, width=227, height=15)
-            y += 1
+        def config_conversations_page_as_customer(actual_page=1, list_of_objects=None):
+            conversations_as_customer = My_functions.download_conversations(
+                "announcements.seller_id", "conversations.user_id", actual_page)
 
-        y = 0
-        for seller_conversation_object in list_of_conversations_as_seller_objects:
-            Button(messages_page, text=f"{seller_conversation_object.title}", bg="#D3D3D3",
-                   font=("Arial", 10), anchor=W, borderwidth=1,
-                   command=lambda conversation_object=seller_conversation_object:
-                   update_text_and_name_label(conversation_object, False)).place(x=335, y=(y * 75) + 50,
-                                                                                 width=300, height=22)
-            Label(messages_page, text=f"ID: {seller_conversation_object.announcement_id}", anchor=E,
-                  bg="#D3D3D3", font=("Arial", 9)).place(x=564, y=(y * 75) + 73, width=70, height=15)
-            Label(messages_page, text=f"Kupujący: {seller_conversation_object.first_name}", anchor=W,
-                  bg="#D3D3D3", font=("Arial", 9)).place(x=335, y=(y * 75) + 73, width=227, height=15)
-            y += 1
+            if list_of_objects:
+
+                for element in list_of_objects:
+                    element.destroy()
+
+            list_of_objects = []
+
+            rows = 0
+            for customer_conversation_object in conversations_as_customer:
+                title_button = Button(messages_page, text=customer_conversation_object.title, bg="#D3D3D3",
+                                      font=("Arial", 10), anchor=W, borderwidth=1,
+                                      command=lambda conversation_object=customer_conversation_object:
+                                      update_text_and_name_label(conversation_object, True))
+                title_button.place(x=15, y=(rows * 75) + 100, width=300, height=22)
+                list_of_objects.append(title_button)
+
+                id_label = Label(messages_page, text=f"ID: {customer_conversation_object.announcement_id}", anchor=E,
+                                 bg="#D3D3D3", font=("Arial", 9))
+                id_label.place(x=244, y=(rows * 75) + 123, width=70, height=15)
+                list_of_objects.append(id_label)
+
+                name_label = Label(messages_page, text=f"Sprzedający: {customer_conversation_object.first_name}",
+                                   anchor=W, bg="#D3D3D3", font=("Arial", 9))
+                name_label.place(x=15, y=(rows * 75) + 123, width=227, height=15)
+                list_of_objects.append(name_label)
+
+                rows += 1
+                if rows == 7:
+                    break
+
+            if 1 < actual_page:
+                button_previous_customer.config(command=lambda: config_conversations_page_as_customer(actual_page - 1,
+                                                                                                      list_of_objects))
+            else:
+                button_previous_customer.config(command=lambda: None)
+
+            if len(conversations_as_customer) == 7:
+                button_next_customer.config(command=lambda: config_conversations_page_as_customer(actual_page + 1,
+                                                                                                  list_of_objects))
+            else:
+                button_next_customer.config(command=lambda: None)
+
+        def config_conversations_page_as_seller(actual_page=1, list_of_objects=None):
+            conversations_as_seller = My_functions.download_conversations(
+                "conversations.user_id", "announcements.seller_id", actual_page)
+
+            if list_of_objects:
+
+                for element in list_of_objects:
+                    element.destroy()
+
+            list_of_objects = []
+
+            rows = 0
+            for seller_conversation_object in conversations_as_seller:
+                title_button = Button(messages_page, text=seller_conversation_object.title, bg="#D3D3D3",
+                                      font=("Arial", 10), anchor=W, borderwidth=1,
+                                      command=lambda conversation_object=seller_conversation_object:
+                                      update_text_and_name_label(conversation_object, False))
+                title_button.place(x=335, y=(rows * 75) + 100, width=300, height=22)
+                list_of_objects.append(title_button)
+
+                id_label = Label(messages_page, text=f"ID: {seller_conversation_object.announcement_id}", anchor=E,
+                                 bg="#D3D3D3", font=("Arial", 9))
+                id_label.place(x=564, y=(rows * 75) + 123, width=70, height=15)
+                list_of_objects.append(id_label)
+
+                name_label = Label(messages_page, text=f"Kupujący: {seller_conversation_object.first_name}", anchor=W,
+                                   bg="#D3D3D3", font=("Arial", 9))
+                name_label.place(x=335, y=(rows * 75) + 123, width=227, height=15)
+                list_of_objects.append(name_label)
+
+                rows += 1
+                if rows == 7:
+                    break
+
+            if 1 < actual_page:
+                button_previous_seller.config(command=lambda: config_conversations_page_as_seller(actual_page - 1,
+                                                                                                  list_of_objects))
+            else:
+                button_previous_seller.config(command=lambda: None)
+
+            if len(conversations_as_seller) == 7:
+                button_next_seller.config(command=lambda: config_conversations_page_as_seller(actual_page + 1,
+                                                                                              list_of_objects))
+            else:
+                button_next_seller.config(command=lambda: None)
+
+        button_previous_customer = Button(messages_page, text="Poprzednia", font=("Arial", 8), borderwidth=0,
+                                          bg="#D3D3D3")
+        button_previous_customer.place(x=15, y=600, width=60, height=32)
+        button_next_customer = Button(messages_page, text="Następna", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
+        button_next_customer.place(x=254, y=600, width=60, height=32)
+
+        button_previous_seller = Button(messages_page, text="Poprzednia", font=("Arial", 8), borderwidth=0,
+                                        bg="#D3D3D3")
+        button_previous_seller.place(x=335, y=600, width=60, height=32)
+        button_next_seller = Button(messages_page, text="Następna", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
+        button_next_seller.place(x=574, y=600, width=60, height=32)
+        config_conversations_page_as_customer()
+        config_conversations_page_as_seller()
 
         choose_conversation_label = Label(messages_page, bg="#A9A9A9", font=("Arial", 20),
                                           text=f"Wybierz konwersacje, {Config_data.logged_in_user_info.first_name}")
@@ -658,7 +842,7 @@ def init_messages_page_frame(root):
 
             person = "Sprzedający" if is_user_customer else "Kupujący"
 
-            Label(messages_page, text=f"{conversation_object.title}", anchor=W,
+            Label(messages_page, text=conversation_object.title, anchor=W,
                   font=("Arial", 16), bg="#A9A9A9").place(x=650, y=15, width=370)
             Label(messages_page, text=f"{person}: {conversation_object.first_name}", anchor=E,
                   font=("Arial", 16), bg="#A9A9A9").place(x=1025, y=15, width=250)
@@ -673,6 +857,7 @@ def init_messages_page_frame(root):
 
                 text["state"] = "normal"
                 text.delete("1.0", END)
+
                 i = 1
                 for message in list_of_message_objects:
                     position = f"{i}.0"
@@ -683,6 +868,7 @@ def init_messages_page_frame(root):
                         text.insert(position, f"\t{message.first_name}\n\t{message.date} {message.time}"
                                               f"\n\t{message.content}\n\n")
                     i += 4
+
                 text["state"] = "disabled"
 
                 Button(messages_page, text="Wyślij", width=11, borderwidth=1, font=("Arial", 11),
@@ -706,75 +892,178 @@ def init_favorite_page_frame(root):
 
         ttk.Separator(favorite_page).place(x=427, y=15, height=600)
         ttk.Separator(favorite_page).place(x=854, y=15, height=600)
-        Label(favorite_page, text="Ulubione", font=("Arial", 27), borderwidth=0, bg="#A9A9A9").place(x=15, y=15)
-        Label(favorite_page, text="Zakończone", font=("Arial", 27), borderwidth=0, bg="#A9A9A9").place(x=900, y=15)
 
-        user_favorite_announcements = My_functions.download_user_favorite_announcements()
-        user_fav_active_announcements = []
-        user_fav_completed_announcements = []
-        for element in user_favorite_announcements:
-            if element.active_flag == 1:
-                user_fav_active_announcements.append(element)
+        ttk.Separator(favorite_page).place(x=40, y=85, width=350)
+        ttk.Separator(favorite_page).place(x=890, y=85, width=350)
+        Label(favorite_page, text="Ulubione", font=("Arial", 27), borderwidth=0, bg="#A9A9A9").place(x=145, y=30)
+        Label(favorite_page, text="Zakończone", font=("Arial", 27), borderwidth=0, bg="#A9A9A9").place(x=970, y=30)
+
+        def config_page_of_fav_active_announcements(actual_page=1, list_of_objects=None):
+            user_fav_active_announcements = My_functions.download_user_favorite_announcements("active_flag",
+                                                                                              actual_page, 8)
+
+            if list_of_objects:
+
+                for element in list_of_objects:
+                    element.destroy()
+
+            list_of_objects = []
+
+            columns = 0
+            rows = 0
+            # Init user fav active announcements
+            for user_fav_active_announcement_object in user_fav_active_announcements:
+                photo_label = Label(favorite_page, bg="#D3D3D3", image=user_fav_active_announcement_object.
+                                    main_photo)
+                photo_label.place(x=40 + (columns * 425), y=(rows * 120) + 164, width=115, height=66)
+                list_of_objects.append(photo_label)
+
+                title_button = Button(favorite_page, text=user_fav_active_announcement_object.title, anchor=W,
+                                      font=("Arial", 10), bg="#D3D3D3", borderwidth=1,
+                                      command=lambda announcement_object=user_fav_active_announcement_object:
+                                      init_announcement_page_frame(favorite_page, announcement_object, True,
+                                                                   False))
+                title_button.place(x=40 + (columns * 425), y=(rows * 120) + 140, width=350, height=22)
+                list_of_objects.append(title_button)
+
+                category_label = Label(favorite_page, text=user_fav_active_announcement_object.name_category,
+                                       anchor=W, font=("Arial", 8), bg="#D3D3D3")
+                category_label.place(x=158 + (columns * 425), y=(rows * 120) + 164, width=114, height=15)
+                list_of_objects.append(category_label)
+
+                location_label = Label(favorite_page, text=user_fav_active_announcement_object.location, anchor=W,
+                                       font=("Arial", 8), bg="#D3D3D3")
+                location_label.place(x=158 + (columns * 425), y=(rows * 120) + 181, width=114, height=15)
+                list_of_objects.append(location_label)
+
+                price_label = Label(favorite_page, text=f"{user_fav_active_announcement_object.price} ZŁ", anchor=E,
+                                    font=("Arial", 10), bg="#D3D3D3")
+                price_label.place(x=275 + (columns * 425), y=(rows * 120) + 164, width=114, height=32)
+                list_of_objects.append(price_label)
+
+                message_button = Button(favorite_page, text="Wiadomość", font=("Arial", 8), borderwidth=1,
+                                        bg="#D3D3D3",
+                                        command=lambda announcement_object=user_fav_active_announcement_object:
+                                        init_message_window(announcement_object))
+                message_button.place(x=275 + (columns * 425), y=(rows * 120) + 198, width=115, height=32)
+                list_of_objects.append(message_button)
+
+                unlike_button = Button(favorite_page, text="Nie lubię", font=("Arial", 8), borderwidth=1,
+                                       bg="#D3D3D3",
+                                       command=lambda announcement_object=user_fav_active_announcement_object:
+                                       My_functions.delete_announcement_from_favorite(announcement_object,
+                                                                                      init_favorite_page_frame,
+                                                                                      root))
+                unlike_button.place(x=158 + (columns * 425), y=(rows * 120) + 198, width=115, height=32)
+                list_of_objects.append(unlike_button)
+
+                rows += 1
+                if rows == 4:
+                    rows = 0
+                    columns += 1
+                    if rows == 0 and columns == 2:
+                        break
+
+            if 1 < actual_page:
+                button_previous_active.config(command=lambda: config_page_of_fav_active_announcements(actual_page - 1,
+                                                                                                      list_of_objects))
             else:
-                user_fav_completed_announcements.append(element)
+                button_previous_active.config(command=lambda: None)
 
-        x = 0
-        y = 0
-        # Init user fav active announcements
-        for user_fav_active_announcement_object in user_fav_active_announcements:
-            Button(favorite_page, text=f"{user_fav_active_announcement_object.title}", anchor=W, font=("Arial", 10),
-                   bg="#D3D3D3", borderwidth=1,
-                   command=lambda announcement_object=user_fav_active_announcement_object:
-                   init_announcement_page_frame(favorite_page, announcement_object, True,
-                                                False)).place(x=15 + (x * 450), y=(y * 110) + 100, width=300,
-                                                              height=22)
-            Label(favorite_page, text=f"{user_fav_active_announcement_object.name_category}", anchor=W,
-                  font=("Arial", 8),
-                  bg="#D3D3D3").place(x=15 + (x * 450), y=(y * 110) + 124, width=100, height=15)
-            Label(favorite_page, text=f"{user_fav_active_announcement_object.location}", anchor=W, font=("Arial", 8),
-                  bg="#D3D3D3").place(x=15 + (x * 450), y=(y * 110) + 141, width=100, height=15)
-            Label(favorite_page, text=f"{user_fav_active_announcement_object.price} ZŁ", anchor=E, font=("Arial", 10),
-                  bg="#D3D3D3").place(x=117 + (x * 450), y=(y * 110) + 124, width=70, height=32)
-            Button(favorite_page, text="Wiadomość", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
-                   command=lambda announcement_object=user_fav_active_announcement_object:
-                   init_message_window(announcement_object)).place(x=191 + (x * 450), y=(y * 110) + 124, width=60,
-                                                                   height=32)
-            Button(favorite_page, text="Nie lubię", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
-                   command=lambda announcement_object=user_fav_active_announcement_object:
-                   My_functions.delete_announcement_from_favorite(announcement_object, init_favorite_page_frame,
-                                                                  root)).place(x=255 + (x * 450), y=(y * 110) + 124,
-                                                                               width=60, height=32)
+            if len(user_fav_active_announcements) == 8:
+                button_next_active.config(command=lambda: config_page_of_fav_active_announcements(actual_page + 1,
+                                                                                                  list_of_objects))
+            else:
+                button_next_active.config(command=lambda: None)
 
-            y += 1
-            if y == 5:
-                y = 0
-                x += 1
+        def config_page_of_fav_completed_announcements(actual_page=1, list_of_objects=None):
+            user_fav_completed_announcements = My_functions.download_user_favorite_announcements("completed_flag",
+                                                                                                 actual_page, 4)
 
-        y = 0
-        # Init user fav completed announcements
-        for user_fav_completed_announcement_object in user_fav_completed_announcements:
-            Button(favorite_page, text=f"{user_fav_completed_announcement_object.title}", anchor=W, font=("Arial", 10),
-                   bg="#D3D3D3", borderwidth=1,
-                   command=lambda announcement_object=user_fav_completed_announcement_object:
-                   init_announcement_page_frame(favorite_page, announcement_object, True,
-                                                False)).place(x=870, y=(y * 110) + 100, width=300, height=22)
-            Label(favorite_page, text=f"{user_fav_completed_announcement_object.name_category}", anchor=W,
-                  font=("Arial", 8),
-                  bg="#D3D3D3").place(x=870, y=(y * 110) + 124, width=100, height=15)
-            Label(favorite_page, text=f"{user_fav_completed_announcement_object.location}", anchor=W, font=("Arial", 8),
-                  bg="#D3D3D3").place(x=870, y=(y * 110) + 141, width=100, height=15)
-            Label(favorite_page, text=f"{user_fav_completed_announcement_object.price} ZŁ", anchor=E,
-                  font=("Arial", 10),
-                  bg="#D3D3D3").place(x=972, y=(y * 110) + 124, width=70, height=32)
-            Button(favorite_page, text="Wiadomość", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
-                   command=lambda announcement_object=user_fav_completed_announcement_object:
-                   init_message_window(announcement_object)).place(x=1046, y=(y * 110) + 124, width=60, height=32)
-            Button(favorite_page, text="Usuń", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
-                   command=lambda announcement_object=user_fav_completed_announcement_object:
-                   My_functions.delete_announcement_from_favorite(announcement_object, init_favorite_page_frame,
-                                                                  root)).place(x=1110, y=(y * 110) + 124, width=60,
-                                                                               height=32)
-            y += 1
+            if list_of_objects:
+
+                for element in list_of_objects:
+                    element.destroy()
+
+            list_of_objects = []
+
+            rows = 0
+            # Init user fav completed announcements
+            for user_fav_completed_announcement_object in user_fav_completed_announcements:
+                photo_label = Label(favorite_page, bg="#D3D3D3",
+                                    image=user_fav_completed_announcement_object.main_photo)
+                photo_label.place(x=890, y=(rows * 120) + 164, width=115, height=66)
+                list_of_objects.append(photo_label)
+
+                title_button = Button(favorite_page, text=user_fav_completed_announcement_object.title, anchor=W,
+                                      font=("Arial", 10), bg="#D3D3D3", borderwidth=1,
+                                      command=lambda announcement_object=user_fav_completed_announcement_object:
+                                      init_announcement_page_frame(favorite_page, announcement_object, True,
+                                                                   False))
+                title_button.place(x=890, y=(rows * 120) + 140, width=350, height=22)
+                list_of_objects.append(title_button)
+
+                category_label = Label(favorite_page, text=user_fav_completed_announcement_object.name_category,
+                                       anchor=W, font=("Arial", 8), bg="#D3D3D3")
+                category_label.place(x=1008, y=(rows * 120) + 164, width=114, height=15)
+                list_of_objects.append(category_label)
+
+                location_label = Label(favorite_page, text=user_fav_completed_announcement_object.location,
+                                       anchor=W, font=("Arial", 8), bg="#D3D3D3")
+                location_label.place(x=1008, y=(rows * 120) + 181, width=114, height=15)
+                list_of_objects.append(location_label)
+
+                price_label = Label(favorite_page, text=f"{user_fav_completed_announcement_object.price} ZŁ",
+                                    anchor=E, font=("Arial", 10), bg="#D3D3D3")
+                price_label.place(x=1125, y=(rows * 120) + 164, width=114, height=32)
+                list_of_objects.append(price_label)
+
+                message_button = Button(favorite_page, text="Wiadomość", font=("Arial", 8), borderwidth=1,
+                                        bg="#D3D3D3",
+                                        command=lambda announcement_object=user_fav_completed_announcement_object:
+                                        init_message_window(announcement_object))
+                message_button.place(x=1125, y=(rows * 120) + 198, width=115, height=32)
+                list_of_objects.append(message_button)
+
+                delete_button = Button(favorite_page, text="Usuń", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
+                                       command=lambda announcement_object=user_fav_completed_announcement_object:
+                                       My_functions.delete_announcement_from_favorite(announcement_object,
+                                                                                      init_favorite_page_frame,
+                                                                                      root))
+                delete_button.place(x=1008, y=(rows * 120) + 198, width=115, height=32)
+                list_of_objects.append(delete_button)
+
+                rows += 1
+                if rows == 4:
+                    break
+
+            if 1 < actual_page:
+                button_previous_completed.config(command=lambda: config_page_of_fav_completed_announcements(
+                    actual_page - 1, list_of_objects))
+            else:
+                button_previous_completed.config(command=lambda: None)
+
+            if len(user_fav_completed_announcements) == 4:
+                button_next_completed.config(command=lambda: config_page_of_fav_completed_announcements(
+                    actual_page + 1, list_of_objects))
+            else:
+                button_next_completed.config(command=lambda: None)
+
+        button_previous_active = Button(favorite_page, text="Poprzednia", font=("Arial", 8), borderwidth=0,
+                                        bg="#D3D3D3")
+        button_previous_active.place(x=15, y=600, width=60, height=32)
+        button_next_active = Button(favorite_page, text="Następna", font=("Arial", 8), borderwidth=0,
+                                    bg="#D3D3D3")
+        button_next_active.place(x=785, y=600, width=60, height=32)
+
+        button_previous_completed = Button(favorite_page, text="Poprzednia", font=("Arial", 8), borderwidth=0,
+                                           bg="#D3D3D3")
+        button_previous_completed.place(x=865, y=600, width=60, height=32)
+        button_next_completed = Button(favorite_page, text="Następna", font=("Arial", 8), borderwidth=0,
+                                       bg="#D3D3D3")
+        button_next_completed.place(x=1200, y=600, width=60, height=32)
+        config_page_of_fav_active_announcements()
+        config_page_of_fav_completed_announcements()
 
         Config_data.current_page = favorite_page
 
@@ -793,12 +1082,12 @@ def init_message_window(announcement_object):
         center_x = int(screen_width / 2 - message_window_width / 2)
         center_y = int(screen_height / 2 - message_window_height / 2)
         message_window.geometry(f"{message_window_width}x{message_window_height}+{center_x}+{center_y}")
-        message_window.title(f"{announcement_object.first_name}")
+        message_window.title(announcement_object.first_name)
         message_window.resizable(width=True, height=True)
         message_window.config(bg="#B0C4DE")
         message_window.wm_iconphoto(False, PhotoImage(file="Photos/messages_icon.png"))
 
-        Label(message_window, width=68, height=1, text=f"{announcement_object.title}", anchor=W).pack()
+        Label(message_window, width=68, height=1, text=announcement_object.title, anchor=W).pack()
         Label(message_window, width=68, height=1, text=f"Cena: {announcement_object.price} ZŁ", anchor=W).pack()
         Label(message_window, width=80, height=1, text=f"ID: {announcement_object.announcement_id}", anchor=W,
               font=("Arial", 8)).pack()
@@ -824,6 +1113,7 @@ def init_message_window(announcement_object):
             list_of_message_objects = My_functions.download_messages(announcement_object=announcement_object)
             text["state"] = "normal"
             text.delete("1.0", END)
+
             i = 1
             for message in list_of_message_objects:
                 position = f"{i}.0"
@@ -834,6 +1124,7 @@ def init_message_window(announcement_object):
                     text.insert(position, f"\t{message.first_name}\n\t{message.date} {message.time}"
                                           f"\n\t{message.content}\n\n")
                 i += 4
+
             text["state"] = "disabled"
 
             Button(message_window, text="Wyślij", width=9, borderwidth=1,

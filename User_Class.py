@@ -33,9 +33,9 @@ class LoggedUser:
         self.city = updated_city
 
 
-class UserAnnouncement:
+class Announcement:
     def __init__(self, announcement_id, first_name, seller_id, name_category, category_id, title, description, price,
-                 location, active_flag):
+                 location, main_photo):
         self.announcement_id = announcement_id
         self.first_name = first_name
         self.seller_id = seller_id
@@ -45,26 +45,12 @@ class UserAnnouncement:
         self.description = description
         self.price = price
         self.location = location
-        self.active_flag = active_flag
-
-
-class Announcement:
-    def __init__(self, announcement_id, first_name, seller_id, name_category, title, description, price, location,
-                 main_photo):
-        self.announcement_id = announcement_id
-        self.first_name = first_name
-        self.seller_id = seller_id
-        self.name_category = name_category
-        self.title = title
-        self.description = description
-        self.price = price
-        self.location = location
         self.main_photo = main_photo
 
 
 class UserFavoriteAnnouncement:
     def __init__(self, favorite_announcement_id, announcement_id, first_name, seller_id, title, description,
-                 name_category, price, location, active_flag):
+                 name_category, price, location, main_photo):
         self.favorite_announcement_id = favorite_announcement_id
         self.announcement_id = announcement_id
         self.first_name = first_name
@@ -74,7 +60,7 @@ class UserFavoriteAnnouncement:
         self.name_category = name_category
         self.price = price
         self.location = location
-        self.active_flag = active_flag
+        self.main_photo = main_photo
 
 
 class Message:

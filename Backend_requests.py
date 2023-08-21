@@ -3,19 +3,21 @@ from requests import get, post, put, patch, delete, RequestException, Response
 import Config_data
 
 
-def request_to_get_announcements(from_search_engine, content_to_search=None, location=None, category_id=None):
+def request_to_get_announcements(from_search_engine, page, content_to_search=None, location=None, category_id=None):
     # Creating endpoint and calling GET method on this endpoint.
     try:
         url = "http://127.0.0.1:5000/announcements/search"
+        params = {
+            "per_page": 15,
+            "page": page
+        }
         if from_search_engine:
-            params = {
-                "q": content_to_search,
-                "l": location,
-                "c": category_id
-            }
-            response = get(url, params=params)
-        else:
-            response = get(url)
+            params["q"] = content_to_search
+            params["l"] = location
+            params["c"] = category_id
+
+        response = get(url, params=params)
+
     # If cant connect with endpoint, making response object with 404 status code and return response.
     except RequestException:
         response = Response()
@@ -95,11 +97,16 @@ def request_to_update_the_announcement(title, description, price, location, anno
         return response
 
 
-def request_to_get_user_announcements():
+def request_to_get_user_announcements(field, page):
     # Creating endpoint and calling GET method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/announcements"
-        response = get(url)
+        params = {
+            "field": field,
+            "per_page": 4,
+            "page": page
+        }
+        response = get(url, params=params)
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
     except RequestException:
@@ -221,11 +228,16 @@ def request_to_delete_the_announcement(announcement_id):
         return response
 
 
-def request_to_get_user_favorite_announcements():
+def request_to_get_user_favorite_announcements(field, page, per_page):
     # Creating endpoint and calling GET method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/favorite-announcements"
-        response = get(url)
+        params = {
+            "field": field,
+            "page": page,
+            "per_page": per_page
+        }
+        response = get(url, params=params)
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
     except RequestException:
@@ -324,11 +336,17 @@ def request_to_send_message(content, is_user_customer, conversation_id=None, ann
         return response
 
 
-def request_to_get_conversations():
+def request_to_get_conversations(on_field, where_field, page):
     # Creating endpoint and calling GET method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/conversations"
-        response = get(url)
+        params = {
+            "on_field": on_field,
+            "where_field": where_field,
+            "page": page,
+            "per_page": 7
+        }
+        response = get(url, params=params)
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
     except RequestException:
