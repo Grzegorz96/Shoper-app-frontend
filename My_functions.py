@@ -195,8 +195,8 @@ def change_announcement_data(list_of_entries, description_text, user_active_anno
         messagebox.showwarning("Błędny tytuł ogłoszenia.", "Tytuł ogłoszenia powinien zawierać od 10 do 45 znaków.")
 
 
-def download_user_announcements(field, page):
-    response_for_getting_user_announcements = Backend_requests.request_to_get_user_announcements(field, page)
+def download_user_announcements(active_flag, page):
+    response_for_getting_user_announcements = Backend_requests.request_to_get_user_announcements(active_flag, page)
     if response_for_getting_user_announcements.status_code == codes.ok:
 
         list_of_objects_user_announcements = []
@@ -510,9 +510,9 @@ def download_announcements(from_search_engine, page, first_init, search_engine=N
         return []
 
 
-def download_user_favorite_announcements(field, page, per_page):
+def download_user_favorite_announcements(active_flag, page, per_page):
     response_for_getting_user_favorite_announcements = Backend_requests.request_to_get_user_favorite_announcements(
-        field, page, per_page)
+        active_flag, page, per_page)
 
     if response_for_getting_user_favorite_announcements.status_code == codes.ok:
         # Making list of fav_announcements objects
@@ -646,8 +646,8 @@ def send_message(list_of_message_objects, message_entry, refresh_messages, is_us
         messagebox.showwarning("Błędna wiadomość.", "Nie możesz wysłać pustej wiadomości.")
 
 
-def download_conversations(on_field, where_field, page):
-    response_for_getting_conversations = Backend_requests.request_to_get_conversations(on_field, where_field, page)
+def download_conversations(customer_flag, page):
+    response_for_getting_conversations = Backend_requests.request_to_get_conversations(customer_flag, page)
     if response_for_getting_conversations.status_code == codes.ok:
         list_of_conversations = []
         for conversation in response_for_getting_conversations.json()["result"]:
@@ -667,7 +667,7 @@ def download_conversations(on_field, where_field, page):
         return []
 
 
-def download_path(announcement_id):
+def download_paths(announcement_id):
     response_for_getting_paths = Backend_requests.request_to_get_paths(announcement_id)
     if response_for_getting_paths.status_code == codes.ok:
         list_of_photos = []
@@ -688,3 +688,30 @@ def download_path(announcement_id):
 def loading_images():
     Config_data.images["arrows"] = [ImageTk.PhotoImage(Image.open("Photos/left.png").resize((50, 50))),
                                     ImageTk.PhotoImage(Image.open("Photos/right.png").resize((50, 50)))]
+
+
+def config_buttons(actual_page, button_previous, button_next, collection, function, list_of_objects, objects_on_page):
+    if 1 < actual_page:
+        button_previous.config(command=lambda: function(actual_page - 1, list_of_objects))
+    else:
+        button_previous.config(command=lambda: None)
+
+    if len(collection) == objects_on_page:
+        button_next.config(command=lambda: function(actual_page + 1, list_of_objects))
+    else:
+        button_next.config(command=lambda: None)
+
+
+def create_buttons(page, x1, x2):
+    button_previous = Button(page, text="Poprzednia", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
+    button_previous.place(x=x1, y=600, width=60, height=32)
+    button_next = Button(page, text="Następna", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
+    button_next.place(x=x2, y=600, width=60, height=32)
+    return button_previous, button_next
+
+
+def upload_photo(announcement_id, main_photo_flag, photo_object):
+    response_for_uploading_photo = Backend_requests.request_to_upload_photo(announcement_id, main_photo_flag,
+                                                                            photo_object)
+    if response_for_uploading_photo.status == codes.ok:
+        pass

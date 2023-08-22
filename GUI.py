@@ -349,7 +349,7 @@ def init_user_page_frame(root):
         y += 1
 
     def config_page_of_user_active_announcements(actual_page=1, list_of_objects=None):
-        user_active_announcements = My_functions.download_user_announcements("active_flag", actual_page)
+        user_active_announcements = My_functions.download_user_announcements(1, actual_page)
 
         if list_of_objects:
 
@@ -405,20 +405,11 @@ def init_user_page_frame(root):
             if rows == 4:
                 break
 
-        if 1 < actual_page:
-            button_previous_active.config(command=lambda: config_page_of_user_active_announcements(actual_page - 1,
-                                                                                                   list_of_objects))
-        else:
-            button_previous_active.config(command=lambda: None)
-
-        if len(user_active_announcements) == 4:
-            button_next_active.config(command=lambda: config_page_of_user_active_announcements(actual_page + 1,
-                                                                                               list_of_objects))
-        else:
-            button_next_active.config(command=lambda: None)
+        My_functions.config_buttons(actual_page, button_previous_active, button_next_active, user_active_announcements,
+                                    config_page_of_user_active_announcements, list_of_objects, 4)
 
     def config_page_of_user_completed_announcements(actual_page=1, list_of_objects=None):
-        user_completed_announcements = My_functions.download_user_announcements("completed_flag", actual_page)
+        user_completed_announcements = My_functions.download_user_announcements(0, actual_page)
 
         if list_of_objects:
 
@@ -474,28 +465,12 @@ def init_user_page_frame(root):
             if rows == 4:
                 break
 
-        if 1 < actual_page:
-            button_previous_completed.config(command=lambda: config_page_of_user_completed_announcements(
-                actual_page - 1, list_of_objects))
-        else:
-            button_previous_completed.config(command=lambda: None)
+        My_functions.config_buttons(actual_page, button_previous_completed, button_next_completed,
+                                    user_completed_announcements, config_page_of_user_completed_announcements,
+                                    list_of_objects, 4)
 
-        if len(user_completed_announcements) == 4:
-            button_next_completed.config(command=lambda: config_page_of_user_completed_announcements(actual_page + 1,
-                                                                                                     list_of_objects))
-        else:
-            button_next_completed.config(command=lambda: None)
-
-    button_previous_active = Button(account_page, text="Poprzednia", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
-    button_previous_active.place(x=438, y=600, width=60, height=32)
-    button_next_active = Button(account_page, text="Następna", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
-    button_next_active.place(x=785, y=600, width=60, height=32)
-
-    button_previous_completed = Button(account_page, text="Poprzednia", font=("Arial", 8), borderwidth=0,
-                                       bg="#D3D3D3")
-    button_previous_completed.place(x=865, y=600, width=60, height=32)
-    button_next_completed = Button(account_page, text="Następna", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
-    button_next_completed.place(x=1200, y=600, width=60, height=32)
+    button_previous_active, button_next_active = My_functions.create_buttons(account_page, 438, 785)
+    button_previous_completed, button_next_completed = My_functions.create_buttons(account_page, 865, 1200)
     config_page_of_user_active_announcements()
     config_page_of_user_completed_announcements()
 
@@ -626,27 +601,17 @@ def init_shopper_page_frame(root, search_engine=None, search_location=None, curr
                 if rows == 0 and columns == 3:
                     break
 
-        if 1 < actual_page:
-            button_previous.config(command=lambda: config_page_of_announcements(actual_page - 1, list_of_objects))
-        else:
-            button_previous.config(command=lambda: None)
+        My_functions.config_buttons(actual_page, button_previous, button_next, announcements,
+                                    config_page_of_announcements, list_of_objects, 15)
 
-        if len(announcements) == 15:
-            button_next.config(command=lambda: config_page_of_announcements(actual_page + 1, list_of_objects))
-        else:
-            button_next.config(command=lambda: None)
-
-    button_previous = Button(main_page, text="Poprzednia", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
-    button_previous.place(x=15, y=600, width=60, height=32)
-    button_next = Button(main_page, text="Następna", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
-    button_next.place(x=1200, y=600, width=60, height=32)
+    button_previous, button_next = My_functions.create_buttons(main_page, 15, 1200)
     config_page_of_announcements(first_init=True)
 
     Config_data.current_page = main_page
 
 
 def init_announcement_page_frame(page, announcement_object, block_fav, block_mess):
-    photos = My_functions.download_path(announcement_object.announcement_id)
+    photos = My_functions.download_paths(announcement_object.announcement_id)
     tmp_page = Frame(page, bg="#A9A9A9", width=1276, height=636)
     tmp_page.pack()
 
@@ -716,8 +681,7 @@ def init_messages_page_frame(root):
         Label(messages_page, text="Sprzedajesz", font=("Arial", 27), bg="#A9A9A9").place(x=378, y=30)
 
         def config_conversations_page_as_customer(actual_page=1, list_of_objects=None):
-            conversations_as_customer = My_functions.download_conversations(
-                "announcements.seller_id", "conversations.user_id", actual_page)
+            conversations_as_customer = My_functions.download_conversations(1, actual_page)
 
             if list_of_objects:
 
@@ -749,21 +713,12 @@ def init_messages_page_frame(root):
                 if rows == 7:
                     break
 
-            if 1 < actual_page:
-                button_previous_customer.config(command=lambda: config_conversations_page_as_customer(actual_page - 1,
-                                                                                                      list_of_objects))
-            else:
-                button_previous_customer.config(command=lambda: None)
-
-            if len(conversations_as_customer) == 7:
-                button_next_customer.config(command=lambda: config_conversations_page_as_customer(actual_page + 1,
-                                                                                                  list_of_objects))
-            else:
-                button_next_customer.config(command=lambda: None)
+            My_functions.config_buttons(actual_page, button_previous_customer, button_next_customer,
+                                        conversations_as_customer, config_conversations_page_as_customer,
+                                        list_of_objects, 7)
 
         def config_conversations_page_as_seller(actual_page=1, list_of_objects=None):
-            conversations_as_seller = My_functions.download_conversations(
-                "conversations.user_id", "announcements.seller_id", actual_page)
+            conversations_as_seller = My_functions.download_conversations(0, actual_page)
 
             if list_of_objects:
 
@@ -795,29 +750,12 @@ def init_messages_page_frame(root):
                 if rows == 7:
                     break
 
-            if 1 < actual_page:
-                button_previous_seller.config(command=lambda: config_conversations_page_as_seller(actual_page - 1,
-                                                                                                  list_of_objects))
-            else:
-                button_previous_seller.config(command=lambda: None)
+            My_functions.config_buttons(actual_page, button_previous_seller, button_next_seller,
+                                        conversations_as_seller, config_conversations_page_as_seller,
+                                        list_of_objects, 7)
 
-            if len(conversations_as_seller) == 7:
-                button_next_seller.config(command=lambda: config_conversations_page_as_seller(actual_page + 1,
-                                                                                              list_of_objects))
-            else:
-                button_next_seller.config(command=lambda: None)
-
-        button_previous_customer = Button(messages_page, text="Poprzednia", font=("Arial", 8), borderwidth=0,
-                                          bg="#D3D3D3")
-        button_previous_customer.place(x=15, y=600, width=60, height=32)
-        button_next_customer = Button(messages_page, text="Następna", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
-        button_next_customer.place(x=254, y=600, width=60, height=32)
-
-        button_previous_seller = Button(messages_page, text="Poprzednia", font=("Arial", 8), borderwidth=0,
-                                        bg="#D3D3D3")
-        button_previous_seller.place(x=335, y=600, width=60, height=32)
-        button_next_seller = Button(messages_page, text="Następna", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
-        button_next_seller.place(x=574, y=600, width=60, height=32)
+        button_previous_customer, button_next_customer = My_functions.create_buttons(messages_page, 15, 254)
+        button_previous_seller, button_next_seller = My_functions.create_buttons(messages_page, 335, 574)
         config_conversations_page_as_customer()
         config_conversations_page_as_seller()
 
@@ -899,8 +837,8 @@ def init_favorite_page_frame(root):
         Label(favorite_page, text="Zakończone", font=("Arial", 27), borderwidth=0, bg="#A9A9A9").place(x=970, y=30)
 
         def config_page_of_fav_active_announcements(actual_page=1, list_of_objects=None):
-            user_fav_active_announcements = My_functions.download_user_favorite_announcements("active_flag",
-                                                                                              actual_page, 8)
+            user_fav_active_announcements = My_functions.download_user_favorite_announcements(1, actual_page,
+                                                                                              8)
 
             if list_of_objects:
 
@@ -964,20 +902,12 @@ def init_favorite_page_frame(root):
                     if rows == 0 and columns == 2:
                         break
 
-            if 1 < actual_page:
-                button_previous_active.config(command=lambda: config_page_of_fav_active_announcements(actual_page - 1,
-                                                                                                      list_of_objects))
-            else:
-                button_previous_active.config(command=lambda: None)
-
-            if len(user_fav_active_announcements) == 8:
-                button_next_active.config(command=lambda: config_page_of_fav_active_announcements(actual_page + 1,
-                                                                                                  list_of_objects))
-            else:
-                button_next_active.config(command=lambda: None)
+            My_functions.config_buttons(actual_page, button_previous_active, button_next_active,
+                                        user_fav_active_announcements, config_page_of_fav_active_announcements,
+                                        list_of_objects, 8)
 
         def config_page_of_fav_completed_announcements(actual_page=1, list_of_objects=None):
-            user_fav_completed_announcements = My_functions.download_user_favorite_announcements("completed_flag",
+            user_fav_completed_announcements = My_functions.download_user_favorite_announcements(0,
                                                                                                  actual_page, 4)
 
             if list_of_objects:
@@ -1037,31 +967,12 @@ def init_favorite_page_frame(root):
                 if rows == 4:
                     break
 
-            if 1 < actual_page:
-                button_previous_completed.config(command=lambda: config_page_of_fav_completed_announcements(
-                    actual_page - 1, list_of_objects))
-            else:
-                button_previous_completed.config(command=lambda: None)
+            My_functions.config_buttons(actual_page, button_previous_completed, button_next_completed,
+                                        user_fav_completed_announcements, config_page_of_fav_completed_announcements,
+                                        list_of_objects, 4)
 
-            if len(user_fav_completed_announcements) == 4:
-                button_next_completed.config(command=lambda: config_page_of_fav_completed_announcements(
-                    actual_page + 1, list_of_objects))
-            else:
-                button_next_completed.config(command=lambda: None)
-
-        button_previous_active = Button(favorite_page, text="Poprzednia", font=("Arial", 8), borderwidth=0,
-                                        bg="#D3D3D3")
-        button_previous_active.place(x=15, y=600, width=60, height=32)
-        button_next_active = Button(favorite_page, text="Następna", font=("Arial", 8), borderwidth=0,
-                                    bg="#D3D3D3")
-        button_next_active.place(x=785, y=600, width=60, height=32)
-
-        button_previous_completed = Button(favorite_page, text="Poprzednia", font=("Arial", 8), borderwidth=0,
-                                           bg="#D3D3D3")
-        button_previous_completed.place(x=865, y=600, width=60, height=32)
-        button_next_completed = Button(favorite_page, text="Następna", font=("Arial", 8), borderwidth=0,
-                                       bg="#D3D3D3")
-        button_next_completed.place(x=1200, y=600, width=60, height=32)
+        button_previous_active, button_next_active = My_functions.create_buttons(favorite_page, 15, 785)
+        button_previous_completed, button_next_completed = My_functions.create_buttons(favorite_page, 865, 1200)
         config_page_of_fav_active_announcements()
         config_page_of_fav_completed_announcements()
 

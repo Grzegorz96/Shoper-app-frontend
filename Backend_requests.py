@@ -97,12 +97,12 @@ def request_to_update_the_announcement(title, description, price, location, anno
         return response
 
 
-def request_to_get_user_announcements(field, page):
+def request_to_get_user_announcements(active_flag, page):
     # Creating endpoint and calling GET method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/announcements"
         params = {
-            "field": field,
+            "active_flag": active_flag,
             "per_page": 4,
             "page": page
         }
@@ -228,12 +228,12 @@ def request_to_delete_the_announcement(announcement_id):
         return response
 
 
-def request_to_get_user_favorite_announcements(field, page, per_page):
+def request_to_get_user_favorite_announcements(active_flag, page, per_page):
     # Creating endpoint and calling GET method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/favorite-announcements"
         params = {
-            "field": field,
+            "active_flag": active_flag,
             "page": page,
             "per_page": per_page
         }
@@ -336,13 +336,12 @@ def request_to_send_message(content, is_user_customer, conversation_id=None, ann
         return response
 
 
-def request_to_get_conversations(on_field, where_field, page):
+def request_to_get_conversations(customer_flag, page):
     # Creating endpoint and calling GET method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/conversations"
         params = {
-            "on_field": on_field,
-            "where_field": where_field,
+            "customer_flag": customer_flag,
             "page": page,
             "per_page": 7
         }
@@ -388,6 +387,27 @@ def request_to_get_paths(announcement_id):
     except RequestException:
         response = Response()
         response.status_code = 404
+        return response
+    # If everything ok from frontend then just return the response from GET method.
+    else:
+        return response
+
+
+def request_to_upload_photo(announcement_id, main_photo_flag, photo_object):
+    # Creating endpoint and calling GET method on this endpoint.
+    try:
+        url = f"http://127.0.0.1:5000/media/upload/{Config_data.logged_in_user_info.user_id}"
+        params = {
+            "announcement_id": announcement_id,
+            "main_photo_flag": main_photo_flag
+        }
+        # response = get(url, json=request_body, stream=True).raw
+        response = post(url, params=params, stream=True).raw
+
+    # If cant connect with endpoint, making response object with 404 status code and return response.
+    except urllib3.exceptions.HTTPError:
+        response = urllib3.response.HTTPResponse()
+        response.status = 404
         return response
     # If everything ok from frontend then just return the response from GET method.
     else:
