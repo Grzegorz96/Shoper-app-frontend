@@ -81,3 +81,14 @@ class Conversation:
         self.announcement_id = announcement_id
         self.title = title
         self.first_name = first_name
+
+
+class PhotoButton:
+    def __init__(self, button, photo_to_display, photo_to_upload, position_x, position_y, main_photo, button_delete):
+        self.button = button
+        self.photo_to_display = photo_to_display
+        self.photo_to_upload = photo_to_upload
+        self.position_x = position_x
+        self.position_y = position_y
+        self.main_photo = main_photo
+        self.button_delete = button_delete

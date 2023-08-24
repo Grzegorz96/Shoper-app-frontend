@@ -5,6 +5,7 @@ from tkinter import messagebox
 # Import modules with functions and global variables.
 import My_functions
 import Config_data
+from User_Class import PhotoButton
 
 
 # Initialization main window of application.
@@ -63,11 +64,9 @@ def init_top_panel(root):
     style.theme_use('clam')
     style.configure("TCombobox", fieldbackground="#D3D3D3", background="white")
     current_var = StringVar()
-    categories = ttk.Combobox(top_panel_frame, textvariable=current_var, width=45, )
+    categories = ttk.Combobox(top_panel_frame, textvariable=current_var, width=45)
     categories.place(x=280, y=50)
-    categories["values"] = (
-        "Elektronika", "Do domu", "Do ogrodu", "Sport i turystyka", "Motoryzacja", "Zdrowie i uroda", "Dla dzieci",
-        "Rolnictwo", "Nieruchomości", "Moda", "Kultura i rozrywka", "Oddam za darmo")
+    categories["values"] = Config_data.categories
 
     # Init search button for top panel
     search_button = Button(top_panel_frame, text="Wyszukaj produkt", borderwidth=0, bg="#D3D3D3",
@@ -200,9 +199,8 @@ def init_login_window(top_panel_frame, root):
 
     combobox_month_var = StringVar()
     combobox_month_birthday = ttk.Combobox(login_window_label, textvariable=combobox_month_var, width=10)
-    combobox_month_birthday["values"] = (
-        "Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik",
-        "Listopad", "Grudzień")
+    combobox_month_birthday["values"] = ("Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec",
+                                         "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień")
     combobox_month_birthday.grid(row=13, column=0, padx=(20, 0))
 
     combobox_year_var = StringVar()
@@ -253,47 +251,72 @@ def init_add_announcement_page_frame(root):
         add_announcement_page = Frame(root, bg="#A9A9A9", width=1280, height=640, highlightbackground="black",
                                       highlightthickness=2)
         add_announcement_page.pack()
-        Label(add_announcement_page, text="Utwórz swoje ogłoszenie!", font=("Arial", 20), borderwidth=0,
-              bg="#A9A9A9").place(x=15, y=15)
+
+        Label(add_announcement_page, text="Utwórz swoje ogłoszenie!", font=("Arial", 27), borderwidth=0,
+              bg="#A9A9A9").place(x=70, y=30)
+        ttk.Separator(add_announcement_page).place(x=40, y=85, width=465)
 
         Label(add_announcement_page, text="Tytuł ogłoszenia", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(
-            x=225, y=70)
+            x=369, y=100)
         title_entry = Entry(add_announcement_page, font=("Arial", 14), borderwidth=0, bg="#D3D3D3")
-        title_entry.place(x=15, y=100, width=350)
+        title_entry.place(x=40, y=130, width=465)
 
-        Label(add_announcement_page, text="Lokalizacja", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=270,
-                                                                                                                y=140)
+        Label(add_announcement_page, text="Lokalizacja", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=118,
+                                                                                                                y=170)
         location_entry = Entry(add_announcement_page, font=("Arial", 14), borderwidth=0, bg="#D3D3D3")
-        location_entry.place(x=15, y=170, width=350)
+        location_entry.place(x=40, y=200, width=170)
 
-        Label(add_announcement_page, text="Kategoria", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=280,
-                                                                                                              y=210)
+        Label(add_announcement_page, text="Kategoria", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=311,
+                                                                                                              y=170)
         current_var_category = StringVar()
-        select_categories = ttk.Combobox(add_announcement_page, textvariable=current_var_category, width=30,
-                                         font=("Arial", 14))
-        select_categories.place(x=15, y=240)
-        select_categories["values"] = (
-            "Elektronika", "Do domu", "Do ogrodu", "Sport i turystyka", "Motoryzacja", "Zdrowie i uroda", "Dla dzieci",
-            "Rolnictwo", "Nieruchomości", "Moda", "Kultura i rozrywka", "Oddam za darmo")
+        select_categories = ttk.Combobox(add_announcement_page, textvariable=current_var_category, font=("Arial", 13))
+        select_categories.place(x=223, y=200, width=170)
+        select_categories["values"] = Config_data.categories
 
-        Label(add_announcement_page, text="Kwota", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=310, y=280)
+        Label(add_announcement_page, text="Kwota", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=453, y=170)
         price_entry = Entry(add_announcement_page, font=("Arial", 14), borderwidth=0, bg="#D3D3D3")
-        price_entry.place(x=265, y=310, width=100)
-        Label(add_announcement_page, text="ZŁ", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=370, y=310)
+        price_entry.place(x=405, y=200, width=100)
+        Label(add_announcement_page, text="ZŁ", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=510, y=200)
 
-        Label(add_announcement_page, text="Opis", borderwidth=0, font=("Arial", 20), bg="#A9A9A9").place(x=1160, y=15)
+        Label(add_announcement_page, text="Opis", borderwidth=0, font=("Arial", 20), bg="#A9A9A9").place(x=1175, y=15)
         Label(add_announcement_page, text="Wpisz minimum 80 znaków", borderwidth=0, font=("Arial", 11),
-              bg="#A9A9A9").place(x=1035, y=47)
-        description_text = Text(add_announcement_page, width=70, height=22, font=("Arial", 14), borderwidth=0)
-        description_text.place(x=450, y=70)
+              bg="#A9A9A9").place(x=1050, y=47)
+        description_text = Text(add_announcement_page, width=61, height=24, font=("Arial", 14), borderwidth=0)
+        description_text.place(x=560, y=70)
 
-        add_announcement_button = Button(add_announcement_page, bg="#00BFFF", text="Dodaj ogłoszenie!", width=30,
-                                         height=3, borderwidth=0, font=("Arial", 15),
-                                         command=lambda: My_functions.add_announcement(title_entry, location_entry,
-                                                                                       current_var_category,
-                                                                                       price_entry, description_text,
-                                                                                       select_categories))
-        add_announcement_button.place(x=35, y=475)
+        rows = 0
+        columns = 0
+        list_of_photo_button_objects = []
+        for i in range(8):
+            photo_button = Button(add_announcement_page, bg="#D3D3D3", image=Config_data.images["camera_icon"],
+                                  state="disabled", borderwidth=0)
+            photo_button.place(x=40+(columns*175), y=250+(rows*100), width=115, height=75)
+            photo_button_object = PhotoButton(photo_button, None, None, 40+(columns*175),
+                                              250+(rows*100), 0, None)
+
+            list_of_photo_button_objects.append(photo_button_object)
+
+            photo_button.config(command=lambda selected_button_object=photo_button_object: My_functions.
+                                set_main_photo(selected_button_object, list_of_photo_button_objects))
+
+            rows += 1
+            if rows == 3:
+                rows = 0
+                columns += 1
+
+        Label(add_announcement_page, text="Naciśnij na obraz, aby wybrać zdjęcie główne."
+                                          " W razie niewybrania, pierwsze zdjęcie będzie zdjęciem głównym.",
+              bg="#D3D3D3", font=("Arial", 7), anchor=W).place(x=40, y=228, width=465)
+
+        Button(add_announcement_page, bg="#D3D3D3", text="Dodaj zdjęcie", font=("Arial", 10),
+               command=lambda: My_functions.select_photo(list_of_photo_button_objects, add_announcement_page)).place(
+            x=390, y=450, width=115, height=75)
+
+        Button(add_announcement_page, bg="#00BFFF", text="Dodaj ogłoszenie!", borderwidth=0, font=("Arial", 15),
+               command=lambda: My_functions.add_announcement(title_entry, location_entry, current_var_category,
+                                                             price_entry, description_text, select_categories,
+                                                             list_of_photo_button_objects)).place(x=40, y=550,
+                                                                                                  width=465, height=50)
 
         Config_data.current_page = add_announcement_page
 
@@ -611,7 +634,6 @@ def init_shopper_page_frame(root, search_engine=None, search_location=None, curr
 
 
 def init_announcement_page_frame(page, announcement_object, block_fav, block_mess):
-    photos = My_functions.download_paths(announcement_object.announcement_id)
     tmp_page = Frame(page, bg="#A9A9A9", width=1276, height=636)
     tmp_page.pack()
 
@@ -648,6 +670,7 @@ def init_announcement_page_frame(page, announcement_object, block_fav, block_mes
 
     photo_label = Label(tmp_page, text="Brak zdjęć do ogłoszenia.", font=("Arial", 12), borderwidth=3, bg="#D3D3D3")
     photo_label.place(x=20, y=112, width=700, height=466)
+    photos = My_functions.download_paths(announcement_object.announcement_id)
 
     def init_photo(actual_photo=0):
         if 0 <= actual_photo < len(photos):

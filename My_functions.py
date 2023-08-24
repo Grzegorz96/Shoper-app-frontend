@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+from tkinter import filedialog
 from re import match
 from User_Class import LoggedUser, Announcement, UserFavoriteAnnouncement, Message, Conversation
 import Config_data
@@ -232,7 +233,7 @@ def download_user_announcements(active_flag, page):
 
 
 def add_announcement(title_entry, location_entry, current_var_category, price_entry, description_text,
-                     select_categories):
+                     select_categories, list_of_photo_button_objects):
     if match("^.{10,45}$", title_entry.get()):
         if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń ]{3,45}$", location_entry.get()):
             if current_var_category.get() in select_categories["values"]:
@@ -253,11 +254,54 @@ def add_announcement(title_entry, location_entry, current_var_category, price_en
                                                                                                             description)
 
                         if response_for_adding_announcement.status_code == codes.created:
+                            announcement_id = response_for_adding_announcement.json()["result"]["announcement_id"]
+                            error_with_uploading = False
+                            list_of_photo_button_objects_to_upload = []
+                            for button_object in list_of_photo_button_objects:
+                                if button_object.photo_to_upload:
+                                    list_of_photo_button_objects_to_upload.append(button_object)
+
+                            if list_of_photo_button_objects_to_upload:
+                                selected_main_photo = False
+                                for button_object in list_of_photo_button_objects_to_upload:
+                                    if button_object.main_photo == 1:
+                                        selected_main_photo = True
+
+                                if not selected_main_photo:
+                                    list_of_photo_button_objects_to_upload[0].main_photo = 1
+
+                                for button_object in list_of_photo_button_objects_to_upload:
+                                    response_for_uploading_photo = Backend_requests.request_to_upload_photo(
+                                        announcement_id, button_object.main_photo, button_object.photo_to_upload)
+
+                                    if response_for_uploading_photo.status != codes.created:
+                                        error_with_uploading = True
+
+                                for button_object in list_of_photo_button_objects_to_upload:
+                                    button_object.button.config(image=Config_data.images["camera_icon"],
+                                                                state="disabled")
+                                    button_object.photo_to_display = None
+                                    button_object.photo_to_upload = None
+
+                                    if button_object.main_photo == 1:
+                                        button_object.main_photo = 0
+                                        button_object.button.config(borderwidth=0)
+
+                                    if button_object.button_delete:
+                                        button_object.button_delete.destroy()
+                                        button_object.button_delete = None
+
                             title_entry.delete(0, END)
                             location_entry.delete(0, END)
                             price_entry.delete(0, END)
                             description_text.delete("1.0", END)
                             current_var_category.set("")
+
+                            if error_with_uploading:
+                                messagebox.showerror("Błąd podczas dodawania zdjęć.",
+                                                     "Podczas dodawania zdjęć wystąpił błąd, spróbuj"
+                                                     " ponownie dodać zdjęcia z poziomu edycji ogłoszenia.")
+
                             messagebox.showinfo("Pomyślnie dodano ogłoszenie.",
                                                 f"Twoje ogłoszenie \"{title}\" zostało dodane, możesz dodać "
                                                 f"kolejne ogłoszenia.")
@@ -686,8 +730,15 @@ def download_paths(announcement_id):
 
 
 def loading_images():
-    Config_data.images["arrows"] = [ImageTk.PhotoImage(Image.open("Photos/left.png").resize((50, 50))),
-                                    ImageTk.PhotoImage(Image.open("Photos/right.png").resize((50, 50)))]
+    try:
+        Config_data.images["arrows"] = [ImageTk.PhotoImage(Image.open("Photos/left.png").resize((50, 50))),
+                                        ImageTk.PhotoImage(Image.open("Photos/right.png").resize((50, 50)))]
+        Config_data.images["camera_icon"] = ImageTk.PhotoImage(Image.open("Photos/camera_icon.png").resize((50, 50)))
+    except FileNotFoundError:
+        messagebox.showerror("Błąd podczas wczytywania statycznych plików graficznych.",
+                             "Nie udało się wczytać statycznych plików graficznych.")
+        Config_data.images["arrows"] = [None, None]
+        Config_data.images["camera_icon"] = None
 
 
 def config_buttons(actual_page, button_previous, button_next, collection, function, list_of_objects, objects_on_page):
@@ -710,8 +761,55 @@ def create_buttons(page, x1, x2):
     return button_previous, button_next
 
 
-def upload_photo(announcement_id, main_photo_flag, photo_object):
-    response_for_uploading_photo = Backend_requests.request_to_upload_photo(announcement_id, main_photo_flag,
-                                                                            photo_object)
-    if response_for_uploading_photo.status == codes.ok:
-        pass
+def select_photo(list_of_photo_button_objects, page):
+    filename = filedialog.askopenfilename(title="Wybierz plik", filetypes=(("Pliki PNG", "*.png"),
+                                                                           ("Pliki JPG", "*.jpg")))
+    if filename:
+        try:
+            photo = ImageTk.PhotoImage(Image.open(filename).resize((115, 75)))
+        except FileNotFoundError:
+            messagebox.showwarning("Błąd podczas otwierania pliku.",
+                                   "Plik który chcesz otworzyć nie istnieje.")
+            return
+        else:
+            available_image_button = False
+            for button_object in list_of_photo_button_objects:
+                if not button_object.photo_to_upload:
+                    available_image_button = True
+                    button_object.button.config(image=photo, state="normal")
+                    button_object.photo_to_display = photo
+                    button_object.photo_to_upload = filename
+
+                    delete_button = Button(page, text="Usuń zdjęcie", font=("Arial", 8), borderwidth=0,
+                                           bg="#D3D3D3", command=lambda: delete_photo(button_object))
+                    delete_button.place(x=button_object.position_x+25, y=button_object.position_y+75)
+
+                    button_object.button_delete = delete_button
+
+                    break
+
+            if not available_image_button:
+                messagebox.showwarning("Brak możliwości dodania kolejnego zdjęcia.",
+                                       "Twój limit dodanych zdjęć został osiągnięty.")
+
+
+def delete_photo(button_object):
+    button_object.button.config(image=Config_data.images["camera_icon"], state="disabled")
+    button_object.photo_to_display = None
+    button_object.photo_to_upload = None
+    if button_object.main_photo == 1:
+        button_object.main_photo = 0
+        button_object.button.config(borderwidth=0)
+
+    if button_object.button_delete:
+        button_object.button_delete.destroy()
+        button_object.button_delete = None
+
+
+def set_main_photo(selected_button_object, list_of_photo_button_objects):
+    for button_object in list_of_photo_button_objects:
+        if button_object.main_photo == 1:
+            button_object.main_photo = 0
+            button_object.button.config(borderwidth=0)
+    selected_button_object.main_photo = 1
+    selected_button_object.button.config(borderwidth=4)

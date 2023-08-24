@@ -393,22 +393,32 @@ def request_to_get_paths(announcement_id):
         return response
 
 
-def request_to_upload_photo(announcement_id, main_photo_flag, photo_object):
+def request_to_upload_photo(announcement_id, main_photo, photo_to_upload):
     # Creating endpoint and calling GET method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/media/upload/{Config_data.logged_in_user_info.user_id}"
         params = {
             "announcement_id": announcement_id,
-            "main_photo_flag": main_photo_flag
+            "main_photo_flag": main_photo
         }
-        # response = get(url, json=request_body, stream=True).raw
-        response = post(url, params=params, stream=True).raw
+
+        with open(photo_to_upload, "rb") as file:
+            files = {
+                "file": file
+            }
+            response = post(url, params=params, files=files, stream=True).raw
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
     except urllib3.exceptions.HTTPError:
         response = urllib3.response.HTTPResponse()
         response.status = 404
         return response
+
+    except FileNotFoundError:
+        response = urllib3.response.HTTPResponse()
+        response.status = 404
+        return response
+
     # If everything ok from frontend then just return the response from GET method.
     else:
         return response
