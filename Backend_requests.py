@@ -377,11 +377,14 @@ def request_to_get_photo(path):
         return response
 
 
-def request_to_get_paths(announcement_id):
+def request_to_get_media_paths(announcement_id, main_photo):
     # Creating endpoint and calling GET method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/announcements/{announcement_id}/media/paths"
-        response = get(url)
+        params = {
+            "main_photo_flag": main_photo
+        }
+        response = get(url, params)
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
     except RequestException:

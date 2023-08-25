@@ -257,23 +257,23 @@ def init_add_announcement_page_frame(root):
         ttk.Separator(add_announcement_page).place(x=40, y=85, width=465)
 
         Label(add_announcement_page, text="Tytuł ogłoszenia", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(
-            x=369, y=100)
+            x=367, y=100)
         title_entry = Entry(add_announcement_page, font=("Arial", 14), borderwidth=0, bg="#D3D3D3")
         title_entry.place(x=40, y=130, width=465)
 
-        Label(add_announcement_page, text="Lokalizacja", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=118,
+        Label(add_announcement_page, text="Lokalizacja", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=116,
                                                                                                                 y=170)
         location_entry = Entry(add_announcement_page, font=("Arial", 14), borderwidth=0, bg="#D3D3D3")
         location_entry.place(x=40, y=200, width=170)
 
-        Label(add_announcement_page, text="Kategoria", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=311,
+        Label(add_announcement_page, text="Kategoria", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=309,
                                                                                                               y=170)
         current_var_category = StringVar()
         select_categories = ttk.Combobox(add_announcement_page, textvariable=current_var_category, font=("Arial", 13))
         select_categories.place(x=223, y=200, width=170)
         select_categories["values"] = Config_data.categories
 
-        Label(add_announcement_page, text="Kwota", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=453, y=170)
+        Label(add_announcement_page, text="Kwota", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=451, y=170)
         price_entry = Entry(add_announcement_page, font=("Arial", 14), borderwidth=0, bg="#D3D3D3")
         price_entry.place(x=405, y=200, width=100)
         Label(add_announcement_page, text="ZŁ", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=510, y=200)
@@ -506,43 +506,92 @@ def init_edit_user_announcement_page_frame(user_active_announcement_object, root
                                         highlightthickness=2)
     edit_user_announcement_page.pack()
 
-    list_of_texts = [user_active_announcement_object.title, user_active_announcement_object.location,
-                     user_active_announcement_object.price]
-    list_of_entries = []
-    y = 70
-    for i in range(3):
-        if i != 2:
-            Label(edit_user_announcement_page, text=list_of_texts[i], font=("Arial", 14), borderwidth=0,
-                  anchor=E, width=31, bg="#A9A9A9").place(x=22, y=y)
-            obj_entry = Entry(edit_user_announcement_page, font=("Arial", 14), borderwidth=0, bg="#D3D3D3")
-            obj_entry.place(x=15, y=y + 30, width=350)
-        else:
-            Label(edit_user_announcement_page, text=list_of_texts[i], font=("Arial", 14),
-                  borderwidth=0, anchor=E, width=13, bg="#A9A9A9").place(x=220, y=y)
-            Label(edit_user_announcement_page, text="ZŁ", font=("Arial", 14), borderwidth=0,
-                  bg="#A9A9A9").place(x=370, y=y + 30)
-            obj_entry = Entry(edit_user_announcement_page, font=("Arial", 14), borderwidth=0, bg="#D3D3D3")
-            obj_entry.place(x=265, y=y + 30, width=100)
-        list_of_entries.append(obj_entry)
-        y += 70
+    Label(edit_user_announcement_page, text="Edytuj swoje ogłoszenie!", font=("Arial", 27), borderwidth=0,
+          bg="#A9A9A9").place(x=70, y=30)
+    ttk.Separator(edit_user_announcement_page).place(x=40, y=85, width=465)
 
     Label(edit_user_announcement_page, text=f"ID OGŁOSZENIA: {user_active_announcement_object.announcement_id}",
-          font=("Arial", 10),
-          borderwidth=0, bg="#A9A9A9").place(x=15, y=15)
+          font=("Arial", 7), borderwidth=0, bg="#A9A9A9").place(x=40, y=10)
 
-    Label(edit_user_announcement_page, text="Opis", borderwidth=0, font=("Arial", 20), bg="#A9A9A9").place(x=1160, y=15)
+    Label(edit_user_announcement_page, text="Tytuł ogłoszenia", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(
+        x=367, y=100)
+    title_entry = Entry(edit_user_announcement_page, font=("Arial", 14), borderwidth=0, bg="#D3D3D3")
+    title_entry.insert(0, user_active_announcement_object.title)
+    title_entry.place(x=40, y=130, width=465)
+
+    Label(edit_user_announcement_page, text="Lokalizacja", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=296,
+                                                                                                                  y=170)
+    location_entry = Entry(edit_user_announcement_page, font=("Arial", 14), borderwidth=0, bg="#D3D3D3")
+    location_entry.insert(0, user_active_announcement_object.location)
+    location_entry.place(x=40, y=200, width=350)
+
+    Label(edit_user_announcement_page, text="Kwota", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=451,
+                                                                                                            y=170)
+    price_entry = Entry(edit_user_announcement_page, font=("Arial", 14), borderwidth=0, bg="#D3D3D3")
+    price_entry.insert(0, user_active_announcement_object.price)
+    price_entry.place(x=405, y=200, width=100)
+    Label(edit_user_announcement_page, text="ZŁ", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=510, y=200)
+
+    Label(edit_user_announcement_page, text="Opis", borderwidth=0, font=("Arial", 20), bg="#A9A9A9").place(x=1175, y=15)
     Label(edit_user_announcement_page, text="Wpisz minimum 80 znaków", borderwidth=0, font=("Arial", 11),
-          bg="#A9A9A9").place(x=1035, y=47)
-    description_text = Text(edit_user_announcement_page, width=70, height=22, font=("Arial", 14), borderwidth=0)
+          bg="#A9A9A9").place(x=1050, y=47)
+    description_text = Text(edit_user_announcement_page, width=61, height=24, font=("Arial", 14), borderwidth=0)
     description_text.insert(INSERT, user_active_announcement_object.description)
-    description_text.place(x=450, y=70)
+    description_text.place(x=560, y=70)
 
-    edit_announcement_button = Button(edit_user_announcement_page, bg="#00BFFF", text="Zmień ogłoszenie!", width=30,
-                                      height=3, borderwidth=0, font=("Arial", 15), command=lambda:
-                                      My_functions.change_announcement_data(list_of_entries, description_text,
-                                                                            user_active_announcement_object,
-                                                                            init_user_page_frame, root))
-    edit_announcement_button.place(x=35, y=475)
+    rows = 0
+    columns = 0
+    list_of_photo_button_objects = []
+    for i in range(8):
+        photo_button = Button(edit_user_announcement_page, bg="#D3D3D3", image=Config_data.images["camera_icon"],
+                              state="disabled", borderwidth=0)
+        photo_button.place(x=40 + (columns * 175), y=250 + (rows * 100), width=115, height=75)
+        photo_button_object = PhotoButton(photo_button, None, None, 40 + (columns * 175),
+                                          250 + (rows * 100), 0, None)
+
+        list_of_photo_button_objects.append(photo_button_object)
+
+        photo_button.config(command=lambda selected_button_object=photo_button_object: My_functions.
+                            set_main_photo(selected_button_object, list_of_photo_button_objects))
+
+        rows += 1
+        if rows == 3:
+            rows = 0
+            columns += 1
+
+    photos = My_functions.download_photos_to_announcement(user_active_announcement_object.announcement_id,
+                                                          True, 115, 75)
+
+    for i in range(len(photos)):
+        list_of_photo_button_objects[i].button.config(state="normal", image=photos[i][0])
+        list_of_photo_button_objects[i].photo_to_display = photos[i][0]
+        list_of_photo_button_objects[i].photo_to_upload = photos[i][1]
+        list_of_photo_button_objects[i].main_photo = photos[i][2]
+        if photos[i][2] == 1:
+            list_of_photo_button_objects[i].button.config(borderwidth=4)
+
+        delete_button = Button(edit_user_announcement_page, text="Usuń zdjęcie", font=("Arial", 8), borderwidth=0,
+                               bg="#D3D3D3", command=lambda button_object=list_of_photo_button_objects[i]: My_functions.
+                               delete_photo(button_object))
+        delete_button.place(x=list_of_photo_button_objects[i].position_x + 25,
+                            y=list_of_photo_button_objects[i].position_y + 75)
+
+        list_of_photo_button_objects[i].button_delete = delete_button
+
+    Label(edit_user_announcement_page, text="Naciśnij na obraz, aby wybrać zdjęcie główne."
+                                            " W razie niewybrania, pierwsze zdjęcie będzie zdjęciem głównym.",
+          bg="#D3D3D3", font=("Arial", 7), anchor=W).place(x=40, y=228, width=465)
+
+    Button(edit_user_announcement_page, bg="#D3D3D3", text="Dodaj zdjęcie", font=("Arial", 10),
+           command=lambda: My_functions.select_photo(list_of_photo_button_objects, edit_user_announcement_page)).place(
+        x=390, y=450, width=115, height=75)
+
+    Button(edit_user_announcement_page, bg="#00BFFF", text="Zmień ogłoszenie!", borderwidth=0, font=("Arial", 15),
+           command=lambda: My_functions.change_announcement_data(title_entry, location_entry, price_entry,
+                                                                 description_text, user_active_announcement_object,
+                                                                 init_user_page_frame, root)).place(x=40, y=550,
+                                                                                                    width=465,
+                                                                                                    height=50)
 
     Config_data.current_page = edit_user_announcement_page
 
@@ -670,7 +719,7 @@ def init_announcement_page_frame(page, announcement_object, block_fav, block_mes
 
     photo_label = Label(tmp_page, text="Brak zdjęć do ogłoszenia.", font=("Arial", 12), borderwidth=3, bg="#D3D3D3")
     photo_label.place(x=20, y=112, width=700, height=466)
-    photos = My_functions.download_paths(announcement_object.announcement_id)
+    photos = My_functions.download_photos_to_announcement(announcement_object.announcement_id, False, 600, 400)
 
     def init_photo(actual_photo=0):
         if 0 <= actual_photo < len(photos):

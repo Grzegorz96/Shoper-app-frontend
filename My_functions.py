@@ -141,29 +141,17 @@ def logout_user(logout_button, user_name, init_shopper_page_frame, root):
     messagebox.showinfo("Pomyślnie wylogowano.", f"Użytkownik {user_name} został pomyślnie wylogowany.")
 
 
-def change_announcement_data(list_of_entries, description_text, user_active_announcement_object, init_user_page_frame,
-                             root):
-    if match("^.{10,45}$", list_of_entries[0].get()) or list_of_entries[0].get() == "":
-        if list_of_entries[0].get() == "":
-            title = user_active_announcement_object.title
-        else:
-            title = list_of_entries[0].get()
-
-        if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń ]{3,45}$", list_of_entries[1].get()) or list_of_entries[1].get() == "":
-            if list_of_entries[1].get() == "":
-                location = user_active_announcement_object.location
-            else:
-                location = list_of_entries[1].get()
-
-            if ((match("^[0-9]+$", list_of_entries[2].get()) and len(list_of_entries[2].get()) <= 7)
-                    or list_of_entries[2].get() == ""):
-                if list_of_entries[2].get() == "":
-                    price = user_active_announcement_object.price
-                else:
-                    price = int(list_of_entries[2].get())
-
+def change_announcement_data(title_entry, location_entry, price_entry, description_text,
+                             user_active_announcement_object, init_user_page_frame, root):
+    if match("^.{10,45}$", title_entry.get()):
+        if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń ]{3,45}$", location_entry.get()):
+            if match("^[0-9]+$", price_entry.get()) and len(price_entry.get()) <= 7:
                 if (len(description_text.get("1.0", "end-1c")) >= 80 and len(
                         description_text.get("1.0", "end-1c")) <= 400):
+
+                    title = title_entry.get()
+                    location = location_entry.get()
+                    price = int(price_entry.get())
                     description = description_text.get("1.0", "end-1c")
 
                     response_for_updating_announcement \
@@ -711,22 +699,45 @@ def download_conversations(customer_flag, page):
         return []
 
 
-def download_paths(announcement_id):
-    response_for_getting_paths = Backend_requests.request_to_get_paths(announcement_id)
-    if response_for_getting_paths.status_code == codes.ok:
-        list_of_photos = []
-        for dictionary in response_for_getting_paths.json()["result"]:
-            response_for_getting_photo = Backend_requests.request_to_get_photo(dictionary["path"])
-            if response_for_getting_photo.status == codes.ok:
-                photo = ImageTk.PhotoImage(Image.open(response_for_getting_photo).resize((600, 400)))
-                list_of_photos.append(photo)
+def download_photos_to_announcement(announcement_id, to_edit, px, py):
+    list_of_photos = []
+    error_with_getting_photos = False
 
-        return list_of_photos
-
+    response_for_getting_paths_to_main_photo = Backend_requests.request_to_get_media_paths(announcement_id, 1)
+    if response_for_getting_paths_to_main_photo.status_code == codes.ok:
+        for dictionary in response_for_getting_paths_to_main_photo.json()["result"]:
+            response_for_getting_main_photo = Backend_requests.request_to_get_photo(dictionary["path"])
+            if response_for_getting_main_photo.status == codes.ok:
+                photo = ImageTk.PhotoImage(Image.open(response_for_getting_main_photo).resize((px, py)))
+                if to_edit:
+                    list_of_photos.append((photo, dictionary["path"], 1))
+                else:
+                    list_of_photos.append(photo)
+            else:
+                error_with_getting_photos = True
     else:
+        error_with_getting_photos = True
+
+    response_for_getting_paths_to_photos = Backend_requests.request_to_get_media_paths(announcement_id, 0)
+    if response_for_getting_paths_to_photos.status_code == codes.ok:
+        for dictionary in response_for_getting_paths_to_photos.json()["result"]:
+            response_for_getting_photos = Backend_requests.request_to_get_photo(dictionary["path"])
+            if response_for_getting_photos.status == codes.ok:
+                photo = ImageTk.PhotoImage(Image.open(response_for_getting_photos).resize((px, py)))
+                if to_edit:
+                    list_of_photos.append((photo, dictionary["path"], 0))
+                else:
+                    list_of_photos.append(photo)
+            else:
+                error_with_getting_photos = True
+    else:
+        error_with_getting_photos = True
+
+    if error_with_getting_photos:
         messagebox.showerror("Błąd podczas wczytywania zdjęć.",
-                             "Nie udalo sie wczytać zdjęć do ogłoszenia, spróbuj później.")
-        return []
+                             "Nie udalo sie wczytać zdjęć do ogłoszenia lub ich części, spróbuj później.")
+
+    return list_of_photos
 
 
 def loading_images():
