@@ -1,5 +1,6 @@
 class LoggedUser:
-    def __init__(self, user_id, first_name, last_name, email, login, password, date_of_birth, street, zip_code, city):
+    def __init__(self, user_id, first_name, last_name, email, login, password, date_of_birth, street, zip_code, city,
+                 creation_account_date):
         self.user_id = user_id
         self.first_name = first_name
         self.last_name = last_name
@@ -10,6 +11,7 @@ class LoggedUser:
         self.street = street
         self.zip_code = zip_code
         self.city = city
+        self.creation_account_date = creation_account_date
 
     def change_user_firstname(self, updated_name):
         self.first_name = updated_name
@@ -35,7 +37,7 @@ class LoggedUser:
 
 class Announcement:
     def __init__(self, announcement_id, first_name, seller_id, name_category, category_id, title, description, price,
-                 location, main_photo):
+                 location, main_photo, state, creation_date, mobile_number):
         self.announcement_id = announcement_id
         self.first_name = first_name
         self.seller_id = seller_id
@@ -46,11 +48,14 @@ class Announcement:
         self.price = price
         self.location = location
         self.main_photo = main_photo
+        self.state = state
+        self.creation_date = creation_date
+        self.mobile_number = mobile_number
 
 
 class UserFavoriteAnnouncement:
     def __init__(self, favorite_announcement_id, announcement_id, first_name, seller_id, title, description,
-                 name_category, price, location, main_photo):
+                 name_category, price, location, main_photo, state, creation_date, mobile_number):
         self.favorite_announcement_id = favorite_announcement_id
         self.announcement_id = announcement_id
         self.first_name = first_name
@@ -61,16 +66,18 @@ class UserFavoriteAnnouncement:
         self.price = price
         self.location = location
         self.main_photo = main_photo
+        self.state = state
+        self.creation_date = creation_date
+        self.mobile_number = mobile_number
 
 
 class Message:
-    def __init__(self, conversation_id, message_id, customer_flag, content, date, time, user_id, first_name):
+    def __init__(self, conversation_id, message_id, customer_flag, content, post_date, user_id, first_name):
         self.conversation_id = conversation_id
         self.message_id = message_id
         self.customer_flag = customer_flag
         self.content = content
-        self.date = date
-        self.time = time
+        self.post_date = post_date
         self.user_id = user_id
         self.first_name = first_name
 
@@ -84,7 +91,8 @@ class Conversation:
 
 
 class PhotoButton:
-    def __init__(self, button, photo_to_display, photo_to_upload, position_x, position_y, main_photo, button_delete):
+    def __init__(self, button, photo_to_display, photo_to_upload, position_x, position_y, main_photo, button_delete,
+                 photo_from_main, photo_from_media):
         self.button = button
         self.photo_to_display = photo_to_display
         self.photo_to_upload = photo_to_upload
@@ -92,3 +100,5 @@ class PhotoButton:
         self.position_y = position_y
         self.main_photo = main_photo
         self.button_delete = button_delete
+        self.photo_from_main = photo_from_main
+        self.photo_from_media = photo_from_media

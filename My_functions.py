@@ -7,6 +7,7 @@ import Config_data
 import Backend_requests
 from requests import codes
 from PIL import Image, ImageTk
+from datetime import datetime
 
 
 # User registration function
@@ -16,8 +17,8 @@ def register_user(first_name_entry, last_name_entry, email_entry, login_entry, p
     if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń]{2,45}$", first_name_entry.get()):
         if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń]{2,45}$", last_name_entry.get()):
             if match(
-                    "^([A-Za-z0-9]+|[A-Za-z0-9][A-Za-z0-9._-]+[A-Za-z0-9])@([A-Za-z0-9]+|[A-Za-z0-9._-]+[A-Za-z0-9])\.[A-Za-z0-9]+$",
-                    email_entry.get()):
+                    "^([A-Za-z0-9]+|[A-Za-z0-9][A-Za-z0-9._-]+[A-Za-z0-9])@([A-Za-z0-9]+"
+                    "|[A-Za-z0-9._-]+[A-Za-z0-9])\.[A-Za-z0-9]+$", email_entry.get()):
                 if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń0-9]{5,45}$", login_entry.get()):
                     if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń0-9!@#$%^&*]{7,45}$", password_entry.get()):
                         if combobox_year_var.get() in combobox_year_birthday["values"] \
@@ -59,9 +60,12 @@ def register_user(first_name_entry, last_name_entry, email_entry, login_entry, p
                                 if "login_error" in response_for_register_user.json():
                                     messagebox.showwarning("Nie udało sie utworzyć konta.",
                                                            "Użytkownik o podanym loginie jest już zarejestowany.")
-                                else:
+                                elif "email_error" in response_for_register_user.json():
                                     messagebox.showwarning("Nie udało sie utworzyć konta.",
                                                            "Użytkownik o podanym emailu jest już zarejestowany.")
+                                else:
+                                    messagebox.showwarning("Nie udało sie utworzyć konta.",
+                                                           "Niepoprawne dane do rejestracji konta.")
 
                             else:
                                 messagebox.showerror("Nie udało sie utworzyć konta.",
@@ -82,10 +86,10 @@ def register_user(first_name_entry, last_name_entry, email_entry, login_entry, p
 
 
 # User login function
-def login_user(entry_login_or_email, entry_password, login_window, top_panel_frame, init_shopper_page_frame, root):
+def login_user(entry_login_or_email, entry_password, top_panel_frame, init_shopper_page_frame, root):
     if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń0-9]{5,45}$", entry_login_or_email.get()) or match(
-            "^([A-Za-z0-9]+|[A-Za-z0-9][A-Za-z0-9._-]+[A-Za-z0-9])@([A-Za-z0-9]+|[A-Za-z0-9._-]+[A-Za-z0-9])\.[A-Za-z0-9]+$",
-            entry_login_or_email.get()):
+            "^([A-Za-z0-9]+|[A-Za-z0-9][A-Za-z0-9._-]+[A-Za-z0-9])@([A-Za-z0-9]+"
+            "|[A-Za-z0-9._-]+[A-Za-z0-9])\.[A-Za-z0-9]+$", entry_login_or_email.get()):
 
         if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń0-9!@#$%^&*]{7,45}$", entry_password.get()):
             login_or_email = entry_login_or_email.get()
@@ -94,6 +98,11 @@ def login_user(entry_login_or_email, entry_password, login_window, top_panel_fra
             response_for_login_user = Backend_requests.request_to_login_user(login_or_email, password)
 
             if response_for_login_user.status_code == codes.ok:
+
+                for window in Config_data.list_of_active_windows:
+                    window.destroy()
+                Config_data.list_of_active_windows = []
+
                 user_info = response_for_login_user.json()["result"]
                 Config_data.is_user_logged_in = True
                 Config_data.logged_in_user_info = LoggedUser(
@@ -106,7 +115,8 @@ def login_user(entry_login_or_email, entry_password, login_window, top_panel_fra
                     user_info["date_of_birth"],
                     user_info["street"],
                     user_info["zip_code"],
-                    user_info["city"]
+                    user_info["city"],
+                    datetime.strptime(user_info["creation_account_date"], '%Y-%m-%d %H:%M:%S')
                 )
 
                 user_name = Config_data.logged_in_user_info.first_name
@@ -115,7 +125,6 @@ def login_user(entry_login_or_email, entry_password, login_window, top_panel_fra
                                        bg="#D3D3D3", command=lambda: logout_user(logout_button, user_name,
                                                                                  init_shopper_page_frame, root))
                 logout_button.place(x=1196, y=60, height=18, width=56)
-                login_window.destroy()
 
             elif response_for_login_user.status_code == codes.bad_request:
                 messagebox.showwarning("Nie ma takiego użytkownika.",
@@ -134,48 +143,177 @@ def login_user(entry_login_or_email, entry_password, login_window, top_panel_fra
 def logout_user(logout_button, user_name, init_shopper_page_frame, root):
     Config_data.is_user_logged_in = False
     Config_data.logged_in_user_info = None
-    Config_data.user_announcements = []
-    Config_data.user_favorite_announcements = []
+
+    for window in Config_data.list_of_active_windows:
+        window.destroy()
+    Config_data.list_of_active_windows = []
+
     init_shopper_page_frame(root)
     logout_button.destroy()
     messagebox.showinfo("Pomyślnie wylogowano.", f"Użytkownik {user_name} został pomyślnie wylogowany.")
 
 
-def change_announcement_data(title_entry, location_entry, price_entry, description_text,
-                             user_active_announcement_object, init_user_page_frame, root):
+def change_announcement_data(title_entry, location_entry, price_entry, description_text, announcement_object,
+                             init_user_page_frame, root, current_var_state, select_state, mobile_number_entry,
+                             list_of_photo_button_objects, deleted_photos):
+
     if match("^.{10,45}$", title_entry.get()):
         if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń ]{3,45}$", location_entry.get()):
-            if match("^[0-9]+$", price_entry.get()) and len(price_entry.get()) <= 7:
-                if (len(description_text.get("1.0", "end-1c")) >= 80 and len(
-                        description_text.get("1.0", "end-1c")) <= 400):
+            if match("^[0-9]{1,7}$", price_entry.get()):
+                if current_var_state.get() in select_state["values"]:
+                    if mobile_number_entry.get() == "" or match("^[+]?[0-9]{6,14}$", mobile_number_entry.get()):
+                        if (len(description_text.get("1.0", "end-1c")) >= 80 and len(
+                                description_text.get("1.0", "end-1c")) <= 400):
 
-                    title = title_entry.get()
-                    location = location_entry.get()
-                    price = int(price_entry.get())
-                    description = description_text.get("1.0", "end-1c")
+                            title = title_entry.get()
+                            location = location_entry.get()
+                            price = int(price_entry.get())
+                            state = current_var_state.get()
+                            if mobile_number_entry.get() == "":
+                                mobile_number = None
+                            else:
+                                mobile_number = mobile_number_entry.get()
+                            description = description_text.get("1.0", "end-1c")
 
-                    response_for_updating_announcement \
-                        = Backend_requests.request_to_update_the_announcement(title, description, price, location,
-                                                                              user_active_announcement_object.
-                                                                              announcement_id)
-                    if response_for_updating_announcement.status_code == codes.ok:
-                        messagebox.showinfo(
-                            f"Pomyślnie zaktualizowano Twoje ogłoszenie, {Config_data.logged_in_user_info.first_name}.",
-                            f"Twoje ogłoszenie \"{title}\" zostało zaktualizowane!")
-                        init_user_page_frame(root)
+                            response_for_updating_announcement \
+                                = Backend_requests.request_to_update_the_announcement(title, description, price,
+                                                                                      location, announcement_object.
+                                                                                      announcement_id, state,
+                                                                                      mobile_number)
+                            if response_for_updating_announcement.status_code == codes.ok:
 
+                                error_with_updating_photos = False
+                                committed_operation_on_main_photo = False
+
+                                for path, main_photo_flag in deleted_photos:
+                                    response_for_deleting_photo = Backend_requests.request_to_delete_photo(
+                                        path, main_photo_flag)
+                                    if response_for_deleting_photo.status_code != codes.ok:
+                                        error_with_updating_photos = True
+
+                                if not error_with_updating_photos:
+                                    for main_photo_from_server in list_of_photo_button_objects:
+                                        if main_photo_from_server.photo_from_main:
+                                            committed_operation_on_main_photo = True
+                                            if not main_photo_from_server.main_photo:
+                                                for photo_button_with_main_photo in list_of_photo_button_objects:
+                                                    if photo_button_with_main_photo.main_photo:
+                                                        if photo_button_with_main_photo.photo_from_media:
+                                                            response_for_switching_photos \
+                                                                = Backend_requests.request_to_switch_photos(
+                                                                    announcement_object.announcement_id,
+                                                                    main_photo_from_server.photo_to_upload,
+                                                                    photo_button_with_main_photo.photo_to_upload,
+                                                                    1, 1)
+                                                            if response_for_switching_photos.status_code != codes.ok:
+                                                                error_with_updating_photos = True
+                                                            break
+
+                                                        else:
+                                                            response_for_switching_photos \
+                                                                = Backend_requests.request_to_switch_photos(
+                                                                    announcement_object.announcement_id,
+                                                                    main_photo_from_server.photo_to_upload,
+                                                                    None, 1, 0)
+                                                            if response_for_switching_photos.status_code == codes.ok:
+                                                                response_for_uploading_photo\
+                                                                    = Backend_requests.request_to_upload_photo(
+                                                                        announcement_object.announcement_id, 1,
+                                                                        photo_button_with_main_photo.photo_to_upload)
+                                                                if response_for_uploading_photo.status != codes.created:
+                                                                    error_with_updating_photos = True
+                                                            else:
+                                                                error_with_updating_photos = True
+                                                            break
+                                            break
+
+                                if not committed_operation_on_main_photo and not error_with_updating_photos:
+                                    for photo_button in list_of_photo_button_objects:
+                                        if photo_button.main_photo:
+                                            committed_operation_on_main_photo = True
+                                            if photo_button.photo_from_media:
+                                                response_for_switching_photos\
+                                                    = Backend_requests.request_to_switch_photos(
+                                                        announcement_object.announcement_id, None,
+                                                        photo_button.photo_to_upload, 0, 1)
+                                                if response_for_switching_photos.status_code != codes.ok:
+                                                    error_with_updating_photos = True
+                                            else:
+                                                response_for_uploading_photo\
+                                                    = Backend_requests.request_to_upload_photo(
+                                                        announcement_object.announcement_id, 1,
+                                                        photo_button.photo_to_upload)
+                                                if response_for_uploading_photo.status != codes.created:
+                                                    error_with_updating_photos = True
+                                            break
+
+                                if not committed_operation_on_main_photo and not error_with_updating_photos:
+                                    for button in list_of_photo_button_objects:
+                                        if button.photo_to_upload:
+                                            if button.photo_from_media:
+                                                response_for_switching_photos\
+                                                    = Backend_requests.request_to_switch_photos(
+                                                        announcement_object.announcement_id, None,
+                                                        button.photo_to_upload, 0, 1)
+                                                if response_for_switching_photos.status_code != codes.ok:
+                                                    error_with_updating_photos = True
+                                            else:
+                                                response_for_uploading_photo\
+                                                    = Backend_requests.request_to_upload_photo(
+                                                        announcement_object.announcement_id, 1,
+                                                        button.photo_to_upload)
+                                                if response_for_uploading_photo.status == codes.created:
+                                                    button.main_photo = 1
+                                                else:
+                                                    error_with_updating_photos = True
+                                            break
+
+                                if not error_with_updating_photos:
+
+                                    for selected_photo in list_of_photo_button_objects:
+                                        if (selected_photo.photo_to_upload
+                                                and not selected_photo.photo_from_main
+                                                and not selected_photo.photo_from_media
+                                                and not selected_photo.main_photo):
+                                            response_for_uploading_photo = Backend_requests.request_to_upload_photo(
+                                                announcement_object.announcement_id, 0, selected_photo.photo_to_upload)
+                                            if response_for_uploading_photo.status != codes.created:
+                                                error_with_updating_photos = True
+
+                                if not error_with_updating_photos:
+                                    messagebox.showinfo(
+                                        f"Pomyślnie zaktualizowano Twoje ogłoszenie,"
+                                        f" {Config_data.logged_in_user_info.first_name}.",
+                                        f"Twoje ogłoszenie \"{title}\" zostało zaktualizowane!")
+                                    init_user_page_frame(root)
+                                else:
+                                    messagebox.showwarning("Wystąpił błąd podczas edycji zdjęć.",
+                                                           "Ogłoszenie zostało pomyślnie zaktualizowane lecz "
+                                                           "wystąpił błąd podczas edycji zdjęć, spróbuj później.")
+                                    init_user_page_frame(root)
+
+                            elif response_for_updating_announcement.status_code == codes.bad_request:
+                                messagebox.showwarning("Nie udało sie zaktualizować ogłoszenia.",
+                                                       "Wprowadzono niepoprawne dane do aktualizacji ogłoszenia.")
+
+                            else:
+                                messagebox.showerror("Błąd podczas aktualizacji ogłoszenia.",
+                                                     "Nie udało sie zaktualizować ogłoszenia, spróbuj później.")
+                        else:
+                            messagebox.showwarning("Błędny opis ogłoszenia.",
+                                                   "Opis ogłoszenia powinien zawierać od 80 do 400 znaków.")
                     else:
-                        messagebox.showerror("Błąd podczas aktualizacji ogłoszenia.",
-                                             "Nie udało sie zaktualizować ogłoszenia, spróbuj później.")
-
+                        messagebox.showwarning("Błędny numer kontaktowy ogłoszenia.",
+                                               "Podany numer kontaktowy zawiera inne znaki niż cyfry lub"
+                                               " jego długość jest nieprawidłowa.")
                 else:
-                    messagebox.showwarning("Błędny opis ogłoszenia.",
-                                           "Opis ogłoszenia powinien zawierać od 80 do 400 znaków.")
+                    messagebox.showwarning("Błędny stan ogłoszenia.",
+                                           "Nie wybrano stanu ogłoszenia.")
+
             else:
                 messagebox.showwarning("Błędna cena ogłoszenia.",
-                                       "Cena ogłoszenia powinna zawierać tylko cyfry od 0 do 9, maksymalna kwota "
+                                       "Cena ogłoszenia powinna zawierać tylko cyfry, maksymalna kwota "
                                        "ogłoszenia to 9 999 999 zł.")
-
         else:
             messagebox.showwarning("Błędna lokalizacja ogłoszenia.",
                                    "Lokalizacja ogłoszenia powinna zawierać od 3 do 45 znaków, podaj jedynie "
@@ -200,7 +338,10 @@ def download_user_announcements(active_flag, page):
                 announcement["description"],
                 announcement["price"],
                 announcement["location"],
-                announcement["main_photo"]
+                announcement["main_photo"],
+                announcement["state"],
+                announcement["creation_date"],
+                announcement["mobile_number"]
             )
             if user_announcement_object.main_photo:
                 response_for_getting_photo = Backend_requests.request_to_get_photo(user_announcement_object.main_photo)
@@ -221,88 +362,107 @@ def download_user_announcements(active_flag, page):
 
 
 def add_announcement(title_entry, location_entry, current_var_category, price_entry, description_text,
-                     select_categories, list_of_photo_button_objects):
+                     select_categories, list_of_photo_button_objects, select_state, current_var_state,
+                     mobile_number_entry):
     if match("^.{10,45}$", title_entry.get()):
         if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń ]{3,45}$", location_entry.get()):
             if current_var_category.get() in select_categories["values"]:
-                if match("^[0-9]+$", price_entry.get()) and len(price_entry.get()) <= 7:
-                    if len(description_text.get("1.0", "end-1c")) >= 80 and len(
-                            description_text.get("1.0", "end-1c")) <= 400:
+                if match("^[0-9]{1,7}$", price_entry.get()):
+                    if current_var_state.get() in select_state["values"]:
+                        if mobile_number_entry.get() == "" or match("^[+]?[0-9]{6,14}$", mobile_number_entry.get()):
+                            if 80 <= len(description_text.get("1.0", "end-1c")) <= 400:
 
-                        title = title_entry.get()
-                        location = location_entry.get()
-                        category_id = select_categories["values"].index(current_var_category.get()) + 1
-                        price = int(price_entry.get())
-                        description = description_text.get("1.0", "end-1c")
+                                title = title_entry.get()
+                                location = location_entry.get()
+                                category_id = select_categories["values"].index(current_var_category.get()) + 1
+                                state = current_var_state.get()
+                                price = int(price_entry.get())
+                                if mobile_number_entry.get() == "":
+                                    mobile_number = None
+                                else:
+                                    mobile_number = mobile_number_entry.get()
 
-                        response_for_adding_announcement = Backend_requests.request_to_add_the_announcement(title,
-                                                                                                            location,
-                                                                                                            category_id,
-                                                                                                            price,
-                                                                                                            description)
+                                description = description_text.get("1.0", "end-1c")
 
-                        if response_for_adding_announcement.status_code == codes.created:
-                            announcement_id = response_for_adding_announcement.json()["result"]["announcement_id"]
-                            error_with_uploading = False
-                            list_of_photo_button_objects_to_upload = []
-                            for button_object in list_of_photo_button_objects:
-                                if button_object.photo_to_upload:
-                                    list_of_photo_button_objects_to_upload.append(button_object)
+                                response_for_adding_announcement = Backend_requests.request_to_add_the_announcement(
+                                    title, location, category_id, state, price, mobile_number, description)
 
-                            if list_of_photo_button_objects_to_upload:
-                                selected_main_photo = False
-                                for button_object in list_of_photo_button_objects_to_upload:
-                                    if button_object.main_photo == 1:
-                                        selected_main_photo = True
+                                if response_for_adding_announcement.status_code == codes.created:
+                                    announcement_id \
+                                        = response_for_adding_announcement.json()["result"]["announcement_id"]
+                                    error_with_uploading = False
+                                    list_of_photo_button_objects_to_upload = []
+                                    for button_object in list_of_photo_button_objects:
+                                        if button_object.photo_to_upload:
+                                            list_of_photo_button_objects_to_upload.append(button_object)
 
-                                if not selected_main_photo:
-                                    list_of_photo_button_objects_to_upload[0].main_photo = 1
+                                    if list_of_photo_button_objects_to_upload:
+                                        selected_main_photo = False
+                                        for button_object in list_of_photo_button_objects_to_upload:
+                                            if button_object.main_photo == 1:
+                                                selected_main_photo = True
 
-                                for button_object in list_of_photo_button_objects_to_upload:
-                                    response_for_uploading_photo = Backend_requests.request_to_upload_photo(
-                                        announcement_id, button_object.main_photo, button_object.photo_to_upload)
+                                        if not selected_main_photo:
+                                            list_of_photo_button_objects_to_upload[0].main_photo = 1
 
-                                    if response_for_uploading_photo.status != codes.created:
-                                        error_with_uploading = True
+                                        for button_object in list_of_photo_button_objects_to_upload:
+                                            response_for_uploading_photo = Backend_requests.request_to_upload_photo(
+                                                announcement_id, button_object.main_photo,
+                                                button_object.photo_to_upload)
 
-                                for button_object in list_of_photo_button_objects_to_upload:
-                                    button_object.button.config(image=Config_data.images["camera_icon"],
-                                                                state="disabled")
-                                    button_object.photo_to_display = None
-                                    button_object.photo_to_upload = None
+                                            if response_for_uploading_photo.status != codes.created:
+                                                error_with_uploading = True
 
-                                    if button_object.main_photo == 1:
-                                        button_object.main_photo = 0
-                                        button_object.button.config(borderwidth=0)
+                                        for button_object in list_of_photo_button_objects_to_upload:
+                                            button_object.button.config(image=Config_data.images["camera_icon"],
+                                                                        state="disabled")
+                                            button_object.photo_to_display = None
+                                            button_object.photo_to_upload = None
 
-                                    if button_object.button_delete:
-                                        button_object.button_delete.destroy()
-                                        button_object.button_delete = None
+                                            if button_object.main_photo == 1:
+                                                button_object.main_photo = 0
+                                                button_object.button.config(borderwidth=0)
 
-                            title_entry.delete(0, END)
-                            location_entry.delete(0, END)
-                            price_entry.delete(0, END)
-                            description_text.delete("1.0", END)
-                            current_var_category.set("")
+                                            if button_object.button_delete:
+                                                button_object.button_delete.destroy()
+                                                button_object.button_delete = None
 
-                            if error_with_uploading:
-                                messagebox.showerror("Błąd podczas dodawania zdjęć.",
-                                                     "Podczas dodawania zdjęć wystąpił błąd, spróbuj"
-                                                     " ponownie dodać zdjęcia z poziomu edycji ogłoszenia.")
+                                    title_entry.delete(0, END)
+                                    location_entry.delete(0, END)
+                                    price_entry.delete(0, END)
+                                    mobile_number_entry.delete(0, END)
+                                    description_text.delete("1.0", END)
+                                    current_var_category.set("")
+                                    current_var_state.set("")
 
-                            messagebox.showinfo("Pomyślnie dodano ogłoszenie.",
-                                                f"Twoje ogłoszenie \"{title}\" zostało dodane, możesz dodać "
-                                                f"kolejne ogłoszenia.")
+                                    if error_with_uploading:
+                                        messagebox.showerror("Błąd podczas dodawania zdjęć.",
+                                                             "Podczas dodawania zdjęć wystąpił błąd, spróbuj"
+                                                             " ponownie dodać zdjęcia z poziomu edycji ogłoszenia.")
 
+                                    messagebox.showinfo("Pomyślnie dodano ogłoszenie.",
+                                                        f"Twoje ogłoszenie \"{title}\" zostało dodane, możesz dodać "
+                                                        f"kolejne ogłoszenia.")
+
+                                elif response_for_adding_announcement.status_code == codes.bad_request:
+                                    messagebox.showwarning("Nie udało sie dodać ogłoszenia.",
+                                                           "Wprowadzono niepoprawne dane do utworzenia ogłoszenia.")
+                                else:
+                                    messagebox.showerror("Błąd podczas dodawania ogłoszenia.",
+                                                         "Nie udało sie dodać ogłoszenia, spróbuj później.")
+                            else:
+                                messagebox.showwarning("Błędny opis ogłoszenia.",
+                                                       "Opis ogłoszenia powinien zawierać od 80 do 400 znaków.")
                         else:
-                            messagebox.showerror("Błąd podczas dodawania ogłoszenia.",
-                                                 "Nie udało sie dodać ogłoszenia, spróbuj później.")
+                            messagebox.showwarning("Błędny numer kontaktowy ogłoszenia.",
+                                                   "Podany numer kontaktowy zawiera inne znaki niż cyfry lub"
+                                                   " jego długość jest nieprawidłowa.")
                     else:
-                        messagebox.showwarning("Błędny opis ogłoszenia.",
-                                               "Opis ogłoszenia powinien zawierać od 80 do 400 znaków.")
+                        messagebox.showwarning("Błędny stan ogłoszenia.",
+                                               "Nie wybrano stanu ogłoszenia.")
                 else:
                     messagebox.showwarning("Błędna cena ogłoszenia.",
-                                           "Cena ogłoszenia powinna zawierać tylko cyfry od 0 do 9, maksymalna "
+                                           "Cena ogłoszenia powinna zawierać tylko cyfry, maksymalna "
                                            "kwota ogłoszenia to 9 999 999 zł.")
             else:
                 messagebox.showwarning("Błędna kategoria ogłoszenia.", "Nie wybrano kategorii ogłoszenia.")
@@ -358,7 +518,7 @@ def delete_text(entry_object):
     entry_object.unbind("<Button-1>")
 
 
-def change_user_data(entry, label):
+def change_user_data(entry, label, hidden_password):
     value = entry.get()
     column = None
     attribute = None
@@ -378,12 +538,13 @@ def change_user_data(entry, label):
 
     elif "Email:" in label["text"]:
         if match(
-                "^([A-Za-z0-9]+|[A-Za-z0-9][A-Za-z0-9._-]+[A-Za-z0-9])@([A-Za-z0-9]+|[A-Za-z0-9._-]+[A-Za-z0-9])\.[A-Za-z0-9]+$",
+                "^([A-Za-z0-9]+|[A-Za-z0-9][A-Za-z0-9._-]+[A-Za-z0-9])@([A-Za-z0-9]+"
+                "|[A-Za-z0-9._-]+[A-Za-z0-9])\.[A-Za-z0-9]+$",
                 value):
             column = "email"
             attribute = "Email:"
         else:
-            messagebox.showerror("Niepoprawny email.", "Wprowadzono niepoprawne dane email.")
+            messagebox.showwarning("Niepoprawny email.", "Wprowadzono niepoprawne dane email.")
 
     elif "Hasło:" in label["text"]:
         if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń0-9!@#$%^&*]{7,45}$", value):
@@ -424,14 +585,22 @@ def change_user_data(entry, label):
             elif column == "city":
                 Config_data.logged_in_user_info.change_user_city(value)
 
-            label.config(text=f"{attribute} {value}")
+            if column == "password" and hidden_password:
+                label.config(text=f"{attribute} {'*'*len(value)}")
+            else:
+                label.config(text=f"{attribute} {value}")
+            entry.delete(0, END)
+
             messagebox.showinfo("Pomyślnie zaktualizowano profil użytkownika.",
                                 f"Twoj profil został zaktualizowany, {Config_data.logged_in_user_info.first_name}.")
 
         elif response_for_updating_user.status_code == codes.bad_request:
-            messagebox.showwarning("Nie udało sie zaktualizować emaila.",
-                                   "Podany email jest już zarejestrowany.")
-
+            if "email_error" in response_for_updating_user.json():
+                messagebox.showwarning("Nie udało sie zaktualizować emaila.",
+                                       "Podany email jest już zarejestrowany.")
+            else:
+                messagebox.showwarning("Nie udało sie zaktualizować użytkownika.",
+                                       "Wprowadzono niepoprawne dane do aktualizacji użytkownika.")
         else:
             messagebox.showerror("Błąd podczas aktualizacji użytkownika.",
                                  "Nie udało sie zaktualizować użytkownika, spróbuj później.")
@@ -515,7 +684,10 @@ def download_announcements(from_search_engine, page, first_init, search_engine=N
                     announcement["description"],
                     announcement["price"],
                     announcement["location"],
-                    announcement["main_photo"]
+                    announcement["main_photo"],
+                    announcement["state"],
+                    announcement["creation_date"],
+                    announcement["mobile_number"]
                 )
 
                 if announcement_object.main_photo:
@@ -560,7 +732,10 @@ def download_user_favorite_announcements(active_flag, page, per_page):
                 favorite_announcement["name_category"],
                 favorite_announcement["price"],
                 favorite_announcement["location"],
-                favorite_announcement["main_photo"]
+                favorite_announcement["main_photo"],
+                favorite_announcement["state"],
+                favorite_announcement["creation_date"],
+                favorite_announcement["mobile_number"]
             )
 
             if user_fav_announcement_object.main_photo:
@@ -633,8 +808,7 @@ def download_messages(announcement_object=None, conversation_object=None):
                 message["message_id"],
                 message["customer_flag"],
                 message["content"],
-                message["date"],
-                message["time"],
+                message["post_date"],
                 message["user_id"],
                 message["first_name"]
             )
@@ -735,9 +909,9 @@ def download_photos_to_announcement(announcement_id, to_edit, px, py):
 
     if error_with_getting_photos:
         messagebox.showerror("Błąd podczas wczytywania zdjęć.",
-                             "Nie udalo sie wczytać zdjęć do ogłoszenia lub ich części, spróbuj później.")
+                             "Nie udalo sie wczytać zdjęć lub ich części, spróbuj później.")
 
-    return list_of_photos
+    return list_of_photos, error_with_getting_photos
 
 
 def loading_images():
@@ -772,7 +946,7 @@ def create_buttons(page, x1, x2):
     return button_previous, button_next
 
 
-def select_photo(list_of_photo_button_objects, page):
+def select_photo(list_of_photo_button_objects, page, deleted_photos=None):
     filename = filedialog.askopenfilename(title="Wybierz plik", filetypes=(("Pliki PNG", "*.png"),
                                                                            ("Pliki JPG", "*.jpg")))
     if filename:
@@ -791,10 +965,9 @@ def select_photo(list_of_photo_button_objects, page):
                     button_object.photo_to_display = photo
                     button_object.photo_to_upload = filename
 
-                    delete_button = Button(page, text="Usuń zdjęcie", font=("Arial", 8), borderwidth=0,
-                                           bg="#D3D3D3", command=lambda: delete_photo(button_object))
+                    delete_button = Button(page, text="Usuń zdjęcie", font=("Arial", 8), borderwidth=0, bg="#D3D3D3",
+                                           command=lambda: delete_photo(button_object, deleted_photos))
                     delete_button.place(x=button_object.position_x+25, y=button_object.position_y+75)
-
                     button_object.button_delete = delete_button
 
                     break
@@ -804,7 +977,15 @@ def select_photo(list_of_photo_button_objects, page):
                                        "Twój limit dodanych zdjęć został osiągnięty.")
 
 
-def delete_photo(button_object):
+def delete_photo(button_object, deleted_photos):
+    if isinstance(deleted_photos, list):
+        if button_object.photo_from_main:
+            button_object.photo_from_main = False
+            deleted_photos.append((button_object.photo_to_upload, 1))
+        elif button_object.photo_from_media:
+            deleted_photos.append((button_object.photo_to_upload, 0))
+            button_object.photo_from_media = False
+
     button_object.button.config(image=Config_data.images["camera_icon"], state="disabled")
     button_object.photo_to_display = None
     button_object.photo_to_upload = None
@@ -824,3 +1005,7 @@ def set_main_photo(selected_button_object, list_of_photo_button_objects):
             button_object.button.config(borderwidth=0)
     selected_button_object.main_photo = 1
     selected_button_object.button.config(borderwidth=4)
+
+
+def set_right(event):
+    event.widget.configure(tabs=(event.width - 6, "right"))

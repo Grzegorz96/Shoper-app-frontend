@@ -75,7 +75,7 @@ def request_to_register_user(first_name, last_name, email, login, password, date
         return response
 
 
-def request_to_update_the_announcement(title, description, price, location, announcement_id):
+def request_to_update_the_announcement(title, description, price, location, announcement_id, state, mobile_number):
     # Creating endpoint and calling GET method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/announcements/{announcement_id}"
@@ -83,7 +83,9 @@ def request_to_update_the_announcement(title, description, price, location, anno
             "title": title,
             "description": description,
             "price": price,
-            "location": location
+            "location": location,
+            "state": state,
+            "mobile_number": mobile_number
         }
         response = put(url, json=request_body)
 
@@ -118,7 +120,7 @@ def request_to_get_user_announcements(active_flag, page):
         return response
 
 
-def request_to_add_the_announcement(title, location, category_id, price, description):
+def request_to_add_the_announcement(title, location, category_id, state, price, mobile_number, description):
     # Creating endpoint and calling GET method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/announcements"
@@ -127,7 +129,10 @@ def request_to_add_the_announcement(title, location, category_id, price, descrip
             "description": description,
             "price": price,
             "location": location,
-            "category_id": category_id
+            "category_id": category_id,
+            "state": state,
+            "mobile_number": mobile_number
+
         }
         response = post(url, json=request_body)
 
@@ -384,7 +389,7 @@ def request_to_get_media_paths(announcement_id, main_photo):
         params = {
             "main_photo_flag": main_photo
         }
-        response = get(url, params)
+        response = get(url, params=params)
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
     except RequestException:
@@ -422,6 +427,51 @@ def request_to_upload_photo(announcement_id, main_photo, photo_to_upload):
         response.status = 404
         return response
 
+    # If everything ok from frontend then just return the response from GET method.
+    else:
+        return response
+
+
+def request_to_delete_photo(path, main_photo):
+    # Creating endpoint and calling GET method on this endpoint.
+    try:
+        url = f"http://127.0.0.1:5000/media/delete"
+        params = {
+            "main_photo_flag": main_photo,
+            "path": path
+        }
+        response = delete(url, params=params)
+
+    # If cant connect with endpoint, making response object with 404 status code and return response.
+    except RequestException:
+        response = Response()
+        response.status_code = 404
+        return response
+    # If everything ok from frontend then just return the response from GET method.
+    else:
+        return response
+
+
+def request_to_switch_photos(announcement_id, main_photo_path, media_photo_path, to_media_flag, to_main_flag):
+    # Creating endpoint and calling GET method on this endpoint.
+    try:
+        url = f"http://127.0.0.1:5000/media/switch/{Config_data.logged_in_user_info.user_id}"
+        request_body = {
+            "main_photo_path": main_photo_path,
+            "media_photo_path": media_photo_path,
+            "announcement_id": announcement_id
+        }
+        params = {
+            "to_media_flag": to_media_flag,
+            "to_main_flag": to_main_flag
+        }
+        response = put(url, json=request_body, params=params)
+
+    # If cant connect with endpoint, making response object with 404 status code and return response.
+    except RequestException:
+        response = Response()
+        response.status_code = 404
+        return response
     # If everything ok from frontend then just return the response from GET method.
     else:
         return response
