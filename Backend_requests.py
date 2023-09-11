@@ -6,7 +6,7 @@ import Config_data
 
 
 def request_to_get_announcements(from_search_engine, page, content_to_search=None, location=None, category_id=None):
-    """ Function responsible for requests to download announcements for specific parameters."""
+    """Function responsible for requests to download announcements for specific parameters."""
     # Creating url, parameters and calling GET method on this endpoint.
     try:
         url = "http://127.0.0.1:5000/announcements/search"
@@ -32,7 +32,7 @@ def request_to_get_announcements(from_search_engine, page, content_to_search=Non
 
 
 def request_to_login_user(login_or_email, password):
-    """ Function responsible for asking to download user information using a password and login or email."""
+    """Function responsible for asking to download user information using a password and login or email."""
     # Creating url, request_body and calling GET method on this endpoint.
     try:
         url = "http://127.0.0.1:5000/users/login"
@@ -53,7 +53,7 @@ def request_to_login_user(login_or_email, password):
 
 
 def request_to_register_user(first_name, last_name, email, login, password, date_of_birth, street, zip_code, city):
-    """ Function responsible for requesting information about a new user to be entered into the database."""
+    """Function responsible for requesting information about a new user to be entered into the database."""
     # Creating url with request_body and calling POST method on this endpoint.
     try:
         url = "http://127.0.0.1:5000/users/register"
@@ -81,7 +81,7 @@ def request_to_register_user(first_name, last_name, email, login, password, date
 
 
 def request_to_update_the_announcement(title, description, price, location, announcement_id, state, mobile_number):
-    """ Function responsible for requesting an update of a user's announcement."""
+    """Function responsible for requesting an update of a user's announcement."""
     # Creating url, request_body and calling PUT method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/announcements/{announcement_id}"
@@ -106,7 +106,7 @@ def request_to_update_the_announcement(title, description, price, location, anno
 
 
 def request_to_get_user_announcements(active_flag, page):
-    """ The function responsible for downloading user's announcements when the active flag and page are specified."""
+    """The function responsible for downloading user's announcements when the active flag and page are specified."""
     # Creating url, parameters and calling GET method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/announcements"
@@ -128,7 +128,7 @@ def request_to_get_user_announcements(active_flag, page):
 
 
 def request_to_add_the_announcement(title, location, category_id, state, price, mobile_number, description):
-    """ Function responsible for requesting to add a new announcement."""
+    """Function responsible for requesting to add a new announcement."""
     # Creating url, request_body and calling POST method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/announcements"
@@ -155,7 +155,7 @@ def request_to_add_the_announcement(title, location, category_id, state, price, 
 
 
 def request_to_verify_login(login):
-    """ Function responsible for requesting login verification."""
+    """Function responsible for requesting login verification."""
     # Creating url, request_body and calling GET method on this endpoint.
     try:
         url = "http://127.0.0.1:5000/users/login-verification"
@@ -175,7 +175,7 @@ def request_to_verify_login(login):
 
 
 def request_to_update_user_data(column, value):
-    """ Function responsible for requesting update of user data, using a specific column and value."""
+    """Function responsible for requesting update of user data, using a specific column and value."""
     # Creating url, request_body and calling PATCH method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}"
@@ -196,7 +196,7 @@ def request_to_update_user_data(column, value):
 
 
 def request_to_complete_the_announcement(announcement_id):
-    """ Function responsible for requesting to change the user's announcement flag from active to complete."""
+    """Function responsible for requesting to change the user's announcement flag from active to complete."""
     # Creating url and calling PATCH method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/announcements/{announcement_id}/complete"
@@ -213,7 +213,7 @@ def request_to_complete_the_announcement(announcement_id):
 
 
 def request_to_restore_the_announcement(announcement_id):
-    """ Function responsible for requesting to change the user's announcement flag from complete to active."""
+    """Function responsible for requesting to change the user's announcement flag from complete to active."""
     # Creating url and calling PATCH method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/announcements/{announcement_id}/restore"
@@ -230,7 +230,7 @@ def request_to_restore_the_announcement(announcement_id):
 
 
 def request_to_delete_the_announcement(announcement_id):
-    """ Function responsible for requesting to change the user's announcement flag from complete to delete."""
+    """Function responsible for requesting to change the user's announcement flag from complete to delete."""
     # Creating url and calling PATCH method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/announcements/{announcement_id}/delete"
@@ -247,7 +247,7 @@ def request_to_delete_the_announcement(announcement_id):
 
 
 def request_to_get_user_favorite_announcements(active_flag, page, per_page):
-    """ Function responsible for requesting to download the user's favorite announcements by specifying active flag,
+    """Function responsible for requesting to download the user's favorite announcements by specifying active flag,
     page and per page params."""
     # Creating url, params and calling GET method on this endpoint.
     try:
@@ -270,7 +270,7 @@ def request_to_get_user_favorite_announcements(active_flag, page, per_page):
 
 
 def request_to_add_announcement_to_favorite(announcement_id):
-    """ Function responsible for requesting that a selected announcement be added to the user's favorites."""
+    """Function responsible for requesting that a selected announcement be added to the user's favorites."""
     # Creating url, request_body and calling POST method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/favorite-announcements"
@@ -290,7 +290,7 @@ def request_to_add_announcement_to_favorite(announcement_id):
 
 
 def request_to_delete_announcement_from_favorite(favorite_announcement_id):
-    """ Function responsible for requesting removal of a selected announcement from the user's favorites."""
+    """Function responsible for requesting removal of a selected announcement from the user's favorites."""
     # Creating url and calling DELETE method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/favorite-announcements/{favorite_announcement_id}"
@@ -307,7 +307,7 @@ def request_to_delete_announcement_from_favorite(favorite_announcement_id):
 
 
 def request_to_get_messages(announcement_id=None, conversation_id=None):
-    """ Function responsible for requesting to download a message using the conversation id or announcement id."""
+    """Function responsible for requesting to download a message using the conversation id or announcement id."""
     # Creating url, request_body and calling GET method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/messages"
@@ -332,7 +332,7 @@ def request_to_get_messages(announcement_id=None, conversation_id=None):
 
 
 def request_to_send_message(content, is_user_customer, conversation_id=None, announcement_id=None):
-    """ Function responsible for requesting to send a message."""
+    """Function responsible for requesting to send a message."""
     # Creating url, request_body and calling POST method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/messages"
@@ -361,7 +361,7 @@ def request_to_send_message(content, is_user_customer, conversation_id=None, ann
 
 
 def request_to_get_conversations(customer_flag, page):
-    """ Function responsible for requesting download of the user's conversation, specifying whether to download for
+    """Function responsible for requesting download of the user's conversation, specifying whether to download for
     the buyer or seller and the page."""
     # Creating url, parameters and calling GET method on this endpoint.
     try:
@@ -384,14 +384,13 @@ def request_to_get_conversations(customer_flag, page):
 
 
 def request_to_get_photo(path):
-    """ Function responsible for requesting to download a graphic file when specifying the path."""
+    """Function responsible for requesting to download a graphic file when specifying the path."""
     # Creating url, request_body and calling GET method on this endpoint.
     try:
         url = "http://127.0.0.1:5000/media/download"
         request_body = {
             "path": path
         }
-        # response = get(url, json=request_body, stream=True).raw
         response = get(url, json=request_body, stream=True).raw
 
     # If cant connect with endpoint, making HTTPResponse object with 404 status code and return response.
@@ -405,8 +404,8 @@ def request_to_get_photo(path):
 
 
 def request_to_get_media_paths(announcement_id, main_photo):
-    """ Function responsible for requesting downloading paths to graphic files for a given announcement when specifying
-     announcement_id and the main_photo flag."""
+    """Function responsible for requesting downloading paths to graphic files for a given announcement when specifying
+    announcement_id and the main_photo flag."""
     # Creating url, parameters and calling GET method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/announcements/{announcement_id}/media/paths"
@@ -426,8 +425,8 @@ def request_to_get_media_paths(announcement_id, main_photo):
 
 
 def request_to_upload_photo(announcement_id, main_photo, photo_to_upload):
-    """ The function responsible for requesting the upload of a graphic file on the server and saving its path in the
-     database."""
+    """The function responsible for requesting the upload of a graphic file on the server and saving its path in the
+    database."""
     # Creating url and parameters.
     try:
         url = f"http://127.0.0.1:5000/media/upload/{Config_data.logged_in_user_info.user_id}"
@@ -462,8 +461,8 @@ def request_to_upload_photo(announcement_id, main_photo, photo_to_upload):
 
 
 def request_to_delete_photo(path, main_photo):
-    """ The function responsible for requesting the removal of a graphic file from the server and its path from
-     the database."""
+    """The function responsible for requesting the removal of a graphic file from the server and its path from
+    the database."""
     # Creating url, parameters and calling DELETE method on this endpoint.
     try:
         url = f"http://127.0.0.1:5000/media/delete"
@@ -484,7 +483,7 @@ def request_to_delete_photo(path, main_photo):
 
 
 def request_to_switch_photos(announcement_id, main_photo_path, media_photo_path, to_media_flag, to_main_flag):
-    """ The function responsible for requesting swapping file paths in the database, deleting from one table,
+    """The function responsible for requesting swapping file paths in the database, deleting from one table,
     adding to another and vice versa."""
     # Creating url, request_body, parameters and calling PUT method on this endpoint.
     try:

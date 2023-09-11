@@ -13,7 +13,7 @@ from datetime import datetime
 
 
 def init_main_window():
-    """ The function that initializes the main application window, this is a function that is called from the Main.py
+    """The function that initializes the main application window, this is a function that is called from the Main.py
     module once and then returns the created root object to the Main.py module."""
     # Creating root
     root = Tk()
@@ -36,7 +36,7 @@ def init_main_window():
 
 
 def init_top_panel(root):
-    """ The function initializing the top panel of the application is called once from Main.py and attaches the top
+    """The function initializing the top panel of the application is called once from Main.py and attaches the top
     panel objects to the main application window, which are later used by the user to initialize subsequent pages."""
     # Init top_panel_frame for root.
     top_panel_frame = Frame(root, width=1280, height=80)
@@ -89,7 +89,7 @@ def init_top_panel(root):
 
 
 def is_user_logged_to_user_page(top_panel_frame, root):
-    """ The function to check if the user is logged in, if logged in, I call the init_user_page_frame function,
+    """The function to check if the user is logged in, if logged in, I call the init_user_page_frame function,
     if not already logged in, it calls the init_login_window function so that the user can log in."""
     if Config_data.is_user_logged_in:
         init_user_page_frame(root)
@@ -98,8 +98,8 @@ def is_user_logged_to_user_page(top_panel_frame, root):
 
 
 def init_login_window(top_panel_frame, root):
-    """ A function that initializes an additional window with a login and registration form. Using it,
-     the user can log in or register a new account."""
+    """A function that initializes an additional window with a login and registration form. Using it,
+    the user can log in or register a new account."""
     # Init login_window from Top_Level() Class.
     login_window = Toplevel()
     # Adding the created window object to the global list to be able to destroy the created objects at the right moment.
@@ -237,7 +237,7 @@ def init_login_window(top_panel_frame, root):
 
 
 def init_add_announcement_page_frame(root):
-    """ The function initializing the page for adding announcements by the user. With this function, the user can enter
+    """The function initializing the page for adding announcements by the user. With this function, the user can enter
     all the necessary data and multimedia files and then, after their validation, they will be placed on the server and
     in the database. If the user is logged in, he has access to this function, otherwise he will receive a message."""
     # Checking if user is logged in.
@@ -352,7 +352,7 @@ def init_add_announcement_page_frame(root):
 
 
 def init_user_page_frame(root):
-    """ User page initialization function. Using it, the user can make changes to his account. It can also modify,
+    """User page initialization function. Using it, the user can make changes to his account. It can also modify,
     activate, terminate and delete announcements."""
     # Destroying the current page.
     Config_data.current_page.destroy()
@@ -425,7 +425,7 @@ def init_user_page_frame(root):
         y += 1
 
     def show_password():
-        """ The password discovery function takes the local variable hidden_password, sets its state to False,
+        """The password discovery function takes the local variable hidden_password, sets its state to False,
         configures the local button so that its next press points to the hide_password function. Finally,
         it replaces the text with password_label as decoded."""
         nonlocal hidden_password
@@ -434,7 +434,7 @@ def init_user_page_frame(root):
         password_label.config(text=f"Hasło: {Config_data.logged_in_user_info.password}")
 
     def hide_password():
-        """ The password-hiding function takes the local variable hidden_password, sets its state to True, configures
+        """The password-hiding function takes the local variable hidden_password, sets its state to True, configures
         the local button so that its next press points to the show_password function. Finally, it replaces text with
         password_label as encoded with "*"* len of actual password."""
         nonlocal hidden_password
@@ -443,7 +443,7 @@ def init_user_page_frame(root):
         password_label.config(text=f"Hasło: {'*' * len(Config_data.logged_in_user_info.password)}")
 
     def config_page_of_user_active_announcements(actual_page=1, list_of_objects=None):
-        """ The pagination function of the user's active announcements, downloads a specific number of announcements
+        """The pagination function of the user's active announcements, downloads a specific number of announcements
         from the backend and then displays it on the page, and finally determines, depending on the number of
         downloaded objects and the current page, whether it can assign the function of the next call to a specific
         button or must block it."""
@@ -504,7 +504,7 @@ def init_user_page_frame(root):
                                  config_page_of_user_active_announcements, list_of_objects, 4)
 
     def config_page_of_user_completed_announcements(actual_page=1, list_of_objects=None):
-        """ The pagination function of the user's completed announcements, downloads a specific number of announcements
+        """The pagination function of the user's completed announcements, downloads a specific number of announcements
         from the backend and then displays it on the page, and finally determines, depending on the number of
         downloaded objects and the current page, whether it can assign the function of the next call to a specific
         button or must block it."""
@@ -576,7 +576,7 @@ def init_user_page_frame(root):
 
 
 def init_edit_user_announcement_page_frame(announcement_object, root):
-    """ The function initializing the page for editing the announcement by the user. The user can update the data for
+    """The function initializing the page for editing the announcement by the user. The user can update the data for
     the announcement, remove the photo, add a photo or Modify the main photo."""
     # Destroying the current page.
     Config_data.current_page.destroy()
@@ -724,7 +724,7 @@ def init_edit_user_announcement_page_frame(announcement_object, root):
 
 def init_shopper_page_frame(root, search_engine=None, search_location=None, current_var=None, categories=None,
                             from_search_engine=False):
-    """ The function initializing the main page of the application. On this page, the user can view searched
+    """The function initializing the main page of the application. On this page, the user can view searched
     announcements, go to specific announcements, send messages or like."""
     # At first initialization current_page is None, this prevents the error.
     if isinstance(Config_data.current_page, Frame):
@@ -739,8 +739,8 @@ def init_shopper_page_frame(root, search_engine=None, search_location=None, curr
     ttk.Separator(main_page).place(x=854, y=15, height=600)
 
     def config_page_of_announcements(actual_page=1, list_of_objects=None, first_init=False):
-        """ Page pagination function for shopper_page_frame, default call accepts parameters actual_page=1,
-        list_of_objects=None, first_init_False, this allows the program to work properly."""
+        """Page pagination function for shopper_page_frame, default call accepts parameters actual_page=1,
+        list_of_objects=None, first_init=False, this allows the program to work properly."""
         # The program verifies where the first function was called from.
         if from_search_engine:
             # If with search_engine then it will call functions with additional parameters and download list of
@@ -816,7 +816,7 @@ def init_shopper_page_frame(root, search_engine=None, search_location=None, curr
 
 
 def init_announcement_page_frame(page, announcement_object, block_fav, block_mess):
-    """ The function initializing the announcement page, displays all data for a given announcement. It also downloads
+    """The function initializing the announcement page, displays all data for a given announcement. It also downloads
     photos and displays them in the gallery. From this page, the user can like the announcement, send a message
     or unlock the seller's mobile number."""
     # Initialization of the local tmp_page, this object will not be assigned to the Config_data.current_page because it
@@ -884,7 +884,7 @@ def init_announcement_page_frame(page, announcement_object, block_fav, block_mes
         announcement_object.announcement_id, False, 600, 400)
 
     def init_photo(actual_photo=0):
-        """ Photo initialization function, thanks to which the user can configure the photo displayed on the label."""
+        """Photo initialization function, thanks to which the user can configure the photo displayed on the label."""
         # If actual_photo is greater or equal to 0 and lower than length of photos, the program will enter the block
         # and modify the objects accordingly.
         if 0 <= actual_photo < len(photos):
@@ -902,7 +902,7 @@ def init_announcement_page_frame(page, announcement_object, block_fav, block_mes
 
 
 def init_messages_page_frame(root):
-    """ A function that initializes the user's messages page. The user can select the appropriate conversation
+    """A function that initializes the user's messages page. The user can select the appropriate conversation
     and reply to the buyer or seller."""
     # Checking if the user is logged in.
     if Config_data.is_user_logged_in:
@@ -927,7 +927,7 @@ def init_messages_page_frame(root):
         Label(messages_page, text="Sprzedajesz", font=("Arial", 27), bg="#A9A9A9").place(x=378, y=30)
 
         def config_conversations_page_as_customer(actual_page=1, list_of_objects=None):
-            """ pagination function for downloaded conversations as a customer."""
+            """Pagination function for downloaded conversations as a customer."""
             # Retrieving a list of conversation objects and assigning them to a variable.
             conversations_as_customer = Functions.download_conversations(1, actual_page)
 
@@ -974,7 +974,7 @@ def init_messages_page_frame(root):
                                      7)
 
         def config_conversations_page_as_seller(actual_page=1, list_of_objects=None):
-            """ pagination function for downloaded conversations as a seller."""
+            """Pagination function for downloaded conversations as a seller."""
             # Retrieving a list of conversation objects and assigning them to a variable.
             conversations_as_seller = Functions.download_conversations(0, actual_page)
 
@@ -1032,7 +1032,7 @@ def init_messages_page_frame(root):
         list_of_objects_to_destroy = []
 
         def update_text_of_messages(conversation_object, is_user_customer):
-            """ The function supports the display of new message windows and the correct destruction of old windows."""
+            """The function supports the display of new message windows and the correct destruction of old windows."""
             nonlocal choose_conversation_label
             # Removing the label the first time the function is called.
             if isinstance(choose_conversation_label, Label):
@@ -1086,7 +1086,7 @@ def init_messages_page_frame(root):
             list_of_objects_to_destroy.append(send_button)
 
             def refresh_messages():
-                """ The function is responsible for downloading messages, appropriate text display and configuration
+                """The function is responsible for downloading messages, appropriate text display and configuration
                 of the button for sending messages."""
                 # Downloading messages from conversation_object and assigning them to a variable.
                 list_of_message_objects = Functions.download_messages(conversation_object=conversation_object)
@@ -1126,7 +1126,7 @@ def init_messages_page_frame(root):
 
 
 def init_favorite_page_frame(root):
-    """ Function of a page with the user's favorite announcements, from this page the user can unlike an announcement,
+    """Function of a page with the user's favorite announcements, from this page the user can unlike an announcement,
     send a message to seller, view the announcement. The page also has pagination for active and completed favorite
     announcements."""
     # Checking if user is logged in.
@@ -1149,7 +1149,7 @@ def init_favorite_page_frame(root):
         Label(favorite_page, text="Zakończone", font=("Arial", 27), borderwidth=0, bg="#A9A9A9").place(x=970, y=30)
 
         def config_page_of_fav_active_announcements(actual_page=1, list_of_objects=None):
-            """ Pagination function for active favorite announcements."""
+            """Pagination function for active favorite announcements."""
             # Retrieving the list of active_favorite_announcements from function called with specified arguments.
             user_fav_active_announcements = Functions.download_user_favorite_announcements(1, actual_page, 8)
 
@@ -1213,7 +1213,7 @@ def init_favorite_page_frame(root):
                                      list_of_objects, 8)
 
         def config_page_of_fav_completed_announcements(actual_page=1, list_of_objects=None):
-            """ Pagination function for completed favorite announcements."""
+            """Pagination function for completed favorite announcements."""
             # Retrieving the list of completed_favorite_announcements from function called with specified arguments.
             user_fav_completed_announcements = Functions.download_user_favorite_announcements(0, actual_page, 4)
 
@@ -1288,7 +1288,7 @@ def init_favorite_page_frame(root):
 
 
 def init_message_window(announcement_object):
-    """ A function that initializes an additional message window, the user can use it to display and send a message to
+    """A function that initializes an additional message window, the user can use it to display and send a message to
     another user's announcement. Then sent message will be displayed on the message page of both the buyer and the
     seller."""
     # Checking if user is logged in.
@@ -1345,7 +1345,7 @@ def init_message_window(announcement_object):
             send_button.place(x=389, y=457)
 
             def refresh_messages():
-                """ The function is responsible for downloading messages, appropriate text display and configuration of
+                """The function is responsible for downloading messages, appropriate text display and configuration of
                 the button for sending messages."""
                 # Downloading list of messages from announcement object.
                 list_of_message_objects = Functions.download_messages(announcement_object=announcement_object)

@@ -19,7 +19,7 @@ from datetime import datetime
 def register_user(first_name_entry, last_name_entry, email_entry, login_entry, password_entry, combobox_day_var,
                   combobox_day_birthday, combobox_month_var, combobox_month_birthday, combobox_year_var,
                   combobox_year_birthday, street_entry, zip_code_entry, city_entry):
-    """ The function responsible for frontend validation of the entered data - if the data is successfully validated,
+    """The function responsible for frontend validation of the entered data - if the data is successfully validated,
     the function from the backend_request module will be called, which will send the entered data to the backend,
     depending on what status code is returned, the function will perform the appropriate actions and display the
     appropriate message."""
@@ -115,7 +115,7 @@ def register_user(first_name_entry, last_name_entry, email_entry, login_entry, p
 
 
 def login_user(entry_login_or_email, entry_password, top_panel_frame, init_shopper_page_frame, root):
-    """ The function responsible for logging in the user, validating the entered data, changing the global
+    """The function responsible for logging in the user, validating the entered data, changing the global
     is_user_logged_in flag and creating a user object."""
     # Validations of entered data.
     if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń0-9]{5,45}$", entry_login_or_email.get()) or match(
@@ -183,7 +183,7 @@ def login_user(entry_login_or_email, entry_password, top_panel_frame, init_shopp
 
 
 def logout_user(logout_button, user_name, init_shopper_page_frame, root):
-    """ The function responsible for logging out the user deletes the user object, changes the login flag to False,
+    """The function responsible for logging out the user deletes the user object, changes the login flag to False,
     destroys the created message objects, destroys the logout button, initializes the main application page and
     displays an appropriate message."""
     # Changing global flag and deleting data from user object.
@@ -204,7 +204,7 @@ def logout_user(logout_button, user_name, init_shopper_page_frame, root):
 def change_announcement_data(title_entry, location_entry, price_entry, description_text, announcement_object,
                              init_user_page_frame, root, current_var_state, select_state, mobile_number_entry,
                              list_of_photo_button_objects, deleted_photos):
-    """ The function responsible for validating the announcement data, calling the function that sends data to the
+    """The function responsible for validating the announcement data, calling the function that sends data to the
     backend, modifying multimedia files on the server and their paths in the database."""
     # Validations entered data.
     if match("^.{10,45}$", title_entry.get()):
@@ -409,7 +409,7 @@ def change_announcement_data(title_entry, location_entry, price_entry, descripti
 
 
 def download_user_announcements(active_flag, page):
-    """ The function is responsible for triggering a request to download the user's announcements, creating a list of
+    """The function is responsible for triggering a request to download the user's announcements, creating a list of
     objects for these announcements and returning them to the GUI.py module. In the function parameters, the program
     specifies which page it wants to display and whether announcements are active or completed."""
     # Calling the user announcement request function.
@@ -462,7 +462,7 @@ def download_user_announcements(active_flag, page):
 def add_announcement(title_entry, location_entry, current_var_category, price_entry, description_text,
                      select_categories, list_of_photo_button_objects, select_state, current_var_state,
                      mobile_number_entry):
-    """ The function responsible for adding advertisements and photos, validates the entered data, sends it to
+    """The function responsible for adding advertisements and photos, validates the entered data, sends it to
     the server and handles the response returned from the server."""
     # Validations entered data.
     if match("^.{10,45}$", title_entry.get()):
@@ -613,7 +613,7 @@ def add_announcement(title_entry, location_entry, current_var_category, price_en
 
 
 def verify_login(login_entry):
-    """ Function responsible for checking in the database whether the given login is already taken and informing the
+    """Function responsible for checking in the database whether the given login is already taken and informing the
     user about the result of the operation."""
     # Validation entered data.
     if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń0-9]{5,45}$", login_entry.get()):
@@ -643,7 +643,7 @@ def verify_login(login_entry):
 
 
 def verify_password(password_entry):
-    """ Function responsible for verifying the password entered by the user and informing him of the result."""
+    """Function responsible for verifying the password entered by the user and informing him of the result."""
     # If the password entered by the user passes validation, display an acceptance message.
     if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń0-9!@#$%^&*]{7,45}$", password_entry.get()):
         messagebox.showinfo("Poprawne hasło.", "Możesz użyć tego hasła do rejestracji.")
@@ -655,7 +655,7 @@ def verify_password(password_entry):
 
 
 def show_pattern(arg):
-    """ A feature that displays login and password requirements to the user during registration."""
+    """A feature that displays login and password requirements to the user during registration."""
     # If the transmitted argument is equal to the login pattern string, then display a message.
     if arg == "Wzór loginu":
         messagebox.showinfo("Wymogi dotyczące loginu:",
@@ -670,13 +670,13 @@ def show_pattern(arg):
 
 
 def delete_text(entry_object):
-    """ A function that removes text from the entry object and unbinds the function from the object."""
+    """A function that removes text from the entry object and unbinds the function from the object."""
     entry_object.delete(0, END)
     entry_object.unbind("<Button-1>")
 
 
 def change_user_data(entry, label, hidden_password):
-    """ The function responsible for changing user data, validating the entered data, determining what the user wants
+    """The function responsible for changing user data, validating the entered data, determining what the user wants
     to change, sending it to the backend and changing the value in the user object."""
     # Assigning the entered data to variables.
     value = entry.get()
@@ -790,15 +790,19 @@ def change_user_data(entry, label, hidden_password):
 
 
 def move_active_announcement_to_completed_announcements(user_active_announcement_object, init_user_page_frame, root):
+    """Function responsible for ending the announcement. The announcement flag will change from active to completed."""
+    # Calling the function sending a request to end the announcement.
     response_for_end_of_announcement\
         = Backend_requests.request_to_complete_the_announcement(user_active_announcement_object.announcement_id)
 
+    # If the returned response has a status of 200, then display a success message and refresh the page.
     if response_for_end_of_announcement.status_code == codes.ok:
         messagebox.showinfo(f"Pomyślnie zakończono ogłoszenie.",
                             f"{Config_data.logged_in_user_info.first_name}, Twoje ogłoszenie "
                             f"\"{user_active_announcement_object.title}\" zostało przeniesione do zakończonych.")
         init_user_page_frame(root)
 
+    # If the returned response has a status other than 200, then display an error message.
     else:
         messagebox.showerror("Błąd podczas zakańczania ogłoszenia.",
                              f"Nie udalo sie zakończyć Twojego ogłoszenia "
@@ -806,15 +810,20 @@ def move_active_announcement_to_completed_announcements(user_active_announcement
 
 
 def move_completed_announcement_to_active_announcements(user_completed_announcement_object, init_user_page_frame, root):
+    """Function responsible for restoring the announcement. The announcement flag will change from completed to
+    active."""
+    # Calling a function sending a request to restore a given announcement to the active state.
     response_for_restore_of_announcement\
         = Backend_requests.request_to_restore_the_announcement(user_completed_announcement_object.announcement_id)
 
+    # If the returned response has a status of 200, then display a success message and refresh the page.
     if response_for_restore_of_announcement.status_code == codes.ok:
         messagebox.showinfo("Pomyślnie aktywowano ogłoszenie.",
                             f"{Config_data.logged_in_user_info.first_name}, Twoje ogłoszenie "
                             f"\"{user_completed_announcement_object.title}\" zostało aktywowane.")
         init_user_page_frame(root)
 
+    # If the returned response has a status other than 200, then display an error message.
     else:
         messagebox.showerror("Błąd podczas aktywowania ogłoszenia.",
                              f"Nie udalo sie aktywować Twojego ogłoszenia "
@@ -822,15 +831,20 @@ def move_completed_announcement_to_active_announcements(user_completed_announcem
 
 
 def delete_from_completed_announcements(user_completed_announcement_object, init_user_page_frame, root):
+    """Function responsible for deleting a completed announcement. The announcement flag will change from completed to
+     deleted."""
+    # Calling the function sending a request to remove a given announcement.
     response_for_delete_of_announcement\
         = Backend_requests.request_to_delete_the_announcement(user_completed_announcement_object.announcement_id)
 
+    # If the returned response has a status of 200, then display a success message and refresh the page.
     if response_for_delete_of_announcement.status_code == codes.ok:
         messagebox.showinfo(f"Pomyślnie usunięto ogłoszenie.",
                             f"{Config_data.logged_in_user_info.first_name}, Twoje ogłoszenie "
                             f"\"{user_completed_announcement_object.title}\" zostało usunięte.")
         init_user_page_frame(root)
 
+    # If the returned response has a status other than 200, then display an error message.
     else:
         messagebox.showerror("Błąd podczas usuwania ogłoszenia.",
                              f"Nie udalo sie usunąć Twojego ogłoszenia "
@@ -839,6 +853,10 @@ def delete_from_completed_announcements(user_completed_announcement_object, init
 
 def download_announcements(from_search_engine, page, first_init, search_engine=None, search_location=None,
                            current_var=None, categories=None):
+    """Function responsible for downloading announcements on the home page. When the user calls the function from
+     search_engine, the user specifies the parameters with which he wants to download annuncements."""
+
+    # If the function was called from search_engine, the program will assign the imported values to the variables.
     if from_search_engine:
         content_to_search = search_engine.get()
         location = search_location.get()
@@ -846,15 +864,22 @@ def download_announcements(from_search_engine, page, first_init, search_engine=N
         if current_var.get() in categories["values"]:
             category_id = categories["values"].index(current_var.get()) + 1
 
+        # Calling a function sending a request to download a message with specific additional parameters.
         response_for_getting_announcements = Backend_requests.request_to_get_announcements(from_search_engine, page,
                                                                                            content_to_search, location,
                                                                                            category_id)
+
+    # If the function is called not from search_engine, announcements will be downloaded without additional parameters.
     else:
         response_for_getting_announcements = Backend_requests.request_to_get_announcements(from_search_engine, page)
 
+    # # If the returned response has a status of 200, the program will create a list of announcements objects from the
+    # downloaded data.
     if response_for_getting_announcements.status_code == codes.ok:
 
+        # If any announcements are downloaded, the program creates a list of objects.
         if response_for_getting_announcements.json()["result"]:
+
             list_of_objects_announcements = []
             for announcement in response_for_getting_announcements.json()["result"]:
                 announcement_object = Announcement(
@@ -873,6 +898,7 @@ def download_announcements(from_search_engine, page, first_init, search_engine=N
                     announcement["mobile_number"]
                 )
 
+                # Downloading main photos for announcements with a path to the main photo.
                 if announcement_object.main_photo:
                     response_for_getting_photo = Backend_requests.request_to_get_photo(announcement_object.main_photo)
                     if response_for_getting_photo.status == codes.ok:
@@ -883,14 +909,20 @@ def download_announcements(from_search_engine, page, first_init, search_engine=N
 
                 list_of_objects_announcements.append(announcement_object)
 
+            # Returning a list of announcement objects.
             return list_of_objects_announcements
 
+        # If an empty list is returned, it means that no announcements were found for the given parameters.
+        # Calling the function with first_init means that the user is searching for announcements for the first time
+        # (not from pagination) and should be informed about their absence. Calling the function without first_init is
+        # calling the function from pagination, so there is no need to inform the user.
         else:
             if first_init:
                 messagebox.showwarning("Nie znaleźliśmy żadnych ogłoszeń.",
                                        "Przykro nam, nie znaleźliśmy wyników dla Twoich kryteriów wyszukiwania.")
             return []
 
+    # If the returned response has a status other than 200, then display an error message and return an empty list.
     else:
         messagebox.showerror("Błąd podczas wczytywania ogłoszeń.",
                              "Nie udalo sie pobrać ogłoszeń, spróbuj ponownie później.")
@@ -898,11 +930,16 @@ def download_announcements(from_search_engine, page, first_init, search_engine=N
 
 
 def download_user_favorite_announcements(active_flag, page, per_page):
+    """Function responsible for downloading announcements belonging to the user, creating a list of announcements
+    objects and returning this list."""
+    # Calling the function sending a request to download the user's announcements.
     response_for_getting_user_favorite_announcements = Backend_requests.request_to_get_user_favorite_announcements(
         active_flag, page, per_page)
 
+    # If the returned response has a status of 200, the program will create a list of user's announcements objects from
+    # the downloaded data.
     if response_for_getting_user_favorite_announcements.status_code == codes.ok:
-        # Making list of fav_announcements objects
+
         list_of_user_fav_announcement_objects = []
         for favorite_announcement in response_for_getting_user_favorite_announcements.json()["result"]:
             user_fav_announcement_object = UserFavoriteAnnouncement(
@@ -921,6 +958,7 @@ def download_user_favorite_announcements(active_flag, page, per_page):
                 favorite_announcement["mobile_number"]
             )
 
+            # Downloading main photos for user's announcements with a path to the main photo.
             if user_fav_announcement_object.main_photo:
                 response_for_getting_photo = Backend_requests.request_to_get_photo(user_fav_announcement_object.
                                                                                    main_photo)
@@ -932,8 +970,10 @@ def download_user_favorite_announcements(active_flag, page, per_page):
 
             list_of_user_fav_announcement_objects.append(user_fav_announcement_object)
 
+        # Returning a list of user's announcement objects.
         return list_of_user_fav_announcement_objects
 
+    # If the returned response has a status other than 200, then display an error message and return an empty list.
     else:
         messagebox.showerror("Błąd podczas wczytywania ulubionych ogłoszeń.",
                              "Nie udalo sie wczytać ulubionych ogłoszeń, spróbuj później.")
@@ -941,21 +981,32 @@ def download_user_favorite_announcements(active_flag, page, per_page):
 
 
 def add_announcement_to_favorite(announcement_object):
+    """Function responsible for adding announcements to favorites."""
+    # Checking if the user is logged in.
     if Config_data.is_user_logged_in:
+
+        # Calling the function sending a request to add the announcement to the user's favorites.
         response_for_adding_to_favorite\
             = Backend_requests.request_to_add_announcement_to_favorite(announcement_object.announcement_id)
 
+        # If the returned response has a status of 201, the program will display a success message.
         if response_for_adding_to_favorite.status_code == codes.created:
             messagebox.showinfo("Pomyślnie dodano do ulubionych.",
                                 f"Ogłoszenie \"{announcement_object.title}\" zostało dodane do ulubionych.")
+
+        # If the returned response has a status of 400, The program will display a message that the ad has already been
+        # liked by the user.
         elif response_for_adding_to_favorite.status_code == codes.bad_request:
             messagebox.showwarning(
                 f"{Config_data.logged_in_user_info.first_name}, wybrane ogłoszenie znajduję sie już w ulubionych.",
                 f"Ogłoszenie \"{announcement_object.title}\" znajduje się na Twojej liście ulubionych.")
+
+        # If the returned response has a status other than 201 and 400, the program will display an error message.
         else:
             messagebox.showerror("Błąd podczas dodawania do ulubionych.",
                                  "Nie udalo sie dodać do ulubionych, spróbuj później.")
 
+    # User not logged in message.
     else:
         messagebox.showwarning("Nie jesteś zalogowany.",
                                "Aby dodać ogłoszenie do ulubionych musisz sie zalogować.")
@@ -977,13 +1028,22 @@ def delete_announcement_from_favorite(user_fav_announcement_object, init_favorit
 
 
 def download_messages(announcement_object=None, conversation_object=None):
+    """Function responsible for retrieving user's messages using conversation id or announcement id."""
+    # If the user has imported a conversation object, the program sends a request with the conversation_id parameter.
     if conversation_object:
         response_for_getting_messages\
             = Backend_requests.request_to_get_messages(conversation_id=conversation_object.conversation_id)
+
+    # If the user has not imported the conversation id, it means that he has imported the announcement id,
+    # the program will send a request with the announcement_id parameter.
     else:
         response_for_getting_messages\
             = Backend_requests.request_to_get_messages(announcement_id=announcement_object.announcement_id)
+
+    # If the returned response has a status of 200, the program will create list of message objects for the downloaded
+    # conversation.
     if response_for_getting_messages.status_code == codes.ok:
+
         list_of_messages_objects = []
         for message in response_for_getting_messages.json()["result"]:
             message_object = Message(
@@ -997,8 +1057,10 @@ def download_messages(announcement_object=None, conversation_object=None):
             )
             list_of_messages_objects.append(message_object)
 
+        # Return a list of message objects
         return list_of_messages_objects
 
+    # If the returned response has a status of 200, the program will display an error message and return empty list.
     else:
         messagebox.showerror("Błąd podczas wczytywania wiadomości.",
                              "Nie udalo sie wczytać wiadomości, spróbuj później.")
@@ -1006,38 +1068,57 @@ def download_messages(announcement_object=None, conversation_object=None):
 
 
 def send_message(list_of_message_objects, message_entry, refresh_messages, is_user_customer, announcement_object=None):
+    """Function responsible for sending the entered message text to the database."""
+    # Validation of entered data.
     if message_entry.get() != "":
         if message_entry.get() != "Napisz wiadomość...":
 
+            # If validation is successful, the program checks whether the imported message list contains any objects,
+            # if so it will retrieve the conversation id from the object and send the request.
             if list_of_message_objects:
                 conversation_id = list_of_message_objects[0].conversation_id
                 response_for_sending_message = Backend_requests.request_to_send_message(message_entry.get(),
                                                                                         is_user_customer,
                                                                                         conversation_id=conversation_id)
 
+            # If the user does not yet have a message for a given announcement, a request will be sent with the given
+            # announcement_id to first create conversations for a given announcement and then create a message for the
+            # conversation.
             else:
                 announcement_id = announcement_object.announcement_id
                 response_for_sending_message = Backend_requests.request_to_send_message(message_entry.get(),
                                                                                         is_user_customer,
                                                                                         announcement_id=announcement_id)
 
+            # If the returned response has a status of 201, the program will clear message_entry object and will trigger
+            # the message refresh function.
             if response_for_sending_message.status_code == codes.created:
                 message_entry.delete(0, END)
                 refresh_messages()
 
+            # If the returned response has a status of 201, the program will display an error message.
             else:
                 messagebox.showerror("Błąd podczas wysyłania wiadomości.",
                                      "Nie udalo sie wysłać wiadomości, spróbuj później.")
 
+        # Validation failure message.
         else:
             messagebox.showwarning("Błądna wiadomość.", "Aby wysłać, najpierw napisz wiadomość.")
+
+    # Validation failure message.
     else:
         messagebox.showwarning("Błędna wiadomość.", "Nie możesz wysłać pustej wiadomości.")
 
 
 def download_conversations(customer_flag, page):
+    """Function responsible for downloading user conversations, specifying the customer_flag and page parameters.
+    The function can download conversations for the user as a customer and as a seller."""
+    # Calling the function sending a request to download the conversation.
     response_for_getting_conversations = Backend_requests.request_to_get_conversations(customer_flag, page)
+
+    # If the returned response has a status of 200, the program will create list of conversation objects.
     if response_for_getting_conversations.status_code == codes.ok:
+
         list_of_conversations = []
         for conversation in response_for_getting_conversations.json()["result"]:
             conv_object = Conversation(
@@ -1048,8 +1129,10 @@ def download_conversations(customer_flag, page):
             )
             list_of_conversations.append(conv_object)
 
+        # Return list of conversations.
         return list_of_conversations
 
+    # If the returned response has a status of 200, the program will display an error message and return an empty list.
     else:
         messagebox.showerror("Błąd podczas wczytywania konwersacji.",
                              "Nie udalo sie wczytać konwersacji, spróbuj później.")
@@ -1057,10 +1140,17 @@ def download_conversations(customer_flag, page):
 
 
 def download_photos_to_announcement(announcement_id, to_edit, px, py):
+    """A function that downloads photo paths for a given ad and then photos from the downloaded paths."""
+    # Defining an empty list and an error flag.
     list_of_photos = []
     error_with_getting_photos = False
 
+    # Calling the function sending a request to download the path of the main photo for the announcement.
     response_for_getting_paths_to_main_photo = Backend_requests.request_to_get_media_paths(announcement_id, 1)
+
+    # If the returned response has a status of 200, The program will download the photo from the path, open it and
+    # assign it to a variable. Depending on whether the downloaded photo is to be edited or displayed, the program will
+    # add appropriate values to the list.
     if response_for_getting_paths_to_main_photo.status_code == codes.ok:
         for dictionary in response_for_getting_paths_to_main_photo.json()["result"]:
             response_for_getting_main_photo = Backend_requests.request_to_get_photo(dictionary["path"])
@@ -1075,7 +1165,12 @@ def download_photos_to_announcement(announcement_id, to_edit, px, py):
     else:
         error_with_getting_photos = True
 
+    # Calling the function sending a request to download the path of the photos for the announcement.
     response_for_getting_paths_to_photos = Backend_requests.request_to_get_media_paths(announcement_id, 0)
+
+    # If the returned response has a status of 200, The program will download the photos from the paths, open it and
+    # assign it to a variable. Depending on whether the downloaded photo is to be edited or displayed, the program will
+    # add appropriate values to the list.
     if response_for_getting_paths_to_photos.status_code == codes.ok:
         for dictionary in response_for_getting_paths_to_photos.json()["result"]:
             response_for_getting_photos = Backend_requests.request_to_get_photo(dictionary["path"])
@@ -1090,18 +1185,26 @@ def download_photos_to_announcement(announcement_id, to_edit, px, py):
     else:
         error_with_getting_photos = True
 
+    # If any error occurs during the download, the program will display a message.
     if error_with_getting_photos:
         messagebox.showerror("Błąd podczas wczytywania zdjęć.",
                              "Nie udalo sie wczytać zdjęć lub ich części, spróbuj później.")
 
+    # Returning a list with error information.
     return list_of_photos, error_with_getting_photos
 
 
 def loading_images():
+    """The function is launched when the program starts from the Main.py module. The function is responsible for loading
+    static graphic files and assigning them to the global dictionary."""
+    # The program tries to load photos from your computer.
     try:
         Config_data.images["arrows"] = [ImageTk.PhotoImage(Image.open("Photos/left.png").resize((50, 50))),
                                         ImageTk.PhotoImage(Image.open("Photos/right.png").resize((50, 50)))]
         Config_data.images["camera_icon"] = ImageTk.PhotoImage(Image.open("Photos/camera_icon.png").resize((50, 50)))
+
+    # If an error occurs while loading, the program will display an error message and assign the value None to the
+    # dictionary keys.
     except FileNotFoundError:
         messagebox.showerror("Błąd podczas wczytywania statycznych plików graficznych.",
                              "Nie udało się wczytać statycznych plików graficznych.")
@@ -1110,35 +1213,56 @@ def loading_images():
 
 
 def config_buttons(actual_page, button_previous, button_next, collection, function, list_of_objects, objects_on_page):
+    """The function responsible for configuring buttons for switching pages in the program."""
+    # If the imported page number is greater than 1, the program updates the page back function.
     if 1 < actual_page:
         button_previous.config(command=lambda: function(actual_page - 1, list_of_objects))
+    # Otherwise, it will update the button functions by assigning None.
     else:
         button_previous.config(command=lambda: None)
 
+    # If the length of the retrieved object collection is equal to the number of objects displayed on the page,
+    # the program updates the next page function.
     if len(collection) == objects_on_page:
         button_next.config(command=lambda: function(actual_page + 1, list_of_objects))
+    # Otherwise, it will update the button functions by assigning None.
     else:
         button_next.config(command=lambda: None)
 
 
 def create_buttons(page, x1, x2):
+    """The function responsible for creating page change button objects for given page objects and returning them to
+    the function."""
+    # Creating buttons for a specific page and a specific x value.
     button_previous = Button(page, text="Poprzednia", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
     button_previous.place(x=x1, y=600, width=60, height=32)
     button_next = Button(page, text="Następna", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
     button_next.place(x=x2, y=600, width=60, height=32)
+
+    # Returning button objects.
     return button_previous, button_next
 
 
 def select_photo(list_of_photo_button_objects, page, deleted_photos=None):
+    """The function responsible for selecting a graphic file from the user's computer, displaying it and assigning
+    appropriate values to the PhotoButton object."""
+    # Assigning the path of the file that was selected by the user. The program allows you to select JPG and PNG files.
     filename = filedialog.askopenfilename(title="Wybierz plik", filetypes=(("Pliki PNG", "*.png"),
                                                                            ("Pliki JPG", "*.jpg")))
+
+    # If the user selects a file, the program will try to open it and assign it to a variable.
     if filename:
         try:
             photo = ImageTk.PhotoImage(Image.open(filename).resize((115, 75)))
+
+        # If such a file is missing, an error will be displayed and the function will terminate.
         except FileNotFoundError:
             messagebox.showwarning("Błąd podczas otwierania pliku.",
                                    "Plik który chcesz otworzyć nie istnieje.")
             return
+
+        # If the file is opened and assigned correctly, the program will check whether it can add a photo to the
+        # PhotoButton object.
         else:
             available_image_button = False
             for button_object in list_of_photo_button_objects:
@@ -1147,20 +1271,27 @@ def select_photo(list_of_photo_button_objects, page, deleted_photos=None):
                     button_object.button.config(image=photo, state="normal")
                     button_object.photo_to_display = photo
                     button_object.photo_to_upload = filename
-
+                    # Creating a button object for deleting a photo with parameters of the PhotoButton object and
+                    # deleted_photos.
                     delete_button = Button(page, text="Usuń zdjęcie", font=("Arial", 8), borderwidth=0, bg="#D3D3D3",
                                            command=lambda: delete_photo(button_object, deleted_photos))
                     delete_button.place(x=button_object.position_x+25, y=button_object.position_y+75)
                     button_object.button_delete = delete_button
 
+                    # Loop break.
                     break
 
+            # If the loop did not find any free buttons, an appropriate message will be displayed.
             if not available_image_button:
                 messagebox.showwarning("Brak możliwości dodania kolejnego zdjęcia.",
                                        "Twój limit dodanych zdjęć został osiągnięty.")
 
 
 def delete_photo(button_object, deleted_photos):
+    """Function responsible for removing a photo from the PhotoButton object and restoring the initial values
+    to the PhotoButton object."""
+    # If the function is called with the deleted_photos parameter, which is a list, then the program additionally
+    # clears the necessary fields of the object and adds the photo to the list.
     if isinstance(deleted_photos, list):
         if button_object.photo_from_main:
             button_object.photo_from_main = False
@@ -1169,32 +1300,43 @@ def delete_photo(button_object, deleted_photos):
             deleted_photos.append((button_object.photo_to_upload, 0))
             button_object.photo_from_media = False
 
+    # Clearing the remaining fields.
     button_object.button.config(image=Config_data.images["camera_icon"], state="disabled")
     button_object.photo_to_display = None
     button_object.photo_to_upload = None
+    # If the photo being deleted was the main photo, change additional fields.
     if button_object.main_photo == 1:
         button_object.main_photo = 0
         button_object.button.config(borderwidth=0)
-
+    # Destruction and removal of the delete button object from the field.
     if button_object.button_delete:
         button_object.button_delete.destroy()
         button_object.button_delete = None
 
 
 def set_main_photo(selected_button_object, list_of_photo_button_objects):
+    """The function responsible for setting a photo as the main one. It accepts parameters of the selected button
+    and lists of all buttons."""
+    # It will loop through each button and check if any are set as the main photo, if so it will remove them.
     for button_object in list_of_photo_button_objects:
         if button_object.main_photo == 1:
             button_object.main_photo = 0
             button_object.button.config(borderwidth=0)
+
+    # Assigning the photo as the main one to the selected button.
     selected_button_object.main_photo = 1
     selected_button_object.button.config(borderwidth=4)
 
 
 def set_right(event):
+    """A function that configures the text in the Text object so that it can be displayed on the right."""
     event.widget.configure(tabs=(event.width - 6, "right"))
 
 
 def init_label_objects_of_announcement(page, announcement_object, x1, x2, x3, y1, y2, y3, list_of_objects):
+    """Function responsible for the initialization of label objects on switched announcement pages. It accepts the
+    position parameters of the created objects, the announcement object, the page object and the list of objects to be
+    deleted."""
     # Init photo_label and adding it to the list of objects.
     photo_label = Label(page, bg="#D3D3D3", image=announcement_object.main_photo)
     photo_label.place(x=x1, y=y1, width=115, height=67)

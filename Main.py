@@ -5,7 +5,7 @@ from Functions import loading_images
 
 # Mainloop of SHOPPER application
 if __name__ == "__main__":
-    """ Initialization of the main application window, all changes will be added and removed for this object.
+    """Initialization of the main application window, all changes will be added and removed for this object.
     The application object must be run in the mainloop so that the application does not shut down."""
     root = init_main_window()
     # Loading static files into the project.
