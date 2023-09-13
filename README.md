@@ -121,5 +121,13 @@ E-mail: grzesstrzeszewski@gmail.com
 
 ## License
 
-[MIT](https://github.com/Grzegorz96/millionaire-app-frontend/blob/master/LICENSE.md)
+[MIT](https://github.com/Grzegorz96/Shopper-app-frontend/blob/master/LICENSE.md)
+
+
+## Screnshoots
+
+
+
+
+
 
