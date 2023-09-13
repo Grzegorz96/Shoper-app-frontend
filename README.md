@@ -132,16 +132,25 @@ E-mail: grzesstrzeszewski@gmail.com
 ##### Screenshot of the favorite page
 ![fav](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/c3ede5b4-8cad-48e8-b7fd-2447aeca3e5c)
 ##### Screenshot of adding the announcement
-![success_add](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/3d150929-1888-444c-a1c0-47bc9fbdb2dd)
-
-
-
-
-
-
-
-
-
+![add_ann](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/8316a6a0-a533-4f63-8281-613d605d030a)
+##### Screenshot of editing the announcement
+![edit_ann](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/ccafc7fc-dba1-4af8-9b27-f0b1e10a344c)
+##### Screenshot of selecting category in home page
+![main_category](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/82326049-7939-4530-a5a6-368b1a3565a1)
+##### Screenshot of the message page
+![mess_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/718525b0-e19c-4930-a7e8-6d60db9f6665)
+##### Screenshot of the announcement page
+![ann_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/6e0e59d1-f114-4047-a9ba-917a6f31151b)
+##### Screenshot of the announcements page with message
+![ann_with_mess](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/0fd50729-ce44-43e4-9b99-562d17749b7b)
+##### Screenshot of the home page with message
+![main_with_mess](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/4c69c92c-8c29-4397-921a-dcc188f28133)
+##### Screenshot of successfully restoring the announcement
+![restore_ann](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/6fd76628-b3b3-4075-8de9-b9c0396826ae)
+##### Screenshot of successfully adding the announcement
+![success_add](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/585099a8-90c9-4516-87ca-a78dea4ee05d)
+##### Screenshot of successfully editing the announcement
+![edit_succes](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/8af064c4-7a57-433c-b2be-ba57fdca5c6b)
 
 
 
