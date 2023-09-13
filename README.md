@@ -58,7 +58,7 @@ The application consists of 6 modules, each module is responsible for a differen
  git clone https://github.com/Grzegorz96/Shoper-app-frondend.git
 ```
 - Enter the directory Shoper-app-frondend/Shoper_app_exe.
-- If you want to move the Shoper_app.exe file, do it together with the photos folder. You can also create a copy of the .exe file on your desktop.
+- If you want to move the Shoper_app.exe file, do it together with the Photos folder. You can also create a copy of the .exe file on your desktop.
 - Run Shoper_app.exe.
 
 
