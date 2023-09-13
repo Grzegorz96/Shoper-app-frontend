@@ -91,11 +91,35 @@ The application consists of 6 modules, each module is responsible for a differen
 ```
 Program SHOPER.PL connects to the enpoints on the cloud server, you don't need to create a local server.
 
+
 ## Lessons Learned
 
+It took me almost 2 months to work on this program and its backend and database. During this time, I had to solve a lot of problems related to these programs. The first version of the program did not include a backend and the connection to the database was made directly from the frontend. I had to rewrite the entire project and add an API to it and then combine it into a logical whole. I learned how to work with multimedia files on the server and I was trained in working with the http protocol. I had to come up with a messaging system so that everything worked correctly, without errors, and that users always received their messages. I have completed most of the functions I set for myself. A big challenge for me was creating a photo editing function - the user can change photos in various ways and each of these cases had to be handled correctly. Creating the necessary tables into the database and creating appropriate relationships between them was also a good test and learning experience. All information displayed to the user is downloaded directly from the server, so there is no fear that something is out of date. I have created a pagination system for displayed announcements and conversations, thanks to which users can create and download as many announcements and conversations as they want, there is no limit. Changes must be made when converting photos from the server from binary and when sending photos to the server. Everything worked fine on the local version of the backend application, but after deploying the application to the server, these activities take too long. Creating this project entirely by myself showed me how much work is needed to create a working application.
 
 
+## Features to be implemented
+- Email verification function.
+- Password recovery and change function via a code sent to email.
+- Delete account function.
+- Filtering and sorting announcements function.
+- Function of displaying another user's account.
+- hashing of user passwords in the database
+- Function covering password characters (during registration and login).
+- Improve optimization of reading images on the frontend from the downloaded binary. Currently, the time to convert a photo and assign it to a variable is 0.6-0.7 seconds.
+- Improve the optimization of uploading photos to the server, currently it takes 2-3 seconds from execution the request to entering the function on the server, which is definitely too long.
 
 
+## Authors
 
+- [@Grzegorz96](https://www.github.com/Grzegorz96)
+
+
+## Contact
+
+E-mail: grzesstrzeszewski@gmail.com
+
+
+## License
+
+[MIT](https://github.com/Grzegorz96/millionaire-app-frontend/blob/master/LICENSE.md)
 
