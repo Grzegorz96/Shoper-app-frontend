@@ -114,7 +114,7 @@ def register_user(first_name_entry, last_name_entry, email_entry, login_entry, p
         messagebox.showwarning("Niepoprawne imię.", "Wprowadzono niepoprawne dane imienia.")
 
 
-def login_user(entry_login_or_email, entry_password, top_panel_frame, init_shopper_page_frame, root):
+def login_user(entry_login_or_email, entry_password, top_panel_frame, init_shoper_page_frame, root):
     """The function responsible for logging in the user, validating the entered data, changing the global
     is_user_logged_in flag and creating a user object."""
     # Validations of entered data.
@@ -158,7 +158,7 @@ def login_user(entry_login_or_email, entry_password, top_panel_frame, init_shopp
                 user_name = Config_data.logged_in_user_info.first_name
                 logout_button = Button(top_panel_frame, text="Wyloguj", font=("Arial", 8), borderwidth=0,
                                        bg="#D3D3D3", command=lambda: logout_user(logout_button, user_name,
-                                                                                 init_shopper_page_frame, root))
+                                                                                 init_shoper_page_frame, root))
                 logout_button.place(x=1197, y=60, height=18, width=56)
                 messagebox.showinfo("Pomyślnie zalogowano.", f"Użytkownik {user_name} pomyślnie zalogowany.")
 
@@ -182,7 +182,7 @@ def login_user(entry_login_or_email, entry_password, top_panel_frame, init_shopp
                                "Wprowadzono niepoprawne dane loginu lub emaila.")
 
 
-def logout_user(logout_button, user_name, init_shopper_page_frame, root):
+def logout_user(logout_button, user_name, init_shoper_page_frame, root):
     """The function responsible for logging out the user deletes the user object, changes the login flag to False,
     destroys the created message objects, destroys the logout button, initializes the main application page and
     displays an appropriate message."""
@@ -197,7 +197,7 @@ def logout_user(logout_button, user_name, init_shopper_page_frame, root):
     # Destroying button object, init main page of app and displaying message.
     Config_data.list_of_active_windows.clear()
     logout_button.destroy()
-    init_shopper_page_frame(root)
+    init_shoper_page_frame(root)
     messagebox.showinfo("Pomyślnie wylogowano.", f"Użytkownik {user_name} został pomyślnie wylogowany.")
 
 

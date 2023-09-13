@@ -42,9 +42,9 @@ def init_top_panel(root):
     top_panel_frame = Frame(root, width=1280, height=80)
     top_panel_frame.pack()
 
-    # Init SHOPPER_button for top_panel_frame.
+    # Init SHOPER_button for top_panel_frame.
     Button(top_panel_frame, text="SHOPER", width=30, height=2, borderwidth=0, bg="#D3D3D3",
-           command=lambda: init_shopper_page_frame(root)).place(x=20, y=20)
+           command=lambda: init_shoper_page_frame(root)).place(x=20, y=20)
 
     # Init search_engine for top_panel_frame.
     search_engine = Entry(top_panel_frame, font=("Arial", 11), width=36, borderwidth=0, bg="#D3D3D3")
@@ -68,8 +68,8 @@ def init_top_panel(root):
 
     # Init search_button for top_panel_frame.
     Button(top_panel_frame, text="Wyszukaj produkt", borderwidth=0, bg="#D3D3D3",
-           command=lambda: init_shopper_page_frame(root, search_engine, search_location, current_var, categories,
-                                                   True)).place(x=580, y=6)
+           command=lambda: init_shoper_page_frame(root, search_engine, search_location, current_var, categories,
+                                                  True)).place(x=580, y=6)
 
     # Init favorite_button for top_panel_frame.
     Button(top_panel_frame, text="Ulubione", width=16, height=2, borderwidth=0, bg="#D3D3D3",
@@ -138,8 +138,8 @@ def init_login_window(top_panel_frame, root):
     # Init login_button for login_window_label.
     Button(login_window_label, text="Zaloguj się", font=("Arial", 10), borderwidth=0, bg="#D3D3D3",
            command=lambda: Functions.login_user(entry_login_or_email, entry_password, top_panel_frame,
-                                                init_shopper_page_frame, root)).grid(row=3, column=1, ipadx=10, ipady=8,
-                                                                                     pady=(10, 0))
+                                                init_shoper_page_frame, root)).grid(row=3, column=1, ipadx=10, ipady=8,
+                                                                                    pady=(10, 0))
 
     ttk.Separator(login_window_label, orient="horizontal").grid(row=4, columnspan=2, ipadx=185, pady=15, padx=10)
     Label(login_window_label, text="Zarejestruj się", font="Arial").grid(row=5, column=0, pady=(0, 10))
@@ -722,8 +722,8 @@ def init_edit_user_announcement_page_frame(announcement_object, root):
     Config_data.current_page = edit_user_announcement_page
 
 
-def init_shopper_page_frame(root, search_engine=None, search_location=None, current_var=None, categories=None,
-                            from_search_engine=False):
+def init_shoper_page_frame(root, search_engine=None, search_location=None, current_var=None, categories=None,
+                           from_search_engine=False):
     """The function initializing the main page of the application. On this page, the user can view searched
     announcements, go to specific announcements, send messages or like."""
     # At first initialization current_page is None, this prevents the error.
@@ -739,7 +739,7 @@ def init_shopper_page_frame(root, search_engine=None, search_location=None, curr
     ttk.Separator(main_page).place(x=854, y=15, height=600)
 
     def config_page_of_announcements(actual_page=1, list_of_objects=None, first_init=False):
-        """Page pagination function for shopper_page_frame, default call accepts parameters actual_page=1,
+        """Page pagination function for shoper_page_frame, default call accepts parameters actual_page=1,
         list_of_objects=None, first_init=False, this allows the program to work properly."""
         # The program verifies where the first function was called from.
         if from_search_engine:
