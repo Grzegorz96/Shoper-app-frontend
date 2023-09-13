@@ -9,7 +9,7 @@ def request_to_get_announcements(from_search_engine, page, content_to_search=Non
     """Function responsible for requests to download announcements for specific parameters."""
     # Creating url, parameters and calling GET method on this endpoint.
     try:
-        url = "http://127.0.0.1:5000/announcements/search"
+        url = "http://mrgrzechu96.pythonanywhere.com/announcements/search"
         params = {
             "per_page": 15,
             "page": page
@@ -35,7 +35,7 @@ def request_to_login_user(login_or_email, password):
     """Function responsible for asking to download user information using a password and login or email."""
     # Creating url, request_body and calling GET method on this endpoint.
     try:
-        url = "http://127.0.0.1:5000/users/login"
+        url = "http://mrgrzechu96.pythonanywhere.com/users/login"
         request_body = {
             "login_or_email": login_or_email,
             "password": password
@@ -56,7 +56,7 @@ def request_to_register_user(first_name, last_name, email, login, password, date
     """Function responsible for requesting information about a new user to be entered into the database."""
     # Creating url with request_body and calling POST method on this endpoint.
     try:
-        url = "http://127.0.0.1:5000/users/register"
+        url = "http://mrgrzechu96.pythonanywhere.com/users/register"
         request_body = {
             "first_name": first_name,
             "last_name": last_name,
@@ -84,7 +84,7 @@ def request_to_update_the_announcement(title, description, price, location, anno
     """Function responsible for requesting an update of a user's announcement."""
     # Creating url, request_body and calling PUT method on this endpoint.
     try:
-        url = f"http://127.0.0.1:5000/announcements/{announcement_id}"
+        url = f"http://mrgrzechu96.pythonanywhere.com/announcements/{announcement_id}"
         request_body = {
             "title": title,
             "description": description,
@@ -109,7 +109,7 @@ def request_to_get_user_announcements(active_flag, page):
     """The function responsible for downloading user's announcements when the active flag and page are specified."""
     # Creating url, parameters and calling GET method on this endpoint.
     try:
-        url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/announcements"
+        url = f"http://mrgrzechu96.pythonanywhere.com/users/{Config_data.logged_in_user_info.user_id}/announcements"
         params = {
             "active_flag": active_flag,
             "per_page": 4,
@@ -131,7 +131,7 @@ def request_to_add_the_announcement(title, location, category_id, state, price, 
     """Function responsible for requesting to add a new announcement."""
     # Creating url, request_body and calling POST method on this endpoint.
     try:
-        url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/announcements"
+        url = f"http://mrgrzechu96.pythonanywhere.com/users/{Config_data.logged_in_user_info.user_id}/announcements"
         request_body = {
             "title": title,
             "description": description,
@@ -158,7 +158,7 @@ def request_to_verify_login(login):
     """Function responsible for requesting login verification."""
     # Creating url, request_body and calling GET method on this endpoint.
     try:
-        url = "http://127.0.0.1:5000/users/login-verification"
+        url = "http://mrgrzechu96.pythonanywhere.com/users/login-verification"
         request_body = {
             "login": login
         }
@@ -178,7 +178,7 @@ def request_to_update_user_data(column, value):
     """Function responsible for requesting update of user data, using a specific column and value."""
     # Creating url, request_body and calling PATCH method on this endpoint.
     try:
-        url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}"
+        url = f"http://mrgrzechu96.pythonanywhere.com/users/{Config_data.logged_in_user_info.user_id}"
         request_body = {
             "column": column,
             "value": value
@@ -199,7 +199,7 @@ def request_to_complete_the_announcement(announcement_id):
     """Function responsible for requesting to change the user's announcement flag from active to complete."""
     # Creating url and calling PATCH method on this endpoint.
     try:
-        url = f"http://127.0.0.1:5000/announcements/{announcement_id}/complete"
+        url = f"http://mrgrzechu96.pythonanywhere.com/announcements/{announcement_id}/complete"
         response = patch(url)
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
@@ -216,7 +216,7 @@ def request_to_restore_the_announcement(announcement_id):
     """Function responsible for requesting to change the user's announcement flag from complete to active."""
     # Creating url and calling PATCH method on this endpoint.
     try:
-        url = f"http://127.0.0.1:5000/announcements/{announcement_id}/restore"
+        url = f"http://mrgrzechu96.pythonanywhere.com/announcements/{announcement_id}/restore"
         response = patch(url)
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
@@ -233,7 +233,7 @@ def request_to_delete_the_announcement(announcement_id):
     """Function responsible for requesting to change the user's announcement flag from complete to delete."""
     # Creating url and calling PATCH method on this endpoint.
     try:
-        url = f"http://127.0.0.1:5000/announcements/{announcement_id}/delete"
+        url = f"http://mrgrzechu96.pythonanywhere.com/announcements/{announcement_id}/delete"
         response = patch(url)
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
@@ -251,7 +251,8 @@ def request_to_get_user_favorite_announcements(active_flag, page, per_page):
     page and per page params."""
     # Creating url, params and calling GET method on this endpoint.
     try:
-        url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/favorite-announcements"
+        url = (f"http://mrgrzechu96.pythonanywhere.com/users/{Config_data.logged_in_user_info.user_id}/"
+               f"favorite-announcements")
         params = {
             "active_flag": active_flag,
             "page": page,
@@ -273,7 +274,8 @@ def request_to_add_announcement_to_favorite(announcement_id):
     """Function responsible for requesting that a selected announcement be added to the user's favorites."""
     # Creating url, request_body and calling POST method on this endpoint.
     try:
-        url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/favorite-announcements"
+        url = (f"http://mrgrzechu96.pythonanywhere.com/users/{Config_data.logged_in_user_info.user_id}/"
+               f"favorite-announcements")
         request_body = {
             "announcement_id": announcement_id
         }
@@ -293,7 +295,7 @@ def request_to_delete_announcement_from_favorite(favorite_announcement_id):
     """Function responsible for requesting removal of a selected announcement from the user's favorites."""
     # Creating url and calling DELETE method on this endpoint.
     try:
-        url = f"http://127.0.0.1:5000/favorite-announcements/{favorite_announcement_id}"
+        url = f"http://mrgrzechu96.pythonanywhere.com/favorite-announcements/{favorite_announcement_id}"
         response = delete(url)
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
@@ -310,7 +312,7 @@ def request_to_get_messages(announcement_id=None, conversation_id=None):
     """Function responsible for requesting to download a message using the conversation id or announcement id."""
     # Creating url, request_body and calling GET method on this endpoint.
     try:
-        url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/messages"
+        url = f"http://mrgrzechu96.pythonanywhere.com/users/{Config_data.logged_in_user_info.user_id}/messages"
         if conversation_id:
             request_body = {
                 "conversation_id": conversation_id
@@ -335,7 +337,7 @@ def request_to_send_message(content, is_user_customer, conversation_id=None, ann
     """Function responsible for requesting to send a message."""
     # Creating url, request_body and calling POST method on this endpoint.
     try:
-        url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/messages"
+        url = f"http://mrgrzechu96.pythonanywhere.com/users/{Config_data.logged_in_user_info.user_id}/messages"
         if conversation_id:
             request_body = {
                 "conversation_id": conversation_id,
@@ -365,7 +367,7 @@ def request_to_get_conversations(customer_flag, page):
     the buyer or seller and the page."""
     # Creating url, parameters and calling GET method on this endpoint.
     try:
-        url = f"http://127.0.0.1:5000/users/{Config_data.logged_in_user_info.user_id}/conversations"
+        url = f"http://mrgrzechu96.pythonanywhere.com/users/{Config_data.logged_in_user_info.user_id}/conversations"
         params = {
             "customer_flag": customer_flag,
             "page": page,
@@ -387,7 +389,7 @@ def request_to_get_photo(path):
     """Function responsible for requesting to download a graphic file when specifying the path."""
     # Creating url, request_body and calling GET method on this endpoint.
     try:
-        url = "http://127.0.0.1:5000/media/download"
+        url = "http://mrgrzechu96.pythonanywhere.com/media/download"
         request_body = {
             "path": path
         }
@@ -408,7 +410,7 @@ def request_to_get_media_paths(announcement_id, main_photo):
     announcement_id and the main_photo flag."""
     # Creating url, parameters and calling GET method on this endpoint.
     try:
-        url = f"http://127.0.0.1:5000/announcements/{announcement_id}/media/paths"
+        url = f"http://mrgrzechu96.pythonanywhere.com/announcements/{announcement_id}/media/paths"
         params = {
             "main_photo_flag": main_photo
         }
@@ -429,7 +431,7 @@ def request_to_upload_photo(announcement_id, main_photo, photo_to_upload):
     database."""
     # Creating url and parameters.
     try:
-        url = f"http://127.0.0.1:5000/media/upload/{Config_data.logged_in_user_info.user_id}"
+        url = f"http://mrgrzechu96.pythonanywhere.com/media/upload/{Config_data.logged_in_user_info.user_id}"
         params = {
             "announcement_id": announcement_id,
             "main_photo_flag": main_photo
@@ -465,7 +467,7 @@ def request_to_delete_photo(path, main_photo):
     the database."""
     # Creating url, parameters and calling DELETE method on this endpoint.
     try:
-        url = f"http://127.0.0.1:5000/media/delete"
+        url = f"http://mrgrzechu96.pythonanywhere.com/media/delete"
         params = {
             "main_photo_flag": main_photo,
             "path": path
@@ -487,7 +489,7 @@ def request_to_switch_photos(announcement_id, main_photo_path, media_photo_path,
     adding to another and vice versa."""
     # Creating url, request_body, parameters and calling PUT method on this endpoint.
     try:
-        url = f"http://127.0.0.1:5000/media/switch/{Config_data.logged_in_user_info.user_id}"
+        url = f"http://mrgrzechu96.pythonanywhere.com/media/switch/{Config_data.logged_in_user_info.user_id}"
         request_body = {
             "main_photo_path": main_photo_path,
             "media_photo_path": media_photo_path,

@@ -854,8 +854,7 @@ def delete_from_completed_announcements(user_completed_announcement_object, init
 def download_announcements(from_search_engine, page, first_init, search_engine=None, search_location=None,
                            current_var=None, categories=None):
     """Function responsible for downloading announcements on the home page. When the user calls the function from
-     search_engine, the user specifies the parameters with which he wants to download annuncements."""
-
+     search_engine, the user specifies the parameters with which he wants to download announcements."""
     # If the function was called from search_engine, the program will assign the imported values to the variables.
     if from_search_engine:
         content_to_search = search_engine.get()
