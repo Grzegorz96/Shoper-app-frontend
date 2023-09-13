@@ -25,7 +25,7 @@ def init_main_window():
     center_x = int(screen_width / 2 - window_width / 2)
     center_y = int(screen_height / 2 - window_height / 2)
     root.geometry(f"{window_width}x{window_height}+{center_x}+{center_y}")
-    root.title("SHOPPER.PL")
+    root.title("SHOPER.PL")
     root.resizable(width=True, height=True)
     # Creating background color and icon of app.
     root.config(bg="#B0C4DE")
@@ -43,7 +43,7 @@ def init_top_panel(root):
     top_panel_frame.pack()
 
     # Init SHOPPER_button for top_panel_frame.
-    Button(top_panel_frame, text="SHOPPER", width=30, height=2, borderwidth=0, bg="#D3D3D3",
+    Button(top_panel_frame, text="SHOPER", width=30, height=2, borderwidth=0, bg="#D3D3D3",
            command=lambda: init_shopper_page_frame(root)).place(x=20, y=20)
 
     # Init search_engine for top_panel_frame.
