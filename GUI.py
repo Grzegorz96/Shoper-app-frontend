@@ -8,14 +8,14 @@ import Functions
 import Config_data
 # Import PhotoButton class from Classes module.
 from Classes import PhotoButton
-# Import datetime
+# Import datetime.
 from datetime import datetime
 
 
 def init_main_window():
     """The function that initializes the main application window, this is a function that is called from the Main.py
     module once and then returns the created root object to the Main.py module."""
-    # Creating root
+    # Creating root.
     root = Tk()
     # Creating geometry, title and setting resizable.
     window_width = 1280
@@ -31,7 +31,7 @@ def init_main_window():
     root.config(bg="#B0C4DE")
     root.call("wm", "iconphoto", root._w, PhotoImage(file="Photos/home_icon.png"))
 
-    # Returning root into Main.py
+    # Returning root into Main.py.
     return root
 
 
@@ -730,7 +730,7 @@ def init_shoper_page_frame(root, search_engine=None, search_location=None, curre
     if isinstance(Config_data.current_page, Frame):
         Config_data.current_page.destroy()
 
-    # Init main_page for root
+    # Init main_page for root.
     main_page = Frame(root, bg="#A9A9A9", width=1280, height=640, highlightbackground="black", highlightthickness=2)
     main_page.pack()
 
