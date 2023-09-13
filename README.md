@@ -125,6 +125,20 @@ E-mail: grzesstrzeszewski@gmail.com
 
 
 ## Screnshoots
+##### Screenshot of the home page
+![main_shoper](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/353ac4a9-fdb4-4071-bef0-444f1397fed5)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
