@@ -103,10 +103,9 @@ It took me almost 2 months to work on this program and its backend and database.
 - Delete account function.
 - Filtering and sorting announcements function.
 - Function of displaying another user's account.
-- hashing of user passwords in the database
 - Function covering password characters (during registration and login).
-- Improve optimization of reading images on the frontend from the downloaded binary. Currently, the time to convert a photo and assign it to a variable is 0.6-0.7 seconds.
-- Improve the optimization of uploading photos to the server, currently it takes 2-3 seconds from execution the request to entering the function on the server, which is definitely too long.
+- Improve optimization of reading images on the frontend from the downloaded binary. Currently, after tests, the time to convert a photo and assign it to a variable is 0.6-0.7 seconds.
+- Improve optimization of uploading photos to the server, currently it takes 2-3 seconds from execution the request to entering the function on the server, which is definitely too long.
 
 
 ## Authors
