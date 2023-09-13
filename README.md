@@ -42,15 +42,56 @@ The application consists of 6 modules, each module is responsible for a differen
 
 **Client:** 
 - Languages: Python
-- Third Party Libraries: Tkinter, Pillow, requests
+- Third Party Libraries: Tkinter, Pillow, requests, urllib3
 
 **Server:** 
 - Languages: Python, SQL
-- Third Party Libraries: Flask, PyJWT, mysql-connector-python, python-dotenv
+- Third Party Libraries: Flask, mysql-connector-python, python-dotenv, werkzeug
 - Hosting for API: www.pythonanywhere.com
 - Hosting for MySQL database: www.pythonanywhere.com
 
+- ## Installation
 
+### To quickly launch the application on Windows:
+- Download Shoper-app-frondend repository:
+```bash
+ git clone https://github.com/Grzegorz96/Shoper-app-frondend.git
+```
+- Enter the directory Shoper-app-frondend/Shoper_app_exe.
+- If you want to move the Shoper_app.exe file, do it together with the photos folder. You can also create a copy of the .exe file on your desktop.
+- Run Shoper_app.exe.
+
+
+### For manually launching the application on the IDE:
+#### Requirements:
+##### Programs and libraries:
+- Python 3.11.1
+- Pillow 10.0.0
+- requests 2.31.0
+- urllib3 2.0.4
+#### Instruction:
+- Download Shoper-app-frondend repository:
+```bash
+ git clone https://github.com/Grzegorz96/Shoper-app-frondend.git
+```
+- Open the Shoper-app-frondend on your IDE.
+- Install required packages on your venv:
+```bash
+  pip install -r requirements.txt
+```
+- or
+```bash
+  pip install Pillow==10.0.0
+  pip install requests==2.31.0
+  pip install urllib3==2.0.4
+```
+- Run Main.py on Windows:
+```bash
+ py .\Main.py
+```
+Program SHOPER.PL connects to the enpoints on the cloud server, you don't need to create a local server.
+
+## Lessons Learned
 
 
 
