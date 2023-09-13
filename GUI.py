@@ -26,7 +26,7 @@ def init_main_window():
     center_y = int(screen_height / 2 - window_height / 2)
     root.geometry(f"{window_width}x{window_height}+{center_x}+{center_y}")
     root.title("SHOPER.PL")
-    root.resizable(width=True, height=True)
+    root.resizable(width=False, height=False)
     # Creating background color and icon of app.
     root.config(bg="#B0C4DE")
     root.call("wm", "iconphoto", root._w, PhotoImage(file="Photos/home_icon.png"))
@@ -115,7 +115,7 @@ def init_login_window(top_panel_frame, root):
     # Calling the geometry method, which specifies the dimensions of the window and the coordinates of the anchor.
     login_window.geometry(f"{login_window_width}x{login_window_height}+{center_x}+{center_y}")
     login_window.title("Logowanie")
-    login_window.resizable(width=True, height=True)
+    login_window.resizable(width=False, height=False)
     login_window.config(bg="#B0C4DE")
     login_window.wm_iconphoto(False, PhotoImage(file="Photos/login_icon.png"))
 
@@ -1311,7 +1311,7 @@ def init_message_window(announcement_object):
             message_window.geometry(f"{message_window_width}x{message_window_height}+{center_x}+{center_y}")
             # Setting the title, resizable, background color and icon-photo.
             message_window.title(announcement_object.first_name)
-            message_window.resizable(width=True, height=True)
+            message_window.resizable(width=False, height=False)
             message_window.config(bg="#B0C4DE")
             message_window.wm_iconphoto(False, PhotoImage(file="Photos/messages_icon.png"))
 
