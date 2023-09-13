@@ -1,7 +1,7 @@
 ![shoperlogo](https://github.com/Grzegorz96/Shopper-app-frontend/assets/129303867/df33c699-7ad4-473d-8a52-f9a6c3a97225)
-# SHOPER.PL
+# SHOPER.app
 
-The SHOPER.PL application is an original project that allows users to sell their products and services. Registered users can create announcements and communicate with other users via the application. The user can also upload and download graphic files from the server. The search engine algorithm will allow the user to find exactly what he need. The implemented like system will improve the display of announements that the user is interested in. The application has many useful functions and solutions. It also has its own server application and database. The client application was written for the Windows operating system.
+The SHOPER.app is an original project that allows users to sell their products and services. Registered users can create announcements and communicate with other users via the application. The user can also upload and download graphic files from the server. The search engine algorithm will allow the user to find exactly what he need. The implemented like system will improve the display of announements that the user is interested in. The application has many useful functions and solutions. It also has its own server application and database. The client application was written for the Windows operating system.
 
 ## Description of the modules
 
