@@ -134,7 +134,7 @@ E-mail: grzesstrzeszewski@gmail.com
 ![login_window](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/c25853a1-d68c-43f1-a82a-b99487807e80)
 ##### Screenshot of adding the announcement
 ![add_ann](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/8316a6a0-a533-4f63-8281-613d605d030a)
-##### Screenshot of the window for selecting an image file.
+##### Screenshot of the window for selecting an image file
 ![add_ann_window](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/9db364be-0e61-4c58-9ad6-16761fe3d62e)
 ##### Screenshot of editing the announcement
 ![edit_ann](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/ccafc7fc-dba1-4af8-9b27-f0b1e10a344c)
