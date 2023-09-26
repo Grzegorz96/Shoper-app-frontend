@@ -94,7 +94,7 @@ Program SHOPER.PL connects to the enpoints on the cloud server, you don't need t
 
 ## Lessons Learned
 
-It took me almost 2 months to work on this program and its backend and database. During this time, I had to solve a lot of problems related to these programs. The first version of the program did not include a backend and the connection to the database was made directly from the frontend. I had to rewrite the entire project and add an API to it and then combine it into a logical whole. I learned how to work with multimedia files on the server and I was trained in working with the http protocol. I had to come up with a messaging system so that everything worked correctly, without errors, and that users always received their messages. I have completed most of the functions I set for myself. A big challenge for me was creating a photo editing function - the user can change photos in various ways and each of these cases had to be handled correctly. Creating the necessary tables into the database and creating appropriate relationships between them was also a good test and learning experience. All information displayed to the user is downloaded directly from the server, so there is no fear that something is out of date. I have created a pagination system for displayed announcements and conversations, thanks to which users can create and download as many announcements and conversations as they want, there is no limit. Changes must be made when converting photos from the server from binary and when sending photos to the server. Everything worked fine on the local version of the backend application, but after deploying the application to the server, these activities take too long. Creating this project entirely by myself showed me how much work is needed to create a working application.
+It took me almost 2 months to work on this program and its backend and database. During this time, I had to solve a lot of problems related to these programs. The first version of the program did not include a backend and the connection to the database was made directly from the frontend. I had to rewrite the entire project and add an API to it and then combine it into a logical whole. I learned how to work with multimedia files on the server and I was trained in working with the http protocol. I had to come up with a messaging system so that everything worked correctly, without errors, and that users always received their messages. I have completed most of the functions I set for myself. A big challenge for me was creating a photo editing function - the user can change photos in various ways and each of these cases had to be handled correctly. Creating the necessary tables into the database and creating appropriate relationships between them was also a good test and learning experience. All information displayed to the user is downloaded directly from the server, so there is no fear that something is out of date. I have created a pagination system for displayed announcements and conversations, thanks to which users can create and download as many announcements and conversations as they want, there is no limit. Creating this project entirely by myself showed me how much work is needed to create a working application.
 
 
 ## Features to be implemented
@@ -104,10 +104,8 @@ It took me almost 2 months to work on this program and its backend and database.
 - Filtering and sorting announcements function.
 - Function of displaying another user's account.
 - Function covering password characters (during registration and login).
-- Improve optimization of reading images on the frontend from the downloaded binary. Currently, after tests, the time to convert a photo and assign it to a variable is 0.6-0.7 seconds. When 15 photos need to be loaded on a website, this creates a long waiting time.
-- Improve optimization of uploading photos to the server, currently it takes 2-3 seconds from execution the request to entering the function on the server, which is definitely too long.
 
-
+ 
 ## Authors
 
 - [@Grzegorz96](https://www.github.com/Grzegorz96)
@@ -125,32 +123,34 @@ E-mail: grzesstrzeszewski@gmail.com
 
 ## Screnshoots
 ##### Screenshot of the home page
-![main_shoper](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/353ac4a9-fdb4-4071-bef0-444f1397fed5)
+![main_shoper](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/42f0e0c4-6b05-4bcf-b9d5-e05af3068f1c)
 ##### Screenshot of the user page
-![user_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/9e5e5eb9-9b2f-4207-9a8f-6896f7386453)
+![user_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/4296e23a-340c-4da4-85f8-b0602402740f)
 ##### Screenshot of the favorite page
-![fav](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/c3ede5b4-8cad-48e8-b7fd-2447aeca3e5c)
+![fav_ann](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/2e9e0caa-308d-472c-9438-91251cd881d1)
 ##### Screenshot of the login/register window
-![login_window](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/c25853a1-d68c-43f1-a82a-b99487807e80)
+![login_window](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/9ddfd480-832a-424e-bef2-eaa72a1d3163)
 ##### Screenshot of adding the announcement
-![add_ann](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/8316a6a0-a533-4f63-8281-613d605d030a)
+![add_ann](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/ad27a4e7-fb1a-449d-b8d8-e9370b193a51)
 ##### Screenshot of the window for selecting an image file
-![add_file_window](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/d563932a-dca6-451b-9fdd-32a688997943)
+![add_ann_window](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/96b88d22-91aa-4180-a0ec-f3b02a2b367a)
 ##### Screenshot of editing the announcement
-![edit_ann](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/ccafc7fc-dba1-4af8-9b27-f0b1e10a344c)
+![edit_ann](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/eed330e2-99c0-4a2e-88dd-18957d72eceb)
 ##### Screenshot of selecting category in home page
-![main_category](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/82326049-7939-4530-a5a6-368b1a3565a1)
+![main_category](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/79d1cd3f-2751-4e6a-ba88-b715e9273416)
 ##### Screenshot of the message page
-![mess_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/718525b0-e19c-4930-a7e8-6d60db9f6665)
+![conversations](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/9f912607-7582-45b7-8138-193cf3845198)
 ##### Screenshot of the announcement page
-![ann_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/6e0e59d1-f114-4047-a9ba-917a6f31151b)
+![ann_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/cd3dc7c2-44ab-4476-94a4-20fa04511deb)
 ##### Screenshot of the announcements page with message
-![ann_with_mess](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/0fd50729-ce44-43e4-9b99-562d17749b7b)
+![ann_with_mess](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/6a020872-de6e-4283-aa18-16bb2d8b0caf)
 ##### Screenshot of the home page with message
-![main_with_mess](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/4c69c92c-8c29-4397-921a-dcc188f28133)
+![main_with_mess](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/27cc32bb-92a2-43cd-94af-aceb77ba4a25)
 ##### Screenshot of successfully restoring the announcement
-![restore_ann](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/6fd76628-b3b3-4075-8de9-b9c0396826ae)
+![restored](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/67b63f2d-fc9b-4eb5-80d1-876f78b77242)
+##### Screenshot of successfully completing the announcement
+![completed](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/dc5b24c1-2593-4419-a828-ab429d62cccd)
 ##### Screenshot of successfully adding the announcement
-![success_add](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/585099a8-90c9-4516-87ca-a78dea4ee05d)
+![add_ann_success](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/e5f2e618-2016-4f00-97f6-a193e2ec1656)
 ##### Screenshot of successfully editing the announcement
-![edit_succes](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/8af064c4-7a57-433c-b2be-ba57fdca5c6b)
+![edit_ann_success](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/7fe590d6-5f4e-44bf-b4d6-457e0184044a)
