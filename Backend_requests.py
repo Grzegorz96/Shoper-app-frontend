@@ -3,6 +3,10 @@ import urllib3
 from requests import get, post, put, patch, delete, RequestException, Response
 # Import global variables.
 import Config_data
+# Import of modules needed to converting and sending image files.
+from PIL import Image, UnidentifiedImageError
+from io import BufferedReader, BytesIO, UnsupportedOperation
+import os
 
 
 def request_to_get_announcements(from_search_engine, page, content_to_search=None, location=None, category_id=None):
@@ -436,13 +440,27 @@ def request_to_upload_photo(announcement_id, main_photo, photo_to_upload):
             "announcement_id": announcement_id,
             "main_photo_flag": main_photo
         }
-        # Binary opening of a file from the user's computer and assigning it as a file to be sent.
-        # Execution of the request.
-        with open(photo_to_upload, "rb") as file:
-            files = {
-                "file": file
-            }
-            response = post(url, params=params, files=files, stream=True).raw
+        # Open and compress the file to the required size.
+        compressed_image = Image.open(photo_to_upload)
+        compressed_image.thumbnail((600, 400), resample=3)
+        # Create a byte array
+        image_byte_arr = BytesIO()
+        # Save the compressed image as byte arrays.
+        compressed_image.save(image_byte_arr, format="JPEG")
+        # Return the cursor to the beginning of the array.
+        image_byte_arr.seek(0)
+        # Get the name of the uploaded file.
+        file_name = os.path.basename(photo_to_upload)
+        # Add a file name.
+        image_byte_arr.name = file_name
+        # Create a BufferedReader object from the array that will be sent to the backend.
+        file = BufferedReader(image_byte_arr)
+        # Create files.
+        files = {
+            "file": file
+        }
+
+        response = post(url, params=params, files=files, stream=True).raw
 
     # If cant connect with endpoint, making HTTPResponse object with 404 status code and return response.
     except urllib3.exceptions.HTTPError:
@@ -452,7 +470,7 @@ def request_to_upload_photo(announcement_id, main_photo, photo_to_upload):
 
     # If the photo previously selected by the user is not already in the saved path, then make HTTPResponse object and
     # return it with status 404.
-    except FileNotFoundError:
+    except (FileNotFoundError, UnsupportedOperation, UnidentifiedImageError):
         response = urllib3.response.HTTPResponse()
         response.status = 404
         return response

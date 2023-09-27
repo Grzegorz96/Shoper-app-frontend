@@ -14,6 +14,7 @@ import Backend_requests
 from requests import codes
 from PIL import Image, ImageTk
 from datetime import datetime
+import os.path
 
 
 def register_user(first_name_entry, last_name_entry, email_entry, login_entry, password_entry, combobox_day_var,
@@ -442,7 +443,9 @@ def download_user_announcements(active_flag, page):
             if user_announcement_object.main_photo:
                 response_for_getting_photo = Backend_requests.request_to_get_photo(user_announcement_object.main_photo)
                 if response_for_getting_photo.status == codes.ok:
-                    main_photo = ImageTk.PhotoImage(Image.open(response_for_getting_photo).resize((90, 67)))
+                    image = Image.open(response_for_getting_photo)
+                    image.thumbnail((90, 67), resample=3)
+                    main_photo = ImageTk.PhotoImage(image)
                     user_announcement_object.main_photo = main_photo
                 else:
                     user_announcement_object.main_photo = None
@@ -901,7 +904,9 @@ def download_announcements(from_search_engine, page, first_init, search_engine=N
                 if announcement_object.main_photo:
                     response_for_getting_photo = Backend_requests.request_to_get_photo(announcement_object.main_photo)
                     if response_for_getting_photo.status == codes.ok:
-                        main_photo = ImageTk.PhotoImage(Image.open(response_for_getting_photo).resize((90, 67)))
+                        image = Image.open(response_for_getting_photo)
+                        image.thumbnail((90, 67), resample=3)
+                        main_photo = ImageTk.PhotoImage(image)
                         announcement_object.main_photo = main_photo
                     else:
                         announcement_object.main_photo = None
@@ -962,7 +967,9 @@ def download_user_favorite_announcements(active_flag, page, per_page):
                 response_for_getting_photo = Backend_requests.request_to_get_photo(user_fav_announcement_object.
                                                                                    main_photo)
                 if response_for_getting_photo.status == codes.ok:
-                    main_photo = ImageTk.PhotoImage(Image.open(response_for_getting_photo).resize((90, 67)))
+                    image = Image.open(response_for_getting_photo)
+                    image.thumbnail((90, 67), resample=3)
+                    main_photo = ImageTk.PhotoImage(image)
                     user_fav_announcement_object.main_photo = main_photo
                 else:
                     user_fav_announcement_object.main_photo = None
@@ -1154,7 +1161,9 @@ def download_photos_to_announcement(announcement_id, to_edit, px, py):
         for dictionary in response_for_getting_paths_to_main_photo.json()["result"]:
             response_for_getting_main_photo = Backend_requests.request_to_get_photo(dictionary["path"])
             if response_for_getting_main_photo.status == codes.ok:
-                photo = ImageTk.PhotoImage(Image.open(response_for_getting_main_photo).resize((px, py)))
+                image = Image.open(response_for_getting_main_photo)
+                image.thumbnail((px, py), resample=3)
+                photo = ImageTk.PhotoImage(image)
                 if to_edit:
                     list_of_photos.append((photo, dictionary["path"], 1))
                 else:
@@ -1174,7 +1183,9 @@ def download_photos_to_announcement(announcement_id, to_edit, px, py):
         for dictionary in response_for_getting_paths_to_photos.json()["result"]:
             response_for_getting_photos = Backend_requests.request_to_get_photo(dictionary["path"])
             if response_for_getting_photos.status == codes.ok:
-                photo = ImageTk.PhotoImage(Image.open(response_for_getting_photos).resize((px, py)))
+                image = Image.open(response_for_getting_photos)
+                image.thumbnail((px, py), resample=3)
+                photo = ImageTk.PhotoImage(image)
                 if to_edit:
                     list_of_photos.append((photo, dictionary["path"], 0))
                 else:
@@ -1245,14 +1256,22 @@ def create_buttons(page, x1, x2):
 def select_photo(list_of_photo_button_objects, page, deleted_photos=None):
     """The function responsible for selecting a graphic file from the user's computer, displaying it and assigning
     appropriate values to the PhotoButton object."""
-    # Assigning the path of the file that was selected by the user. The program allows you to select JPG and PNG files.
-    filename = filedialog.askopenfilename(title="Wybierz plik", filetypes=(("Pliki PNG", "*.png"),
-                                                                           ("Pliki JPG", "*.jpg")))
+    # Assigning the path of the file that was selected by the user. The program allows you to select JPG files.
+    filename = filedialog.askopenfilename(title="Wybierz plik", filetypes=(("Pliki JPG", "*.jpg"),))
 
     # If the user selects a file, the program will try to open it and assign it to a variable.
     if filename:
+        # Checking whether the selected file is not larger than 3MB.
+        if os.path.getsize(filename) > 3145728:
+            messagebox.showwarning("Zbyt duży plik.", "Plik który chcesz dodać jest zbyt duży,"
+                                                      " maksymalny rozmiar pliku to 3MB.")
+            return
+
         try:
-            photo = ImageTk.PhotoImage(Image.open(filename).resize((115, 75)))
+            # Opening and converting the selected file.
+            image = Image.open(filename)
+            image.thumbnail((115, 75), resample=3)
+            photo = ImageTk.PhotoImage(image)
 
         # If such a file is missing, an error will be displayed and the function will terminate.
         except FileNotFoundError:
