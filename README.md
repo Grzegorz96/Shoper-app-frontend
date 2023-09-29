@@ -105,7 +105,7 @@ It took me almost 2 months to work on this program and its backend and database.
 - Filtering and sorting announcements function.
 - Function of displaying another user's account.
 - Function covering password characters (during registration and login).
-- Changing the download of graphic files to a package of files. Currently the files are downloaded separately. To perform 16 queries when downloading photos to the home page, after compression files it takes about 6 seconds.)
+- Changing the download of graphic files to a package of files. Currently the files are downloaded separately. To perform 16 queries when downloading photos to the home page, after compression files it takes about 6 seconds.
 
  
 ## Authors
