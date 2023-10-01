@@ -75,16 +75,25 @@ The application consists of 6 modules, each module is responsible for a differen
 ```bash
  git clone https://github.com/Grzegorz96/Shoper-app-frondend.git
 ```
+- Go to the Shoper-app-frondend directory.
 - Open the Shoper-app-frondend on your IDE.
-- Install required packages on your venv:
+- Create virtual enviroment for the project (Windows):
 ```bash
-  pip install -r requirements.txt
+ py -m venv venv
+```
+- Activate virtual enviroment (Windows):
+```bash
+ venv/Scripts/activate.bat
+```
+- Install required packages on your virtual enviroment:
+```bash
+ pip install -r requirements.txt
 ```
 - or
 ```bash
-  pip install Pillow==10.0.0
-  pip install requests==2.31.0
-  pip install urllib3==2.0.4
+ pip install Pillow==10.0.0
+ pip install requests==2.31.0
+ pip install urllib3==2.0.4
 ```
 - Run Main.py on Windows:
 ```bash
