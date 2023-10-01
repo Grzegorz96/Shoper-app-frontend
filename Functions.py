@@ -1211,14 +1211,13 @@ def loading_images():
     try:
         Config_data.images["arrows"] = [ImageTk.PhotoImage(Image.open("Photos/left.png").resize((50, 50))),
                                         ImageTk.PhotoImage(Image.open("Photos/right.png").resize((50, 50)))]
-        Config_data.images["camera_icon"] = ImageTk.PhotoImage(Image.open("Photos/camera_icon.png").resize((50, 50)))
-
-    # If an error occurs while loading, the program will display an error message and assign the value None to the
-    # dictionary keys.
+    # If an error occurs while loading, the program will assign the value None to the dictionary keys.
     except FileNotFoundError:
-        messagebox.showerror("Błąd podczas wczytywania statycznych plików graficznych.",
-                             "Nie udało się wczytać statycznych plików graficznych.")
         Config_data.images["arrows"] = [None, None]
+        
+    try:
+        Config_data.images["camera_icon"] = ImageTk.PhotoImage(Image.open("Photos/camera_icon.png").resize((50, 50)))
+    except FileNotFoundError:
         Config_data.images["camera_icon"] = None
 
 

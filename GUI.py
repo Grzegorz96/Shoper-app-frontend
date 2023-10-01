@@ -29,7 +29,11 @@ def init_main_window():
     root.resizable(width=False, height=False)
     # Creating background color and icon of app.
     root.config(bg="#B0C4DE")
-    root.call("wm", "iconphoto", root._w, PhotoImage(file="Photos/home_icon.png"))
+
+    try:
+        root.call("wm", "iconphoto", root._w, PhotoImage(file="Photos/home_icon.png"))
+    except TclError:
+        pass
 
     # Returning root into Main.py.
     return root
@@ -117,7 +121,11 @@ def init_login_window(top_panel_frame, root):
     login_window.title("Logowanie")
     login_window.resizable(width=False, height=False)
     login_window.config(bg="#B0C4DE")
-    login_window.wm_iconphoto(False, PhotoImage(file="Photos/login_icon.png"))
+
+    try:
+        login_window.wm_iconphoto(False, PhotoImage(file="Photos/login_icon.png"))
+    except TclError:
+        pass
 
     # Init login_window_label for login_window.
     login_window_label = Label(login_window)
@@ -894,9 +902,10 @@ def init_announcement_page_frame(page, announcement_object, block_fav, block_mes
 
     # If list of photos is not empty, the buttons will be created and the first init_photo will be called.
     if len(photos) > 0:
-        button_previous = Button(tmp_page, image=Config_data.images["arrows"][0], borderwidth=0, bg="#D3D3D3")
+        button_previous = Button(tmp_page, text="prev", image=Config_data.images["arrows"][0], borderwidth=0,
+                                 bg="#D3D3D3")
         button_previous.place(x=20, y=325, width=50, height=50)
-        button_next = Button(tmp_page, image=Config_data.images["arrows"][1], borderwidth=0, bg="#D3D3D3")
+        button_next = Button(tmp_page, text="next", image=Config_data.images["arrows"][1], borderwidth=0, bg="#D3D3D3")
         button_next.place(x=670, y=325, width=50, height=50)
         init_photo()
 
@@ -1313,7 +1322,11 @@ def init_message_window(announcement_object):
             message_window.title(announcement_object.first_name)
             message_window.resizable(width=False, height=False)
             message_window.config(bg="#B0C4DE")
-            message_window.wm_iconphoto(False, PhotoImage(file="Photos/messages_icon.png"))
+
+            try:
+                message_window.wm_iconphoto(False, PhotoImage(file="Photos/messages_icon.png"))
+            except TclError:
+                pass
 
             # Init labels with information.
             Label(message_window, width=68, height=1, text=announcement_object.title, anchor=W).pack()
