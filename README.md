@@ -51,7 +51,7 @@ The application consists of 6 modules, each module is responsible for a differen
 - Hosting for API: www.pythonanywhere.com
 - Hosting for MySQL database: www.pythonanywhere.com
 
-- ## Installation
+## Installation
 
 ### To quickly launch the application on Windows:
 - Download Shoper-app-frondend repository:
