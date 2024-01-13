@@ -99,7 +99,7 @@ The application consists of 6 modules, each module is responsible for a differen
 ```bash
  py .\Main.py
 ```
-Program SHOPER.PL connects to the enpoints on the cloud server, you don't need to create a local server.
+Program SHOPER.PL connects to the enpoints on the cloud server, you don't need to create a local backend server.
 
 
 ## Lessons Learned
