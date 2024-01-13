@@ -119,7 +119,7 @@ It took me almost 2 months to work on this program and its backend and database.
  
 ## Authors
 
-- [@Grzegorz96](https://www.github.com/Grzegorz96)
+[@Grzegorz96](https://www.github.com/Grzegorz96)
 
 
 ## Contact
