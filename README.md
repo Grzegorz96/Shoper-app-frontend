@@ -67,6 +67,7 @@ The application consists of 6 modules, each module is responsible for a differen
 #### Requirements:
 ##### Programs and libraries:
 - Python 3.11.1
+- IDE, for example Pycharm
 - Pillow 10.0.0
 - requests 2.31.0
 - urllib3 2.0.4
