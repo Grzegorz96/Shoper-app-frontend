@@ -3,11 +3,32 @@
 
 The SHOPER.app is an original project that allows users to sell their products and services. Registered users can create announcements and communicate with other users via the application. The user can also upload and download graphic files from the server. The search engine algorithm will allow the user to find exactly what he need. The implemented like system will improve the display of announements that the user is interested in. The application has many useful functions and solutions. It also has its own server application and database. The client application was written for the Windows operating system.
 
+
 ## Description of the modules
 
-The application consists of 6 modules, each module is responsible for a different activity. The Classes.py module contains object classes that are needed to create objects using retrieved JSON data. Objects make it much easier to later operate on data in other modules. The logged-in user class also has its setters for modifying the object's value. The Config_data.py module contains the necessary global variables that must be available for each module in the application. Data stored in variables is used throughout the entire duration of the program. The backend_requests.py module is used from the Functions.py module to directly make requests to the server. Using this module, all data is sent to and received from the server, invoking requests is additionally wrapped in a try, except block, so when an operation fails on the frontend side, the error will be handled appropriately. The Functions.py module contains all the functions that the GUI.py module needs to work properly. Validates all data entered by the user, determines whether the request should proceed, and determines what to do with the received response object. This module creates user, announcements, user announcements, favorite announcements, messages and conversations objects. Features such as converting image files from binary to object and all photo modification features. The function module is a decision-making module and it mainly determines what the user can and cannot do and what to do with the received data. The GUI.py module is responsible for the graphical initialization of the application. Application windows and websites are created at its level. Data that was previously downloaded from the server is displayed from this module. This script contains functions for page pagination, also photoButton objects are created here, which are later used to identify changes made to photos while adding and editing announcement. The Main.py module is a file that is executed when the program is started, it is used to initialize the application window, static photos, top panel and the first page of the application.
+The program consists of 6 modules, each of which plays a unique role in the functioning of the application. Below is a brief description of each module:
+
+Classes.py:
+- The Classes.py module contains object classes that are needed to create objects using retrieved JSON data. Objects make it much easier to later operate on data in other modules. The logged-in user class also has its setters for modifying the object's value. 
+
+Config_data.py:
+The Config_data.py module contains the necessary global variables that must be available for each module in the application. Data stored in variables is used throughout the entire duration of the program. 
+
+Backend_requests.py:
+- The Backend_requests.py module is used from the Functions.py module to directly make requests to the server. Using this module, all data is sent to and received from the server, invoking requests is additionally wrapped in a try, except block, so when an operation fails on the frontend side, the error will be handled appropriately.
+
+Functions.py:
+- The Functions.py module contains all the functions that the GUI.py module needs to work properly. Validates all data entered by the user, determines whether the request should proceed, and determines what to do with the received response object. This module creates user, announcements, user announcements, favorite announcements, messages and conversations objects. Features such as converting image files from binary to object and all photo modification features. The function module is a decision-making module and it mainly determines what the user can and cannot do and what to do with the received data. 
+
+GUI.py:
+- The GUI.py module is responsible for the graphical initialization of the application. Application windows and panels are created at its level. Data that was previously downloaded from the server is displayed from this module. This script contains functions for page pagination, also photoButton objects are created here, which are later used to identify changes made to photos while adding and editing announcement.
+
+Main.py:
+- The Main.py module is a file that is executed when the program is started, it is used to initialize the application window, static photos, top panel and the first page of the application.
+
 
 ## Features
+
 - User registration.
 - user login.
 - User logout.
