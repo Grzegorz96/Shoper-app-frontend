@@ -12,7 +12,7 @@ Classes.py:
 - The Classes.py module contains object classes that are needed to create objects using retrieved JSON data. Objects make it much easier to later operate on data in other modules. The logged-in user class also has its setters for modifying the object's value. 
 
 Config_data.py:
-The Config_data.py module contains the necessary global variables that must be available for each module in the application. Data stored in variables is used throughout the entire duration of the program. 
+- The Config_data.py module contains the necessary global variables that must be available for each module in the application. Data stored in variables is used throughout the entire duration of the program. 
 
 Backend_requests.py:
 - The Backend_requests.py module is used from the Functions.py module to directly make requests to the server. Using this module, all data is sent to and received from the server, invoking requests is additionally wrapped in a try, except block, so when an operation fails on the frontend side, the error will be handled appropriately.
