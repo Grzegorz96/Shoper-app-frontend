@@ -107,7 +107,7 @@ Main.py:
 ```bash
  venv/Scripts/activate.bat
 ```
-- Install required packages on your virtual enviroment:
+- Install required packages on your activated virtual enviroment:
 ```bash
  pip install -r requirements.txt
 ```
