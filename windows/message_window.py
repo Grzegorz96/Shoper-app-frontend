@@ -1,8 +1,9 @@
-import config_data
-import functions
+from utils import config_data
+from utils.helpers import set_right, delete_text
 from tkinter import *
 from tkinter import messagebox
-from helpers import set_right, delete_text
+from logic.messages.get_messages import get_messages
+from logic.messages.send_message import send_message
 
 
 def init_message_window(announcement_object):
@@ -70,7 +71,7 @@ def init_message_window(announcement_object):
                 """The function is responsible for downloading messages, appropriate text display and configuration of
                 the button for sending messages."""
                 # Downloading list of messages from announcement object.
-                list_of_message_objects = functions.download_messages(announcement_object=announcement_object)
+                list_of_message_objects = get_messages(announcement_object=announcement_object)
                 # Setting default values for text object.
                 text["state"] = "normal"
                 text.delete("1.0", END)
@@ -89,13 +90,10 @@ def init_message_window(announcement_object):
                 # Setting text state on disabled.
                 text["state"] = "disabled"
                 # Setting the correct function for the button
-                send_button.config(command=lambda: functions.send_message(list_of_message_objects, message_entry,
-                                                                          refresh_messages, True,
-                                                                          announcement_object))
-                message_entry.bind("<Return>", lambda event: functions.send_message(list_of_message_objects,
-                                                                                    message_entry, refresh_messages,
-                                                                                    True,
-                                                                                    announcement_object))
+                send_button.config(command=lambda: send_message(list_of_message_objects, message_entry,
+                                                                refresh_messages, True, announcement_object))
+                message_entry.bind("<Return>", lambda event: send_message(list_of_message_objects, message_entry,
+                                                                          refresh_messages, True, announcement_object))
 
             # First function call.
             refresh_messages()

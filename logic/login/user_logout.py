@@ -1,4 +1,4 @@
-import config_data
+from utils import config_data
 from tkinter import messagebox
 
 

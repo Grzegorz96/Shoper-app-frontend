@@ -2,7 +2,7 @@ import backend_requests
 from tkinter import messagebox, END
 from re import match
 from requests import codes
-import config_data
+from utils import config_data, constants
 
 
 def add_announcement(title_entry, location_entry, current_var_category, price_entry, description_text,
@@ -12,16 +12,16 @@ def add_announcement(title_entry, location_entry, current_var_category, price_en
     # Validations entered data.
     if match("^.{10,45}$", title_entry.get()):
         if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń ]{3,45}$", location_entry.get()):
-            if current_var_category.get() in config_data.categories:
+            if current_var_category.get() in constants.categories:
                 if match("^[0-9]{1,7}$", price_entry.get()):
-                    if current_var_state.get() in config_data.states:
+                    if current_var_state.get() in constants.states:
                         if mobile_number_entry.get() == "" or match("^[+]?[0-9]{6,14}$", mobile_number_entry.get()):
                             if 80 <= len(description_text.get("1.0", "end-1c")) <= 400:
 
                                 # If the validation passes correctly, the data will be assigned to the variables.
                                 title = title_entry.get()
                                 location = location_entry.get()
-                                category_id = config_data.categories.index(current_var_category.get()) + 1
+                                category_id = constants.categories.index(current_var_category.get()) + 1
                                 state = current_var_state.get()
                                 price = int(price_entry.get())
                                 description = description_text.get("1.0", "end-1c")

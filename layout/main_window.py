@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Tk, PhotoImage, TclError
 
 
 def init_main_window():

@@ -1,10 +1,12 @@
-import config_data
-import functions
+from utils import config_data
+from utils.helpers import config_buttons, create_buttons, create_labels
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from pages.announcement_page import init_announcement_page_frame
 from windows.message_window import init_message_window
+from logic.announcements.favorites.get_user_favorite_announcements import get_user_favorite_announcements
+from logic.announcements.favorites.delete_announcement_from_favorites import delete_announcement_from_favorites
 
 
 def init_favorite_page_frame():
@@ -33,7 +35,7 @@ def init_favorite_page_frame():
         def config_page_of_fav_active_announcements(actual_page=1, list_of_objects=None):
             """Pagination function for active favorite announcements."""
             # Retrieving the list of active_favorite_announcements from function called with specified arguments.
-            user_fav_active_announcements = functions.download_user_favorite_announcements(1, actual_page, 8)
+            user_fav_active_announcements = get_user_favorite_announcements(1, actual_page, 8)
 
             if not isinstance(list_of_objects, list):
                 list_of_objects = []
@@ -62,8 +64,8 @@ def init_favorite_page_frame():
                 list_of_objects.append(title_button)
 
                 # Init labels for announcement and adding these to the list of objects.
-                functions.init_label_objects_of_announcement(favorite_page, user_fav_active_announcement_object, x1, x2,
-                                                             x3, y1, y2, y3, list_of_objects)
+                create_labels(favorite_page, user_fav_active_announcement_object, x1, x2, x3, y1, y2, y3,
+                              list_of_objects)
 
                 # Init message_button and adding it to the list of objects.
                 message_button = Button(favorite_page, text="Wiadomość", font=("Arial", 8), borderwidth=1,
@@ -77,8 +79,8 @@ def init_favorite_page_frame():
                 unlike_button = Button(favorite_page, text="Nie lubię", font=("Arial", 8), borderwidth=1,
                                        bg="#D3D3D3",
                                        command=lambda announcement_object=user_fav_active_announcement_object:
-                                       functions.delete_announcement_from_favorite(announcement_object,
-                                                                                   init_favorite_page_frame))
+                                       delete_announcement_from_favorites(announcement_object,
+                                                                          init_favorite_page_frame))
                 unlike_button.place(x=x2, y=(rows * 120) + 207, width=115, height=22)
                 list_of_objects.append(unlike_button)
 
@@ -90,14 +92,13 @@ def init_favorite_page_frame():
                         break
 
             # Updating buttons depending on the number of the current page and the number of downloaded announcements.
-            functions.config_buttons(actual_page, button_previous_active, button_next_active,
-                                     user_fav_active_announcements, config_page_of_fav_active_announcements,
-                                     list_of_objects, 8)
+            config_buttons(actual_page, button_previous_active, button_next_active, user_fav_active_announcements,
+                           config_page_of_fav_active_announcements, list_of_objects, 8)
 
         def config_page_of_fav_completed_announcements(actual_page=1, list_of_objects=None):
             """Pagination function for completed favorite announcements."""
             # Retrieving the list of completed_favorite_announcements from function called with specified arguments.
-            user_fav_completed_announcements = functions.download_user_favorite_announcements(0, actual_page, 4)
+            user_fav_completed_announcements = get_user_favorite_announcements(0, actual_page, 4)
 
             if not isinstance(list_of_objects, list):
                 list_of_objects = []
@@ -126,8 +127,8 @@ def init_favorite_page_frame():
                 list_of_objects.append(title_button)
 
                 # Init labels for announcement and adding these to the list of objects.
-                functions.init_label_objects_of_announcement(favorite_page, user_fav_completed_announcement_object, x1,
-                                                             x2, x3, y1, y2, y3, list_of_objects)
+                create_labels(favorite_page, user_fav_completed_announcement_object, x1, x2, x3, y1, y2, y3,
+                              list_of_objects)
 
                 # Init message_button and adding it to the list of objects.
                 message_button = Button(favorite_page, text="Wiadomość", font=("Arial", 8), borderwidth=1,
@@ -140,8 +141,8 @@ def init_favorite_page_frame():
                 # Init delete_button and adding it to the list of objects.
                 delete_button = Button(favorite_page, text="Usuń", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
                                        command=lambda announcement_object=user_fav_completed_announcement_object:
-                                       functions.delete_announcement_from_favorite(announcement_object,
-                                                                                   init_favorite_page_frame))
+                                       delete_announcement_from_favorites(announcement_object,
+                                                                          init_favorite_page_frame))
                 delete_button.place(x=1008, y=(rows * 120) + 207, width=115, height=22)
                 list_of_objects.append(delete_button)
 
@@ -150,13 +151,13 @@ def init_favorite_page_frame():
                     break
 
             # Updating buttons depending on the number of the current page and the number of downloaded announcements.
-            functions.config_buttons(actual_page, button_previous_completed, button_next_completed,
-                                     user_fav_completed_announcements, config_page_of_fav_completed_announcements,
-                                     list_of_objects, 4)
+            config_buttons(actual_page, button_previous_completed, button_next_completed,
+                           user_fav_completed_announcements, config_page_of_fav_completed_announcements,
+                           list_of_objects, 4)
 
         # Calling the button creation function and assigning the returned objects to variables.
-        button_previous_active, button_next_active = functions.create_buttons(favorite_page, 15, 785)
-        button_previous_completed, button_next_completed = functions.create_buttons(favorite_page, 865, 1200)
+        button_previous_active, button_next_active = create_buttons(favorite_page, 15, 785)
+        button_previous_completed, button_next_completed = create_buttons(favorite_page, 865, 1200)
         # The first call to the page setup functions.
         config_page_of_fav_active_announcements()
         config_page_of_fav_completed_announcements()

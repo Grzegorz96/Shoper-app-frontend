@@ -1,20 +1,20 @@
-import config_data
+from utils import config_data, constants
 from tkinter import messagebox
 from re import match
 from requests import codes
 import backend_requests
 
 
-def change_announcement_data(title_entry, location_entry, price_entry, description_text, announcement_object,
-                             init_user_page_frame, current_var_state, mobile_number_entry, list_of_photo_button_objects,
-                             deleted_photos):
+def update_announcement(title_entry, location_entry, price_entry, description_text, announcement_object,
+                        init_user_page_frame, current_var_state, mobile_number_entry, list_of_photo_button_objects,
+                        deleted_photos):
     """The function responsible for validating the announcement data, calling the function that sends data to the
     backend, modifying multimedia files on the server and their paths in the database."""
     # Validations entered data.
     if match("^.{10,45}$", title_entry.get()):
         if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń ]{3,45}$", location_entry.get()):
             if match("^[0-9]{1,7}$", price_entry.get()):
-                if current_var_state.get() in config_data.states:
+                if current_var_state.get() in constants.states:
                     if mobile_number_entry.get() == "" or match("^[+]?[0-9]{6,14}$", mobile_number_entry.get()):
                         if (len(description_text.get("1.0", "end-1c")) >= 80 and len(
                                 description_text.get("1.0", "end-1c")) <= 400):

@@ -1,8 +1,9 @@
-import config_data
-import functions
+from utils import config_data
 from tkinter import *
 from tkinter import ttk
 from windows.message_window import init_message_window
+from logic.announcements.favorites.add_announcement_to_favorites import add_announcement_to_favorites
+from logic.announcements.media.get_images_to_announcement import get_images_to_announcement
 
 
 def init_announcement_page_frame(page, announcement_object, block_fav, block_mess):
@@ -57,7 +58,7 @@ def init_announcement_page_frame(page, announcement_object, block_fav, block_mes
 
     # Init button_fav if the object does not meet the specified conditions, it's state will be disabled.
     button_fav = Button(tmp_page, text="Lubię to", font=("Arial", 12), borderwidth=0, bg="#D3D3D3", width=10,
-                        command=lambda: functions.add_announcement_to_favorite(announcement_object))
+                        command=lambda: add_announcement_to_favorites(announcement_object))
     button_fav.place(x=1037, y=594)
     button_fav["state"] = "disabled" if block_fav else "normal"
 
@@ -70,8 +71,7 @@ def init_announcement_page_frame(page, announcement_object, block_fav, block_mes
            command=lambda: tmp_page.destroy()).place(x=1141, y=594)
 
     # Downloading list of photos to announcement.
-    photos, error_with_getting_photos = functions.download_photos_to_announcement(
-        announcement_object.announcement_id, False, 600, 400)
+    photos, error_with_getting_photos = get_images_to_announcement(announcement_object.announcement_id, False, 600, 400)
 
     def init_photo(actual_photo=0):
         """Photo initialization function, thanks to which the user can configure the photo displayed on the label."""

@@ -1,11 +1,11 @@
 from tkinter import messagebox
 from requests import codes
-from classes import Announcement
+from models import Announcement
 import backend_requests
-from helpers import convert_image_to_tkinter
+from utils.formating import convert_image_to_tkinter
 
 
-def download_user_announcements(active_flag, page):
+def get_user_announcements(active_flag, page):
     """The function is responsible for triggering a request to download the user's announcements, creating a list of
     objects for these announcements and returning them to the gui.py module. In the function parameters, the program
     specifies which page it wants to display and whether announcements are active or completed."""

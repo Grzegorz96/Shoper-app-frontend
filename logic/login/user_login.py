@@ -1,10 +1,10 @@
-import config_data
+from utils import config_data
 import backend_requests
 from re import match
 from tkinter import messagebox, Button
 from requests import codes
 from datetime import datetime
-from classes import LoggedUser
+from models import LoggedUser
 from logic.login.user_logout import logout_user
 
 

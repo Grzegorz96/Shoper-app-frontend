@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
-import config_data
-from helpers import delete_text
+from utils.helpers import delete_text
+from utils import config_data, constants
 from windows.login_register_window import init_login_register_window
 from pages.home_page import init_shoper_page_frame
 from pages.add_announcement_page import init_add_announcement_page_frame
@@ -53,7 +53,7 @@ def init_top_panel():
     )
 
     current_var_category = StringVar()
-    ttk.Combobox(top_panel_frame, textvariable=current_var_category, width=45, values=config_data.categories,
+    ttk.Combobox(top_panel_frame, textvariable=current_var_category, width=45, values=constants.categories,
                  state="readonly").place(x=280, y=50)
 
     Button(top_panel_frame, text="X",  borderwidth=0, bg="#D3D3D3", command=lambda: current_var_category.set("")).place(

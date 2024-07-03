@@ -1,10 +1,11 @@
-import config_data
-import functions
+from utils import config_data, constants
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from classes import PhotoButton
+from models import PhotoButton
 from logic.announcements.add_announcement import add_announcement
+from logic.announcements.media.select_image import select_image
+from logic.announcements.media.set_main_image import set_main_image
 
 
 def init_add_announcement_page_frame():
@@ -42,7 +43,7 @@ def init_add_announcement_page_frame():
                                                                                                                y=170)
         current_var_category = StringVar()
         ttk.Combobox(add_announcement_page, textvariable=current_var_category, font=("Arial", 13), state="readonly",
-                     values=config_data.categories).place(x=223, y=200, width=170)
+                     values=constants.categories).place(x=223, y=200, width=170)
 
         # Init price_entry for add_announcement_page.
         Label(add_announcement_page, text="Kwota*", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=444, y=170)
@@ -54,7 +55,7 @@ def init_add_announcement_page_frame():
         Label(add_announcement_page, text="Stan*", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=683, y=15)
         current_var_state = StringVar()
         ttk.Combobox(add_announcement_page, textvariable=current_var_state, font=("Arial", 13), state="readonly",
-                     values=config_data.states).place(x=560, y=40, width=170)
+                     values=constants.states).place(x=560, y=40, width=170)
 
         # Init mobile_number_entry for add_announcement_page.
         Label(add_announcement_page, text="Numer telefonu", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(
@@ -88,8 +89,8 @@ def init_add_announcement_page_frame():
                                               False)
             list_of_photo_button_objects.append(photo_button_object)
             # Added function to change the main photo.
-            photo_button.config(command=lambda selected_button_object=photo_button_object: functions.
-                                set_main_photo(selected_button_object, list_of_photo_button_objects))
+            photo_button.config(command=lambda selected_button_object=photo_button_object: set_main_image(
+                selected_button_object, list_of_photo_button_objects))
 
             rows += 1
             if rows == 3:
@@ -102,7 +103,7 @@ def init_add_announcement_page_frame():
 
         # Init add_photo_button for add_announcement_page.
         Button(add_announcement_page, bg="#D3D3D3", text="Dodaj zdjęcie", font=("Arial", 10),
-               command=lambda: functions.select_photo(list_of_photo_button_objects, add_announcement_page)).place(
+               command=lambda: select_image(list_of_photo_button_objects, add_announcement_page)).place(
             x=390, y=450, width=115, height=75)
 
         # Init add_announcement_button for add_announcement_page.

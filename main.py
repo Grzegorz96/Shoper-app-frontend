@@ -1,9 +1,9 @@
 # Import function to load images.
+from utils import config_data
+from utils.helpers import loading_images
 from layout.main_window import init_main_window
 from layout.top_panel import init_top_panel
 from pages.home_page import init_shoper_page_frame
-from functions import loading_images
-import config_data
 
 # Mainloop of SHOPER application.
 if __name__ == "__main__":

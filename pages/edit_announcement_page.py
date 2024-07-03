@@ -1,9 +1,12 @@
-import config_data
+from utils import config_data, constants
 from tkinter import *
 from tkinter import ttk
-from classes import PhotoButton
-import functions
-from logic.announcements.update_announcement import change_announcement_data
+from models import PhotoButton
+from logic.announcements.update_announcement import update_announcement
+from logic.announcements.media.get_images_to_announcement import get_images_to_announcement
+from logic.announcements.media.select_image import select_image
+from logic.announcements.media.delete_image import delete_image
+from logic.announcements.media.set_main_image import set_main_image
 
 
 def init_edit_user_announcement_page_frame(announcement_object, init_user_page_frame):
@@ -50,7 +53,7 @@ def init_edit_user_announcement_page_frame(announcement_object, init_user_page_f
     Label(edit_user_announcement_page, text="Stan", font=("Arial", 14), borderwidth=0, bg="#A9A9A9").place(x=689, y=15)
     current_var_state = StringVar()
     ttk.Combobox(edit_user_announcement_page, textvariable=current_var_state, font=("Arial", 13), state="readonly",
-                 values=config_data.states).place(x=560, y=40, width=170)
+                 values=constants.states).place(x=560, y=40, width=170)
     current_var_state.set(announcement_object.state)
 
     # Init label and mobile_number_entry for announcement.
@@ -87,8 +90,8 @@ def init_edit_user_announcement_page_frame(announcement_object, init_user_page_f
 
         list_of_photo_button_objects.append(photo_button_object)
         # Inserting the main photo selection function into the photo button.
-        photo_button.config(command=lambda selected_button_object=photo_button_object: functions.
-                            set_main_photo(selected_button_object, list_of_photo_button_objects))
+        photo_button.config(command=lambda selected_button_object=photo_button_object: set_main_image(
+            selected_button_object, list_of_photo_button_objects))
 
         rows += 1
         if rows == 3:
@@ -97,8 +100,8 @@ def init_edit_user_announcement_page_frame(announcement_object, init_user_page_f
 
     # Downloading photos for the announcement and information about whether there was any error with downloading the
     # photos.
-    photos_to_edit, error_with_getting_photos = functions.download_photos_to_announcement(
-        announcement_object.announcement_id, True, 115, 75)
+    photos_to_edit, error_with_getting_photos = get_images_to_announcement(announcement_object.announcement_id, True,
+                                                                           115, 75)
     # Declaring a list of photos to be removed from the server.
     deleted_photos = []
 
@@ -120,7 +123,7 @@ def init_edit_user_announcement_page_frame(announcement_object, init_user_page_f
             # Creating a delete photo button for the downloaded photo and assigning it to the PhotoButton object field.
             delete_button = Button(edit_user_announcement_page, text="Usuń zdjęcie", font=("Arial", 8), borderwidth=0,
                                    bg="#D3D3D3", command=lambda button_object=list_of_photo_button_objects[index]:
-                                   functions.delete_photo(button_object, deleted_photos))
+                                   delete_image(button_object, deleted_photos))
             delete_button.place(x=list_of_photo_button_objects[index].position_x + 25,
                                 y=list_of_photo_button_objects[index].position_y + 75)
 
@@ -132,8 +135,7 @@ def init_edit_user_announcement_page_frame(announcement_object, init_user_page_f
 
     # Init add_photo_button for edited announcement.
     add_photo_button = Button(edit_user_announcement_page, bg="#D3D3D3", text="Dodaj zdjęcie", font=("Arial", 10),
-                              command=lambda: functions.select_photo(list_of_photo_button_objects,
-                                                                     edit_user_announcement_page))
+                              command=lambda: select_image(list_of_photo_button_objects, edit_user_announcement_page))
     add_photo_button.place(x=390, y=450, width=115, height=75)
     # If was error_with_getting_photos, add_photo_button will be disabled.
     if error_with_getting_photos:
@@ -141,10 +143,10 @@ def init_edit_user_announcement_page_frame(announcement_object, init_user_page_f
 
     # Init change_announcement_button for edit_user_announcement_page.
     Button(edit_user_announcement_page, bg="#00BFFF", text="Zmień ogłoszenie!", borderwidth=0, font=("Arial", 15),
-           command=lambda: change_announcement_data(title_entry, location_entry, price_entry, description_text,
-                                                    announcement_object, init_user_page_frame, current_var_state,
-                                                    mobile_number_entry, list_of_photo_button_objects,
-                                                    deleted_photos)).place(x=40, y=550, width=465, height=50)
+           command=lambda: update_announcement(title_entry, location_entry, price_entry, description_text,
+                                               announcement_object, init_user_page_frame, current_var_state,
+                                               mobile_number_entry, list_of_photo_button_objects,
+                                               deleted_photos)).place(x=40, y=550, width=465, height=50)
 
     # Assigning a local page to a global variable to be able to destroy it when initializing the next page.
     config_data.current_page = edit_user_announcement_page

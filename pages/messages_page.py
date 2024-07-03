@@ -1,9 +1,11 @@
-import config_data
-import functions
+from utils import config_data
+from utils.helpers import config_buttons, create_buttons, set_right, delete_text
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from helpers import set_right, delete_text
+from logic.messages.get_messages import get_messages
+from logic.messages.send_message import send_message
+from logic.messages.get_conversations import get_conversations
 
 
 def init_messages_page_frame():
@@ -34,7 +36,7 @@ def init_messages_page_frame():
         def config_conversations_page_as_customer(actual_page=1, list_of_objects=None):
             """Pagination function for downloaded conversations as a customer."""
             # Retrieving a list of conversation objects and assigning them to a variable.
-            conversations_as_customer = functions.download_conversations(1, actual_page)
+            conversations_as_customer = get_conversations(1, actual_page)
 
             # for first calling of function.
             if not isinstance(list_of_objects, list):
@@ -74,14 +76,13 @@ def init_messages_page_frame():
                     break
 
             # Updating buttons depending on the number of the current page and the number of downloaded conversations.
-            functions.config_buttons(actual_page, button_previous_customer, button_next_customer,
-                                     conversations_as_customer, config_conversations_page_as_customer, list_of_objects,
-                                     7)
+            config_buttons(actual_page, button_previous_customer, button_next_customer, conversations_as_customer,
+                           config_conversations_page_as_customer, list_of_objects, 7)
 
         def config_conversations_page_as_seller(actual_page=1, list_of_objects=None):
             """Pagination function for downloaded conversations as a seller."""
             # Retrieving a list of conversation objects and assigning them to a variable.
-            conversations_as_seller = functions.download_conversations(0, actual_page)
+            conversations_as_seller = get_conversations(0, actual_page)
 
             if not isinstance(list_of_objects, list):
                 list_of_objects = []
@@ -120,12 +121,12 @@ def init_messages_page_frame():
                     break
 
             # Updating buttons depending on the number of the current page and the number of downloaded conversations.
-            functions.config_buttons(actual_page, button_previous_seller, button_next_seller, conversations_as_seller,
-                                     config_conversations_page_as_seller, list_of_objects, 7)
+            config_buttons(actual_page, button_previous_seller, button_next_seller, conversations_as_seller,
+                           config_conversations_page_as_seller, list_of_objects, 7)
 
         # Calling the button creation function and assigning the returned objects to variables.
-        button_previous_customer, button_next_customer = functions.create_buttons(messages_page, 15, 254)
-        button_previous_seller, button_next_seller = functions.create_buttons(messages_page, 335, 574)
+        button_previous_customer, button_next_customer = create_buttons(messages_page, 15, 254)
+        button_previous_seller, button_next_seller = create_buttons(messages_page, 335, 574)
         # The first call to the page setup functions.
         config_conversations_page_as_customer()
         config_conversations_page_as_seller()
@@ -194,7 +195,7 @@ def init_messages_page_frame():
                 """The function is responsible for downloading messages, appropriate text display and configuration
                 of the button for sending messages."""
                 # Downloading messages from conversation_object and assigning them to a variable.
-                list_of_message_objects = functions.download_messages(conversation_object=conversation_object)
+                list_of_message_objects = get_messages(conversation_object=conversation_object)
 
                 # Setting the default values of the text object before adding the message.
                 text["state"] = "normal"
@@ -215,11 +216,10 @@ def init_messages_page_frame():
                 text["state"] = "disabled"
                 # Setting send_button with correct state and function.
                 if list_of_message_objects:
-                    send_button.config(command=lambda: functions.send_message(list_of_message_objects, message_entry,
+                    send_button.config(command=lambda: send_message(list_of_message_objects, message_entry,
+                                                                    refresh_messages, is_user_customer))
+                    message_entry.bind("<Return>", lambda event: send_message(list_of_message_objects, message_entry,
                                                                               refresh_messages, is_user_customer))
-                    message_entry.bind("<Return>", lambda event: functions.send_message(list_of_message_objects,
-                                                                                        message_entry, refresh_messages,
-                                                                                        is_user_customer))
 
                 else:
                     send_button.config(state="disabled")

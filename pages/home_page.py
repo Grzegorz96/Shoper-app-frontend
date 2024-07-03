@@ -1,9 +1,11 @@
-import config_data
-import functions
+from utils import config_data
+from utils.helpers import config_buttons, create_buttons, create_labels
 from tkinter import ttk
 from tkinter import *
 from pages.announcement_page import init_announcement_page_frame
 from windows.message_window import init_message_window
+from logic.announcements.get_announcements import get_announcements
+from logic.announcements.favorites.add_announcement_to_favorites import add_announcement_to_favorites
 
 
 def init_shoper_page_frame(search_engine=None, search_location=None, current_var_category=None):
@@ -29,12 +31,12 @@ def init_shoper_page_frame(search_engine=None, search_location=None, current_var
         if search_engine:
             # If with search_engine then it will call functions with additional parameters and download list of
             # announcement objects to variable announcements.
-            announcements = functions.download_announcements(actual_page, first_init, search_engine, search_location,
-                                                             current_var_category)
+            announcements = get_announcements(actual_page, first_init, search_engine, search_location,
+                                              current_var_category)
         else:
             # If not with search_engine then it will call functions without additional parameters and download list of
             # announcement objects to variable announcements.
-            announcements = functions.download_announcements(actual_page, first_init, search_engine)
+            announcements = get_announcements(actual_page, first_init, search_engine)
 
         if not isinstance(list_of_objects, list):
             list_of_objects = []
@@ -63,8 +65,7 @@ def init_shoper_page_frame(search_engine=None, search_location=None, current_var
             list_of_objects.append(title_button)
 
             # Init labels for announcement and adding these to the list of objects.
-            functions.init_label_objects_of_announcement(main_page, announcement_object, x1, x2, x3, y1, y2, y3,
-                                                         list_of_objects)
+            create_labels(main_page, announcement_object, x1, x2, x3, y1, y2, y3, list_of_objects)
 
             # Init message_button and adding it to the list of objects.
             message_button = Button(main_page, text="Wiadomość", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
@@ -75,8 +76,8 @@ def init_shoper_page_frame(search_engine=None, search_location=None, current_var
 
             # Init like_button and adding it to the list of objects.
             like_button = Button(main_page, text="Lubię to", font=("Arial", 8), borderwidth=1, bg="#D3D3D3",
-                                 command=lambda announcement=announcement_object:
-                                 functions.add_announcement_to_favorite(announcement))
+                                 command=lambda announcement=announcement_object: add_announcement_to_favorites(
+                                     announcement))
             like_button.place(x=x2, y=(rows * 120) + 87, width=115, height=22)
             list_of_objects.append(like_button)
 
@@ -88,11 +89,11 @@ def init_shoper_page_frame(search_engine=None, search_location=None, current_var
                     break
 
         # Updating buttons depending on the number of the current page and the number of downloaded announcements.
-        functions.config_buttons(actual_page, button_previous, button_next, announcements, config_page_of_announcements,
-                                 list_of_objects, 15)
+        config_buttons(actual_page, button_previous, button_next, announcements, config_page_of_announcements,
+                       list_of_objects, 15)
 
     # Calling the button creation function and assigning the returned objects to variables.
-    button_previous, button_next = functions.create_buttons(main_page, 15, 1200)
+    button_previous, button_next = create_buttons(main_page, 15, 1200)
     # The first call to the page setup function.
     config_page_of_announcements(first_init=True)
     # Assigning a local page to a global variable to be able to destroy it when initializing the next page.

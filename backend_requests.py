@@ -1,20 +1,20 @@
 # Import of modules needed to create http queries.
 from requests import get, post, put, patch, delete, RequestException, Response
 # Import global variables.
-import config_data
+from utils import config_data, constants
 # Import of modules needed to converting and sending image files.
 from PIL import UnidentifiedImageError
 from io import BytesIO, UnsupportedOperation
 import os
 import zipfile
-from helpers import resize_image
+from utils.formating import resize_image
 
 
 def request_to_get_announcements(search_engine, page, content_to_search=None, location=None, category_id=None):
     """Function responsible for requests to download announcements for specific parameters."""
     # Creating url, parameters and calling GET method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/announcements/search"
+        url = f"{constants.backend_url}/announcements/search"
         params = {
             "per_page": 15,
             "page": page
@@ -40,7 +40,7 @@ def request_to_login_user(login_or_email, password):
     """Function responsible for asking to download user information using a password and login or email."""
     # Creating url, request_body and calling GET method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/users/login"
+        url = f"{constants.backend_url}/users/login"
         request_body = {
             "login_or_email": login_or_email,
             "password": password
@@ -61,7 +61,7 @@ def request_to_register_user(first_name, last_name, email, login, password, date
     """Function responsible for requesting information about a new user to be entered into the database."""
     # Creating url with request_body and calling POST method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/users/register"
+        url = f"{constants.backend_url}/users/register"
         request_body = {
             "first_name": first_name,
             "last_name": last_name,
@@ -89,7 +89,7 @@ def request_to_update_the_announcement(title, description, price, location, anno
     """Function responsible for requesting an update of a user's announcement."""
     # Creating url, request_body and calling PUT method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/announcements/{announcement_id}"
+        url = f"{constants.backend_url}/announcements/{announcement_id}"
         request_body = {
             "title": title,
             "description": description,
@@ -114,7 +114,7 @@ def request_to_get_user_announcements(active_flag, page):
     """The function responsible for downloading user's announcements when the active flag and page are specified."""
     # Creating url, parameters and calling GET method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/users/{config_data.logged_in_user_info.user_id}/announcements"
+        url = f"{constants.backend_url}/users/{config_data.logged_in_user_info.user_id}/announcements"
         params = {
             "active_flag": active_flag,
             "per_page": 4,
@@ -136,7 +136,7 @@ def request_to_add_the_announcement(title, location, category_id, state, price, 
     """Function responsible for requesting to add a new announcement."""
     # Creating url, request_body and calling POST method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/users/{config_data.logged_in_user_info.user_id}/announcements"
+        url = f"{constants.backend_url}/users/{config_data.logged_in_user_info.user_id}/announcements"
         request_body = {
             "title": title,
             "description": description,
@@ -163,7 +163,7 @@ def request_to_verify_login(login):
     """Function responsible for requesting login verification."""
     # Creating url, request_body and calling GET method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/users/login-verification"
+        url = f"{constants.backend_url}/users/login-verification"
         request_body = {
             "login": login
         }
@@ -183,7 +183,7 @@ def request_to_update_user_data(column, value):
     """Function responsible for requesting update of user data, using a specific column and value."""
     # Creating url, request_body and calling PATCH method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/users/{config_data.logged_in_user_info.user_id}"
+        url = f"{constants.backend_url}/users/{config_data.logged_in_user_info.user_id}"
         request_body = {
             "column": column,
             "value": value
@@ -204,7 +204,7 @@ def request_to_complete_the_announcement(announcement_id):
     """Function responsible for requesting to change the user's announcement flag from active to complete."""
     # Creating url and calling PATCH method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/announcements/{announcement_id}/complete"
+        url = f"{constants.backend_url}/announcements/{announcement_id}/complete"
         response = patch(url)
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
@@ -221,7 +221,7 @@ def request_to_restore_the_announcement(announcement_id):
     """Function responsible for requesting to change the user's announcement flag from complete to active."""
     # Creating url and calling PATCH method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/announcements/{announcement_id}/restore"
+        url = f"{constants.backend_url}/announcements/{announcement_id}/restore"
         response = patch(url)
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
@@ -238,7 +238,7 @@ def request_to_delete_the_announcement(announcement_id):
     """Function responsible for requesting to change the user's announcement flag from complete to delete."""
     # Creating url and calling PATCH method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/announcements/{announcement_id}/delete"
+        url = f"{constants.backend_url}/announcements/{announcement_id}/delete"
         response = patch(url)
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
@@ -256,7 +256,7 @@ def request_to_get_user_favorite_announcements(active_flag, page, per_page):
     page and per page params."""
     # Creating url, params and calling GET method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/users/{config_data.logged_in_user_info.user_id}/favorite-announcements"
+        url = f"{constants.backend_url}/users/{config_data.logged_in_user_info.user_id}/favorite-announcements"
         params = {
             "active_flag": active_flag,
             "page": page,
@@ -278,7 +278,7 @@ def request_to_add_announcement_to_favorite(announcement_id):
     """Function responsible for requesting that a selected announcement be added to the user's favorites."""
     # Creating url, request_body and calling POST method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/users/{config_data.logged_in_user_info.user_id}/favorite-announcements"
+        url = f"{constants.backend_url}/users/{config_data.logged_in_user_info.user_id}/favorite-announcements"
         request_body = {
             "announcement_id": announcement_id
         }
@@ -298,7 +298,7 @@ def request_to_delete_announcement_from_favorite(favorite_announcement_id):
     """Function responsible for requesting removal of a selected announcement from the user's favorites."""
     # Creating url and calling DELETE method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/favorite-announcements/{favorite_announcement_id}"
+        url = f"{constants.backend_url}/favorite-announcements/{favorite_announcement_id}"
         response = delete(url)
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
@@ -315,7 +315,7 @@ def request_to_get_messages(announcement_id=None, conversation_id=None):
     """Function responsible for requesting to download a message using the conversation id or announcement id."""
     # Creating url, request_body and calling GET method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/users/{config_data.logged_in_user_info.user_id}/messages"
+        url = f"{constants.backend_url}/users/{config_data.logged_in_user_info.user_id}/messages"
         if conversation_id:
             request_body = {
                 "conversation_id": conversation_id
@@ -340,7 +340,7 @@ def request_to_send_message(content, is_user_customer, conversation_id=None, ann
     """Function responsible for requesting to send a message."""
     # Creating url, request_body and calling POST method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/users/{config_data.logged_in_user_info.user_id}/messages"
+        url = f"{constants.backend_url}/users/{config_data.logged_in_user_info.user_id}/messages"
         if conversation_id:
             request_body = {
                 "conversation_id": conversation_id,
@@ -370,7 +370,7 @@ def request_to_get_conversations(customer_flag, page):
     the buyer or seller and the page."""
     # Creating url, parameters and calling GET method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/users/{config_data.logged_in_user_info.user_id}/conversations"
+        url = f"{constants.backend_url}/users/{config_data.logged_in_user_info.user_id}/conversations"
         params = {
             "customer_flag": customer_flag,
             "page": page,
@@ -392,7 +392,7 @@ def request_to_get_images(announcement_id):
     """Function responsible for requesting to download images from the server."""
     # Creating url and calling GET method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/announcements/{announcement_id}/media"
+        url = f"{constants.backend_url}/announcements/{announcement_id}/media"
         response = get(url)
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
@@ -409,7 +409,7 @@ def request_to_upload_images(announcement_id, images):
     """Function responsible for requesting to upload photos to the server."""
     # Creating url, request_body, files and calling POST method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/media/upload/{config_data.logged_in_user_info.user_id}"
+        url = f"{constants.backend_url}/media/upload/{config_data.logged_in_user_info.user_id}"
 
         request_body = {
             "announcement_id": announcement_id
@@ -461,7 +461,7 @@ def request_to_delete_images(images_to_delete):
        the database."""
     # Creating url, request body and calling DELETE method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/media/delete/{config_data.logged_in_user_info.user_id}"
+        url = f"{constants.backend_url}/media/delete/{config_data.logged_in_user_info.user_id}"
 
         # Creating a list of images to delete.
         request_body = {
@@ -490,7 +490,7 @@ def request_to_switch_images(request_body):
     adding to another and vice versa."""
     # Creating url and calling PUT method on this endpoint.
     try:
-        url = f"{config_data.backend_url}/media/switch/{config_data.logged_in_user_info.user_id}"
+        url = f"{constants.backend_url}/media/switch/{config_data.logged_in_user_info.user_id}"
 
         response = put(url, json=request_body)
 

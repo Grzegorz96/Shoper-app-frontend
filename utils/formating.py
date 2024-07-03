@@ -1,7 +1,6 @@
+from io import BytesIO
 import base64
 from PIL import Image, ImageTk
-from io import BytesIO
-from tkinter import END
 
 
 def convert_image_to_tkinter(base_64_photo):
@@ -22,11 +21,6 @@ def convert_image_to_tkinter(base_64_photo):
     return main_photo
 
 
-def set_right(event):
-    """A function that configures the text in the Text object so that it can be displayed on the right."""
-    event.widget.configure(tabs=(event.width - 6, "right"))
-
-
 def resize_image(image_path, width, height):
     """Resize the image to the specified dimensions and return the resized image as a buffer."""
     # Open the image file.
@@ -45,9 +39,3 @@ def resize_image(image_path, width, height):
 
         # Return the buffer containing the image data.
         return buffer
-
-
-def delete_text(entry_object):
-    """A function that removes text from the entry object and unbinds the function from the object."""
-    entry_object.delete(0, END)
-    entry_object.unbind("<Button-1>")

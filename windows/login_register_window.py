@@ -1,6 +1,6 @@
 from tkinter import ttk
 from tkinter import *
-import config_data
+from utils import config_data, constants
 from pages.home_page import init_shoper_page_frame
 from logic.register.user_registration import register_user
 from logic.login.user_login import login_user
@@ -104,17 +104,17 @@ def init_login_register_window(top_panel_frame):
     Label(login_window_label, text="Data urodzenia*", font="Arial").grid(row=13, column=1)
     current_var_day = StringVar()
     ttk.Combobox(login_window_label, textvariable=current_var_day, width=6, state="readonly",
-                 values=config_data.days).grid(row=13, column=0, sticky=W, pady=10, padx=(26, 0))
+                 values=constants.days).grid(row=13, column=0, sticky=W, pady=10, padx=(26, 0))
 
     # Init combobox months for login_window_label.
     current_var_month = StringVar()
     ttk.Combobox(login_window_label, textvariable=current_var_month, width=10, state="readonly",
-                 values=config_data.months).grid(row=13, column=0, padx=(20, 0))
+                 values=constants.months).grid(row=13, column=0, padx=(20, 0))
 
     # Init combobox years for login_window_label.
     current_var_year = StringVar()
     ttk.Combobox(login_window_label, textvariable=current_var_year, width=6, state="readonly",
-                 values=config_data.years).grid(row=13, column=0, sticky=E, padx=(0, 7))
+                 values=constants.years).grid(row=13, column=0, sticky=E, padx=(0, 7))
 
     # Init street_entry for login_window_label.
     Label(login_window_label, text="Ulica", font="Arial").grid(row=14, column=1)

@@ -2,7 +2,7 @@ import backend_requests
 from re import match
 from tkinter import messagebox, END
 from requests import codes
-import config_data
+from utils import constants
 
 
 def register_user(first_name_entry, last_name_entry, email_entry, login_entry, password_entry, current_var_day,
@@ -20,9 +20,9 @@ def register_user(first_name_entry, last_name_entry, email_entry, login_entry, p
                 if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń0-9]{5,45}$", login_entry.get()):
                     if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń0-9!@#$%^&*]{7,45}$", password_entry.get()):
 
-                        if (current_var_year.get() in config_data.years
-                                and current_var_month.get() in config_data.months
-                                and current_var_day.get() in config_data.days):
+                        if (current_var_year.get() in constants.years
+                                and current_var_month.get() in constants.months
+                                and current_var_day.get() in constants.days):
 
                             # If validation is successful, the data will be assigned to variables, which will then be
                             # placed as arguments to the request function.
