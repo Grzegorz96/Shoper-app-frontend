@@ -1,9 +1,8 @@
 from utils import config_data
-from tkinter import *
-from tkinter import ttk
+from tkinter import Frame, Label, Button, Text, INSERT, ttk, W, E
 from windows.message_window import init_message_window
-from logic.announcements.favorites.add_announcement_to_favorites import add_announcement_to_favorites
-from logic.announcements.media.get_images_to_announcement import get_images_to_announcement
+from logic.announcements.favorites_management.add_announcement_to_favorites import add_announcement_to_favorites
+from logic.media.get_images_to_announcement import get_images_to_announcement
 
 
 def init_announcement_page_frame(page, announcement_object, block_fav, block_mess):

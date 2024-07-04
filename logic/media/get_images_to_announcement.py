@@ -1,9 +1,9 @@
-import backend_requests
 from tkinter import messagebox
 from requests import codes
 from PIL import Image, ImageTk
 from io import BytesIO
 import zipfile
+from services.api.media import request_to_get_images
 
 
 def get_images_to_announcement(announcement_id, to_edit, px, py):
@@ -14,7 +14,7 @@ def get_images_to_announcement(announcement_id, to_edit, px, py):
 
     try:
         # Calling the function sending a request to download photos for a given announcement.
-        response = backend_requests.request_to_get_images(announcement_id)
+        response = request_to_get_images(announcement_id)
         # If the returned response has a status of 200, the program will create a list of photo objects.
         if response.status_code == codes.ok:
             # If the response contains the 'X-Main-Photo' header, the program will assign the value to the variable.

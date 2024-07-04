@@ -1,21 +1,19 @@
-import backend_requests
 from tkinter import messagebox
 from requests import codes
-from models import Message
+from models.message import Message
+from services.api.messages import request_to_get_messages
 
 
 def get_messages(announcement_object=None, conversation_object=None):
     """Function responsible for retrieving user's messages using conversation id or announcement id."""
     # If the user has imported a conversation object, the program sends a request with the conversation_id parameter.
     if conversation_object:
-        response_for_getting_messages\
-            = backend_requests.request_to_get_messages(conversation_id=conversation_object.conversation_id)
+        response_for_getting_messages = request_to_get_messages(conversation_id=conversation_object.conversation_id)
 
     # If the user has not imported the conversation id, it means that he has imported the announcement id,
     # the program will send a request with the announcement_id parameter.
     else:
-        response_for_getting_messages\
-            = backend_requests.request_to_get_messages(announcement_id=announcement_object.announcement_id)
+        response_for_getting_messages = request_to_get_messages(announcement_id=announcement_object.announcement_id)
 
     # If the returned response has a status of 200, the program will create list of message objects for the downloaded
     # conversation.

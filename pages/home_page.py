@@ -1,11 +1,10 @@
 from utils import config_data
 from utils.helpers import config_buttons, create_buttons, create_labels
-from tkinter import ttk
-from tkinter import *
+from tkinter import Frame, Button, W, ttk
 from pages.announcement_page import init_announcement_page_frame
 from windows.message_window import init_message_window
 from logic.announcements.get_announcements import get_announcements
-from logic.announcements.favorites.add_announcement_to_favorites import add_announcement_to_favorites
+from logic.announcements.favorites_management.add_announcement_to_favorites import add_announcement_to_favorites
 
 
 def init_shoper_page_frame(search_engine=None, search_location=None, current_var_category=None):

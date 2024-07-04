@@ -1,5 +1,4 @@
-from tkinter import *
-from tkinter import ttk
+from tkinter import Frame, Button, Entry, Label, StringVar, ttk
 from utils.helpers import delete_text
 from utils import config_data, constants
 from windows.login_register_window import init_login_register_window
@@ -10,11 +9,11 @@ from pages.favorite_page import init_favorite_page_frame
 from pages.messages_page import init_messages_page_frame
 
 
-def is_user_logged_to_user_page(top_panel_frame):
+def handle_user_authentication(top_panel_frame, init_page):
     """The function to check if the user is logged in, if logged in, I call the init_user_page_frame function,
     if not already logged in, it calls the init_login_window function so that the user can log in."""
-    if config_data.is_user_logged_in:
-        init_user_page_frame()
+    if config_data.logged_in_user_info:
+        init_page()
     else:
         init_login_register_window(top_panel_frame)
 
@@ -68,16 +67,17 @@ def init_top_panel():
 
     # Init favorite_button for top_panel_frame.
     Button(top_panel_frame, text="Ulubione", width=16, height=2, borderwidth=0, bg="#D3D3D3",
-           command=lambda: init_favorite_page_frame()).place(x=730, y=20)
+           command=lambda: handle_user_authentication(top_panel_frame, init_favorite_page_frame)).place(x=730, y=20)
 
     # Init messages_button for top_panel_frame.
     Button(top_panel_frame, text="Wiadomości", width=16, height=2, borderwidth=0, bg="#D3D3D3",
-           command=lambda: init_messages_page_frame()).place(x=865, y=20)
+           command=lambda: handle_user_authentication(top_panel_frame, init_messages_page_frame)).place(x=865, y=20)
 
     # Init add_announcement button for top_panel_frame.
-    Button(top_panel_frame, text="Dodaj ogłoszenie", width=16, height=2, borderwidth=0,
-           bg="#D3D3D3", command=lambda: init_add_announcement_page_frame()).place(x=1000, y=20)
+    Button(top_panel_frame, text="Dodaj ogłoszenie", width=16, height=2, borderwidth=0, bg="#D3D3D3",
+           command=lambda: handle_user_authentication(top_panel_frame, init_add_announcement_page_frame)).place(x=1000,
+                                                                                                                y=20)
 
     # Init account_button for top_panel_frame.
     Button(top_panel_frame, text="Twoje konto", width=16, height=2, borderwidth=0, bg="#D3D3D3",
-           command=lambda: is_user_logged_to_user_page(top_panel_frame)).place(x=1135, y=20)
+           command=lambda: handle_user_authentication(top_panel_frame, init_user_page_frame)).place(x=1135, y=20)

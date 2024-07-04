@@ -1,15 +1,15 @@
-import backend_requests
 from tkinter import messagebox
 from requests import codes
 from utils import config_data
+from services.api.announcements import request_to_delete_the_announcement
 
 
 def move_to_deleted_announcements(user_completed_announcement_object, init_user_page_frame):
     """Function responsible for deleting a completed announcement. The announcement flag will change from completed to
      deleted."""
     # Calling the function sending a request to remove a given announcement.
-    response_for_delete_of_announcement\
-        = backend_requests.request_to_delete_the_announcement(user_completed_announcement_object.announcement_id)
+    response_for_delete_of_announcement = request_to_delete_the_announcement(
+        user_completed_announcement_object.announcement_id)
 
     # If the returned response has a status of 200, then display a success message and refresh the page.
     if response_for_delete_of_announcement.status_code == codes.ok:

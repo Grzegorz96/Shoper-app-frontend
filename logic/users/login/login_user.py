@@ -1,11 +1,11 @@
 from utils import config_data
-import backend_requests
 from re import match
 from tkinter import messagebox, Button
 from requests import codes
 from datetime import datetime
-from models import LoggedUser
-from logic.login.user_logout import logout_user
+from models.logged_user import LoggedUser
+from logic.users.login.logout_user import logout_user
+from services.api.users import request_to_login_user
 
 
 def login_user(entry_login_or_email, entry_password, top_panel_frame, init_shoper_page_frame):
@@ -22,7 +22,7 @@ def login_user(entry_login_or_email, entry_password, top_panel_frame, init_shope
 
             # If validation is successful, the program will call the function of sending a user login request with
             # the provided data.
-            response_for_login_user = backend_requests.request_to_login_user(login_or_email, password)
+            response_for_login_user = request_to_login_user(login_or_email, password)
 
             # If the returned status is 200, then the program destroys all previously created login windows, changes
             # the login flag to True, creates a user object with the data retrieved from the database, creates a logout
@@ -33,7 +33,6 @@ def login_user(entry_login_or_email, entry_password, top_panel_frame, init_shope
                     window.destroy()
 
                 config_data.list_of_active_windows.clear()
-                config_data.is_user_logged_in = True
                 user_info = response_for_login_user.json()["result"]
                 config_data.logged_in_user_info = LoggedUser(
                     user_info["user_id"],

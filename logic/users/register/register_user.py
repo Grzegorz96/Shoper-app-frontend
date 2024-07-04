@@ -1,8 +1,8 @@
-import backend_requests
 from re import match
 from tkinter import messagebox, END
 from requests import codes
 from utils import constants
+from services.api.users import request_to_register_user
 
 
 def register_user(first_name_entry, last_name_entry, email_entry, login_entry, password_entry, current_var_day,
@@ -37,12 +37,9 @@ def register_user(first_name_entry, last_name_entry, email_entry, login_entry, p
                             zip_code = zip_code_entry.get()
                             city = city_entry.get()
                             # Calling the user registration request function.
-                            response_for_register_user = backend_requests.request_to_register_user(first_name,
-                                                                                                   last_name, email,
-                                                                                                   login, password,
-                                                                                                   date_of_birth,
-                                                                                                   street, zip_code,
-                                                                                                   city)
+                            response_for_register_user = request_to_register_user(first_name, last_name, email, login,
+                                                                                  password, date_of_birth, street,
+                                                                                  zip_code, city)
 
                             # If the returned response status is 201, the program will delete all entered data from
                             # the entry and combobox objects and display an appropriate message.

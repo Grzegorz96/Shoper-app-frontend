@@ -2,7 +2,8 @@ from utils import config_data, constants
 from tkinter import messagebox
 from re import match
 from requests import codes
-import backend_requests
+from services.api.announcements import request_to_update_the_announcement
+from services.api.media import request_to_upload_images, request_to_delete_images, request_to_switch_images
 
 
 def update_announcement(title_entry, location_entry, price_entry, description_text, announcement_object,
@@ -32,11 +33,9 @@ def update_announcement(title_entry, location_entry, price_entry, description_te
                                 mobile_number = mobile_number_entry.get()
 
                             # Calling the function to send a request to change the announcement for the given arguments.
-                            response_for_updating_announcement \
-                                = backend_requests.request_to_update_the_announcement(title, description, price,
-                                                                                      location, announcement_object.
-                                                                                      announcement_id, state,
-                                                                                      mobile_number)
+                            response_for_updating_announcement = request_to_update_the_announcement(
+                                title, description, price, location, announcement_object.announcement_id, state,
+                                mobile_number)
 
                             # If the function returns a response with status 200, the attached photos will be added.
                             if response_for_updating_announcement.status_code == codes.ok:
@@ -48,9 +47,7 @@ def update_announcement(title_entry, location_entry, price_entry, description_te
                                 # Deleting all selected photos from list, if the returned status is not other than
                                 # 200 then the error_with_updating_photos flag will change its value to True.
                                 if deleted_photos:
-                                    response_for_deleting_photos = backend_requests.request_to_delete_images(
-                                        deleted_photos
-                                    )
+                                    response_for_deleting_photos = request_to_delete_images(deleted_photos)
                                     if response_for_deleting_photos.status_code != codes.ok:
                                         error_with_updating_photos = True
 
@@ -64,28 +61,25 @@ def update_announcement(title_entry, location_entry, price_entry, description_te
                                                 for photo_button_with_main_photo in list_of_photo_button_objects:
                                                     if photo_button_with_main_photo.main_photo:
                                                         if photo_button_with_main_photo.photo_from_media:
-                                                            response_for_switching_photos \
-                                                                = backend_requests.request_to_switch_images({
-                                                                    "main_photo_filename": main_photo_from_server.photo_to_upload,
-                                                                    "media_photo_filename": photo_button_with_main_photo.photo_to_upload,
-                                                                    "announcement_id": announcement_object.announcement_id,
-                                                                })
+                                                            response_for_switching_photos = request_to_switch_images({
+                                                                "main_photo_filename": main_photo_from_server.photo_to_upload,
+                                                                "media_photo_filename": photo_button_with_main_photo.photo_to_upload,
+                                                                "announcement_id": announcement_object.announcement_id,
+                                                            })
                                                             if response_for_switching_photos.status_code != codes.ok:
                                                                 error_with_updating_photos = True
                                                             break
 
                                                         else:
-                                                            response_for_switching_photos \
-                                                                = backend_requests.request_to_switch_images({
-                                                                    "main_photo_filename": main_photo_from_server.photo_to_upload,
-                                                                    "announcement_id": announcement_object.announcement_id,
-                                                                })
+                                                            response_for_switching_photos = request_to_switch_images({
+                                                                "main_photo_filename": main_photo_from_server.photo_to_upload,
+                                                                "announcement_id": announcement_object.announcement_id,
+                                                            })
                                                             if response_for_switching_photos.status_code == codes.ok:
-                                                                response_for_uploading_photo\
-                                                                    = backend_requests.request_to_upload_images(
-                                                                        announcement_object.announcement_id,
-                                                                        [(photo_button_with_main_photo.photo_to_upload,
-                                                                            True)])
+                                                                response_for_uploading_photo = request_to_upload_images(
+                                                                    announcement_object.announcement_id,
+                                                                    [(photo_button_with_main_photo.photo_to_upload,
+                                                                      True)])
                                                                 if response_for_uploading_photo.status_code != codes.created:
                                                                     error_with_updating_photos = True
                                                             else:
@@ -101,19 +95,17 @@ def update_announcement(title_entry, location_entry, price_entry, description_te
                                         if photo_button.main_photo:
                                             committed_operation_on_main_photo = True
                                             if photo_button.photo_from_media:
-                                                response_for_switching_photos\
-                                                    = backend_requests.request_to_switch_images({
-                                                        "announcement_id": announcement_object.announcement_id,
-                                                        "media_photo_filename": photo_button.photo_to_upload,
-                                                    })
+                                                response_for_switching_photos = request_to_switch_images({
+                                                    "announcement_id": announcement_object.announcement_id,
+                                                    "media_photo_filename": photo_button.photo_to_upload,
+                                                })
 
                                                 if response_for_switching_photos.status_code != codes.ok:
                                                     error_with_updating_photos = True
                                             else:
-                                                response_for_uploading_photo\
-                                                    = backend_requests.request_to_upload_images(
-                                                        announcement_object.announcement_id,
-                                                        [(photo_button.photo_to_upload, True)])
+                                                response_for_uploading_photo = request_to_upload_images(
+                                                    announcement_object.announcement_id,
+                                                    [(photo_button.photo_to_upload, True)])
 
                                                 if response_for_uploading_photo.status_code != codes.created:
                                                     error_with_updating_photos = True
@@ -125,19 +117,17 @@ def update_announcement(title_entry, location_entry, price_entry, description_te
                                     for button in list_of_photo_button_objects:
                                         if button.photo_to_upload:
                                             if button.photo_from_media:
-                                                response_for_switching_photos\
-                                                    = backend_requests.request_to_switch_images({
-                                                        "announcement_id": announcement_object.announcement_id,
-                                                        "media_photo_filename": button.photo_to_upload,
-                                                    })
+                                                response_for_switching_photos = request_to_switch_images({
+                                                    "announcement_id": announcement_object.announcement_id,
+                                                    "media_photo_filename": button.photo_to_upload,
+                                                })
 
                                                 if response_for_switching_photos.status_code != codes.ok:
                                                     error_with_updating_photos = True
                                             else:
-                                                response_for_uploading_photo\
-                                                    = backend_requests.request_to_upload_images(
-                                                        announcement_object.announcement_id,
-                                                        [(button.photo_to_upload, True)])
+                                                response_for_uploading_photo = request_to_upload_images(
+                                                    announcement_object.announcement_id,
+                                                    [(button.photo_to_upload, True)])
 
                                                 if response_for_uploading_photo.status_code == codes.created:
                                                     button.main_photo = True
@@ -158,7 +148,7 @@ def update_announcement(title_entry, location_entry, price_entry, description_te
 
                                     if images_to_upload:
                                         # Sending a request to add photos to the server.
-                                        response_for_uploading_images = backend_requests.request_to_upload_images(
+                                        response_for_uploading_images = request_to_upload_images(
                                             announcement_object.announcement_id, images_to_upload)
 
                                         if response_for_uploading_images.status_code != codes.created:

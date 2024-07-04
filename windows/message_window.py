@@ -1,9 +1,9 @@
 from utils import config_data
 from utils.helpers import set_right, delete_text
-from tkinter import *
-from tkinter import messagebox
 from logic.messages.get_messages import get_messages
 from logic.messages.send_message import send_message
+from tkinter import (Toplevel, Label, Text, Scrollbar, LEFT, RIGHT, Y, Entry, Button, messagebox, PhotoImage, TclError,
+                     W, END)
 
 
 def init_message_window(announcement_object):
@@ -11,7 +11,7 @@ def init_message_window(announcement_object):
     another user's announcement. Then sent message will be displayed on the message page of both the buyer and the
     seller."""
     # Checking if user is logged in.
-    if config_data.is_user_logged_in:
+    if config_data.logged_in_user_info:
         # When user is logged in, program checking if selected announcement isn't user's announcement.
         if config_data.logged_in_user_info.user_id != announcement_object.seller_id:
             # Init message_window from Toplevel class.

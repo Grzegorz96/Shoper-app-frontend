@@ -1,10 +1,9 @@
-from tkinter import ttk
-from tkinter import *
+from tkinter import Toplevel, Label, Entry, Button, StringVar, PhotoImage, TclError, E, W, SW, ttk
 from utils import config_data, constants
 from pages.home_page import init_shoper_page_frame
-from logic.register.user_registration import register_user
-from logic.login.user_login import login_user
-from logic.register.user_validation import verify_login, verify_password, show_pattern
+from logic.users.register.register_user import register_user
+from logic.users.login.login_user import login_user
+from logic.users.register.user_validation import verify_login, verify_password, show_pattern
 
 
 def init_login_register_window(top_panel_frame):

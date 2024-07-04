@@ -1,8 +1,8 @@
 from utils import config_data
-import backend_requests
 from re import match
 from tkinter import messagebox, END
 from requests import codes
+from services.api.users import request_to_update_user_data
 
 
 def update_user(entry, label, hidden_password):
@@ -70,7 +70,7 @@ def update_user(entry, label, hidden_password):
     # If it entered a block and created a column.
     if column:
         # Calling the function to send a user update request for a specific column with a validated value.
-        response_for_updating_user = backend_requests.request_to_update_user_data(column, value)
+        response_for_updating_user = request_to_update_user_data(column, value)
 
         # If the status code is 200 then update the given field in the user object.
         if response_for_updating_user.status_code == codes.ok:

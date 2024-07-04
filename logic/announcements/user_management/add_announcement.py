@@ -1,8 +1,9 @@
-import backend_requests
 from tkinter import messagebox, END
 from re import match
 from requests import codes
 from utils import config_data, constants
+from services.api.announcements import request_to_add_the_announcement
+from services.api.media import request_to_upload_images
 
 
 def add_announcement(title_entry, location_entry, current_var_category, price_entry, description_text,
@@ -32,7 +33,7 @@ def add_announcement(title_entry, location_entry, current_var_category, price_en
                                     mobile_number = mobile_number_entry.get()
 
                                 # Calling the function to send a request to add an advertisement to the server.
-                                response_for_adding_announcement = backend_requests.request_to_add_the_announcement(
+                                response_for_adding_announcement = request_to_add_the_announcement(
                                     title, location, category_id, state, price, mobile_number, description)
 
                                 # If the response is 201, the photos are added to the server.
@@ -54,7 +55,7 @@ def add_announcement(title_entry, location_entry, current_var_category, price_en
                                             images_to_upload[0] = (images_to_upload[0][0], True)
 
                                         # Sending a request to add photos to the server.
-                                        response_for_uploading_images = backend_requests.request_to_upload_images(
+                                        response_for_uploading_images = request_to_upload_images(
                                             announcement_id, images_to_upload
                                         )
 

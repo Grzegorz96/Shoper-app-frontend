@@ -1,14 +1,14 @@
-import backend_requests
 from tkinter import messagebox
 from requests import codes
-from models import Conversation
+from models.conversation import Conversation
+from services.api.messages import request_to_get_conversations
 
 
 def get_conversations(customer_flag, page):
     """Function responsible for downloading user conversations, specifying the customer_flag and page parameters.
     The function can download conversations for the user as a customer and as a seller."""
     # Calling the function sending a request to download the conversation.
-    response_for_getting_conversations = backend_requests.request_to_get_conversations(customer_flag, page)
+    response_for_getting_conversations = request_to_get_conversations(customer_flag, page)
 
     # If the returned response has a status of 200, the program will create list of conversation objects.
     if response_for_getting_conversations.status_code == codes.ok:

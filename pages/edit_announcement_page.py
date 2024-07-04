@@ -1,12 +1,11 @@
 from utils import config_data, constants
-from tkinter import *
-from tkinter import ttk
-from models import PhotoButton
-from logic.announcements.update_announcement import update_announcement
-from logic.announcements.media.get_images_to_announcement import get_images_to_announcement
-from logic.announcements.media.select_image import select_image
-from logic.announcements.media.delete_image import delete_image
-from logic.announcements.media.set_main_image import set_main_image
+from tkinter import Frame, Label, Entry, Button, Text, StringVar, INSERT, W, ttk
+from models.photo_button import PhotoButton
+from logic.announcements.user_management.update_announcement import update_announcement
+from logic.media.get_images_to_announcement import get_images_to_announcement
+from logic.media.select_image import select_image
+from logic.media.delete_image import delete_image
+from logic.media.set_main_image import set_main_image
 
 
 def init_edit_user_announcement_page_frame(announcement_object, init_user_page_frame):

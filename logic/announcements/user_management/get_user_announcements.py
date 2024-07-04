@@ -1,8 +1,8 @@
 from tkinter import messagebox
 from requests import codes
-from models import Announcement
-import backend_requests
+from models.announcement import Announcement
 from utils.formating import convert_image_to_tkinter
+from services.api.announcements import request_to_get_user_announcements
 
 
 def get_user_announcements(active_flag, page):
@@ -10,7 +10,7 @@ def get_user_announcements(active_flag, page):
     objects for these announcements and returning them to the gui.py module. In the function parameters, the program
     specifies which page it wants to display and whether announcements are active or completed."""
     # Calling the user announcement request function.
-    response_for_getting_user_announcements = backend_requests.request_to_get_user_announcements(active_flag, page)
+    response_for_getting_user_announcements = request_to_get_user_announcements(active_flag, page)
 
     # If a response with status 200 is returned, then within the number of dictionaries in the list,
     # create announcement objects.

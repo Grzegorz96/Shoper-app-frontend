@@ -1,8 +1,7 @@
 import os
-from tkinter import messagebox, filedialog
+from tkinter import messagebox, filedialog, Button
 from PIL import Image, ImageTk
-from tkinter import Button
-from logic.announcements.media.delete_image import delete_image
+from logic.media.delete_image import delete_image
 
 
 def select_image(list_of_photo_button_objects, page):

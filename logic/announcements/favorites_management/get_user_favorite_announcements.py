@@ -1,16 +1,16 @@
-import backend_requests
 from tkinter import messagebox
 from requests import codes
-from models import UserFavoriteAnnouncement
+from models.user_favorite_announcement import UserFavoriteAnnouncement
 from utils.formating import convert_image_to_tkinter
+from services.api.announcements import request_to_get_user_favorite_announcements
 
 
 def get_user_favorite_announcements(active_flag, page, per_page):
     """Function responsible for downloading announcements belonging to the user, creating a list of announcements
     objects and returning this list."""
     # Calling the function sending a request to download the user's announcements.
-    response_for_getting_user_favorite_announcements = backend_requests.request_to_get_user_favorite_announcements(
-        active_flag, page, per_page)
+    response_for_getting_user_favorite_announcements = request_to_get_user_favorite_announcements(active_flag, page,
+                                                                                                  per_page)
 
     # If the returned response has a status of 200, the program will create a list of user's announcements objects from
     # the downloaded data.

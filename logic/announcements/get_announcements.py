@@ -1,9 +1,9 @@
 from tkinter import messagebox
 from requests import codes
-import backend_requests
 from utils import constants
-from models import Announcement
+from models.announcement import Announcement
 from utils.formating import convert_image_to_tkinter
+from services.api.announcements import request_to_get_announcements
 
 
 def get_announcements(page, first_init, search_engine, search_location=None, current_var_category=None):
@@ -17,13 +17,12 @@ def get_announcements(page, first_init, search_engine, search_location=None, cur
                 current_var_category.get() in constants.categories) else ""
 
         # Calling a function sending a request to download a message with specific additional parameters.
-        response_for_getting_announcements = backend_requests.request_to_get_announcements(search_engine, page,
-                                                                                           content_to_search, location,
-                                                                                           category_id)
+        response_for_getting_announcements = request_to_get_announcements(search_engine, page, content_to_search,
+                                                                          location, category_id)
 
     # If the function is called not from search_engine, announcements will be downloaded without additional parameters.
     else:
-        response_for_getting_announcements = backend_requests.request_to_get_announcements(search_engine, page)
+        response_for_getting_announcements = request_to_get_announcements(search_engine, page)
 
     # # If the returned response has a status of 200, the program will create a list of announcements objects from the
     # downloaded data.

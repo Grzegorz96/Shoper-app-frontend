@@ -1,17 +1,16 @@
-import backend_requests
 from utils import config_data
 from tkinter import messagebox
 from requests import codes
+from services.api.announcements import request_to_add_announcement_to_favorite
 
 
 def add_announcement_to_favorites(announcement_object):
-    """Function responsible for adding announcements to favorites."""
+    """Function responsible for adding announcements to favorites_management."""
     # Checking if the user is logged in.
-    if config_data.is_user_logged_in:
+    if config_data.logged_in_user_info:
 
-        # Calling the function sending a request to add the announcement to the user's favorites.
-        response_for_adding_to_favorite \
-            = backend_requests.request_to_add_announcement_to_favorite(announcement_object.announcement_id)
+        # Calling the function sending a request to add the announcement to the user's favorites_management.
+        response_for_adding_to_favorite = request_to_add_announcement_to_favorite(announcement_object.announcement_id)
 
         # If the returned response has a status of 201, the program will display a success message.
         if response_for_adding_to_favorite.status_code == codes.created:

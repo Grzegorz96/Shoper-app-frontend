@@ -1,7 +1,7 @@
 from re import match
 from tkinter import messagebox
 from requests import codes
-import backend_requests
+from services.api.users import request_to_verify_login
 
 
 def verify_login(login_entry):
@@ -11,7 +11,7 @@ def verify_login(login_entry):
     if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń0-9]{5,45}$", login_entry.get()):
 
         # If validation is successful, call a function to send a login verification request.
-        response_for_login_verification = backend_requests.request_to_verify_login(login_entry.get())
+        response_for_login_verification = request_to_verify_login(login_entry.get())
 
         # If response status is 200 then display the availability message.
         if response_for_login_verification.status_code == codes.ok:

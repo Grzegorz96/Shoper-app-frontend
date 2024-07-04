@@ -1,15 +1,14 @@
 from utils import config_data
 from utils.helpers import delete_text, config_buttons, create_buttons, create_labels
-from tkinter import *
-from tkinter import ttk
+from tkinter import Frame, Label, Entry, Button, W, ttk
 from datetime import datetime
 from pages.edit_announcement_page import init_edit_user_announcement_page_frame
 from pages.announcement_page import init_announcement_page_frame
-from logic.announcements.get_user_announcements import get_user_announcements
+from logic.announcements.user_management.get_user_announcements import get_user_announcements
 from logic.users.update_user import update_user
-from logic.announcements.move_to_completed_announcements import move_to_completed_announcements
-from logic.announcements.move_to_active_announcements import move_to_active_announcements
-from logic.announcements.move_to_deleted_announcements import move_to_deleted_announcements
+from logic.announcements.state_management.move_to_completed_announcements import move_to_completed_announcements
+from logic.announcements.state_management.move_to_active_announcements import move_to_active_announcements
+from logic.announcements.state_management.move_to_deleted_announcements import move_to_deleted_announcements
 
 
 def init_user_page_frame():
