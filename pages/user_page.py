@@ -1,11 +1,12 @@
 from utils import config_data
-from utils.helpers import delete_text, config_buttons, create_buttons, create_labels
+from utils.helpers import delete_text, config_buttons, create_buttons, create_labels, toggle_password
 from tkinter import Frame, Label, Entry, Button, W, ttk
 from datetime import datetime
 from pages.edit_announcement_page import init_edit_user_announcement_page_frame
 from pages.announcement_page import init_announcement_page_frame
 from logic.announcements.user_management.get_user_announcements import get_user_announcements
 from logic.users.update_user import update_user
+from logic.users.delete_user import delete_user
 from logic.announcements.state_management.move_to_completed_announcements import move_to_completed_announcements
 from logic.announcements.state_management.move_to_active_announcements import move_to_active_announcements
 from logic.announcements.state_management.move_to_deleted_announcements import move_to_deleted_announcements
@@ -57,12 +58,13 @@ def init_user_page_frame():
     # Assigning the y and i variables to 0 and specifying the hidden_password variable to True.
     y = 0
     i = 0
-    hidden_password = True
+
     # Displaying data from the list in 2d form
     for text, user_info in list_of_texts_and_user_info:
-        label = Label(account_page, text=f"{text} {user_info}", anchor=W, font=("Arial", 10), bg="#D3D3D3")
+        label = Label(account_page, text=f"{text} {user_info}" if i != 4 else f"{text} {'*'*len(user_info)}", anchor=W,
+                      font=("Arial", 10), bg="#D3D3D3")
         label.place(x=10, y=(y * 52) + 160, width=200, height=30)
-        entry = Entry(account_page, font=("Arial", 9))
+        entry = Entry(account_page, font=("Arial", 9), show="" if i != 4 else "*")
         entry.place(x=220, y=(y * 52) + 160, width=200, height=30)
         # User can't change Login and data of birth.
         if i == 3 or i == 5:
@@ -72,35 +74,20 @@ def init_user_page_frame():
         else:
             # Displaying password by hidden mode. Creating button for showing and hiding password.
             if i == 4:
-                password_label = label
-                password_label.config(text=f"{text} {'*'*len(user_info)}")
-                button = Button(account_page, text="Pokaż hasło", font=("Arial", 7), borderwidth=0, bg="#D3D3D3",
-                                command=lambda: show_password())
-                button.place(x=155, y=350, width=55)
+                toggle_button = Button(account_page, image=config_data.images["eyes"][1], bg="#D3D3D3",
+                                       command=lambda password_entry=entry, password_label=label:
+                                       toggle_password(password_entry, toggle_button, password_label))
+
+                toggle_button.place(x=188, y=347, height=20)
             # If "i" isn't 3 and 5, bind functions.
             entry.insert("0", "Zmień dane, enter aby zatwierdzić")
             entry.bind("<Button-1>", lambda event, e=entry: delete_text(e))
-            entry.bind("<Return>", lambda event, ent=entry, lab=label: update_user(ent, lab, hidden_password))
+            entry.bind("<Return>", lambda event, ent=entry, lab=label: update_user(ent, lab))
         i += 1
         y += 1
 
-    def show_password():
-        """The password discovery function takes the local variable hidden_password, sets its state to False,
-        configures the local button so that its next press points to the hide_password function. Finally,
-        it replaces the text with password_label as decoded."""
-        nonlocal hidden_password
-        hidden_password = False
-        button.config(text="Ukryj hasło", command=lambda: hide_password())
-        password_label.config(text=f"Hasło: {config_data.logged_in_user_info.password}")
-
-    def hide_password():
-        """The password-hiding function takes the local variable hidden_password, sets its state to True, configures
-        the local button so that its next press points to the show_password function. Finally, it replaces text with
-        password_label as encoded with "*"* len of actual password."""
-        nonlocal hidden_password
-        hidden_password = True
-        button.config(text="Pokaż hasło", command=lambda: show_password())
-        password_label.config(text=f"Hasło: {'*' * len(config_data.logged_in_user_info.password)}")
+    Button(account_page, text="Usuń konto", image=config_data.images["delete"], compound="right", font=("Arial", 9),
+           borderwidth=1, bg="#D3D3D3", command=delete_user).place(x=10, y=612, width=100, height=20)
 
     def config_page_of_user_active_announcements(actual_page=1, list_of_objects=None):
         """The pagination function of the user's active announcements, downloads a specific number of announcements

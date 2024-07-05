@@ -1,5 +1,5 @@
 from utils import constants, config_data
-from requests import get, post, patch, Response, RequestException
+from requests import get, post, patch, delete, Response, RequestException
 
 
 def request_to_login_user(login_or_email, password):
@@ -81,6 +81,23 @@ def request_to_update_user_data(column, value):
             "value": value
         }
         response = patch(url, json=request_body)
+
+    # If cant connect with endpoint, making response object with 404 status code and return response.
+    except RequestException:
+        response = Response()
+        response.status_code = 404
+        return response
+    # When the request is successful, return a response from the function.
+    else:
+        return response
+
+
+def request_to_delete_user():
+    """Function responsible for requesting the deletion of the user."""
+    # Creating url and calling PATCH method on this endpoint.
+    try:
+        url = f"{constants.backend_url}/users/{config_data.logged_in_user_info.user_id}"
+        response = delete(url)
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
     except RequestException:

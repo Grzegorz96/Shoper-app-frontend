@@ -8,7 +8,7 @@ from logic.users.login.logout_user import logout_user
 from services.api.users import request_to_login_user
 
 
-def login_user(entry_login_or_email, entry_password, top_panel_frame, init_shoper_page_frame):
+def login_user(entry_login_or_email, entry_password, top_panel_frame):
     """The function responsible for logging in the user, validating the entered data, changing the global
     is_user_logged_in flag and creating a user object."""
     # Validations of entered data.
@@ -48,12 +48,12 @@ def login_user(entry_login_or_email, entry_password, top_panel_frame, init_shope
                     datetime.strptime(user_info["creation_account_date"], '%Y-%m-%d %H:%M:%S')
                 )
 
-                user_name = config_data.logged_in_user_info.first_name
-                logout_button = Button(top_panel_frame, text="Wyloguj", font=("Arial", 8), borderwidth=0,
-                                       bg="#D3D3D3", command=lambda: logout_user(logout_button, user_name,
-                                                                                 init_shoper_page_frame))
-                logout_button.place(x=1197, y=60, height=18, width=56)
-                messagebox.showinfo("Pomyślnie zalogowano.", f"Użytkownik {user_name} pomyślnie zalogowany.")
+                config_data.logout_button = Button(top_panel_frame, image=config_data.images["logout"], text="Wyloguj",
+                                                   font=("Arial", 8), borderwidth=0, bg="#D3D3D3", command=logout_user)
+
+                config_data.logout_button.place(x=1208, y=58, height=20, width=45)
+                messagebox.showinfo("Pomyślnie zalogowano.",
+                                    f"Użytkownik {config_data.logged_in_user_info.first_name} pomyślnie zalogowany.")
 
             # If it returns a status of 400, a message about the lack of a user in the database will be displayed.
             elif response_for_login_user.status_code == codes.bad_request:

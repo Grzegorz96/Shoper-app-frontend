@@ -34,10 +34,10 @@ def verify_login(login_entry):
                                "Nie możesz użyć tego loginu do rejestracji. Sprawdź wzór loginu")
 
 
-def verify_password(password_entry):
+def verify_password(password_register_entry):
     """Function responsible for verifying the password entered by the user and informing him of the result."""
     # If the password entered by the user passes validation, display an acceptance message.
-    if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń0-9!@#$%^&*]{7,45}$", password_entry.get()):
+    if match("^[A-ZĘÓĄŚŁŻŹĆŃa-zęóąśłżźćń0-9!@#$%^&*]{7,45}$", password_register_entry.get()):
         messagebox.showinfo("Poprawne hasło.", "Możesz użyć tego hasła do rejestracji.")
 
     # If the password entered by the user does not pass validation, display a message about non-acceptance.

@@ -26,8 +26,8 @@ def init_top_panel():
     top_panel_frame.pack()
 
     # Init SHOPER_button for top_panel_frame.
-    Button(top_panel_frame, text="SHOPER", width=30, height=2, borderwidth=0, bg="#D3D3D3",
-           command=lambda: init_shoper_page_frame()).place(x=20, y=20)
+    Button(top_panel_frame, image=config_data.images["logo"], text="SHOPER", borderwidth=0, bg="#D3D3D3",
+           command=lambda: init_shoper_page_frame()).place(x=20, y=10, height=60, width=240)
 
     # Init search_engine for top_panel_frame.
     search_engine = Entry(top_panel_frame, font=("Arial", 11), width=36, borderwidth=0, bg="#D3D3D3")
@@ -36,12 +36,12 @@ def init_top_panel():
     search_engine.bind("<Button-1>", lambda event: delete_text(search_engine))
 
     # Init search_location for top_panel_frame.
-    Label(top_panel_frame, text="Wpisz lokalizacje").place(x=580, y=30)
+    Label(top_panel_frame, text="Wpisz lokalizacje").place(x=580, y=30, height=20)
     search_location = Entry(top_panel_frame, font=("Arial", 11), width=36, borderwidth=0, bg="#D3D3D3")
     search_location.place(x=280, y=30)
 
     # Init categories for top_panel_frame.
-    Label(top_panel_frame, text="Wybierz kategorie").place(x=580, y=50)
+    Label(top_panel_frame, text="Wybierz kategorie").place(x=580, y=50, height=20)
     style = ttk.Style()
     style.theme_use('clam')
     style.map(
@@ -55,13 +55,14 @@ def init_top_panel():
     ttk.Combobox(top_panel_frame, textvariable=current_var_category, width=45, values=constants.categories,
                  state="readonly").place(x=280, y=50)
 
-    Button(top_panel_frame, text="X",  borderwidth=0, bg="#D3D3D3", command=lambda: current_var_category.set("")).place(
-        x=536, y=51, height=19, width=20)
+    Button(top_panel_frame,
+           image=config_data.images["close"], text="X", borderwidth=0, bg="#D3D3D3",
+           command=lambda: current_var_category.set("")).place(x=536, y=51, height=19, width=20)
 
     # Init search_button for top_panel_frame.
     Button(top_panel_frame, text="Wyszukaj produkt", borderwidth=0, bg="#D3D3D3",
-           command=lambda: init_shoper_page_frame(search_engine, search_location, current_var_category)).place(x=580,
-                                                                                                               y=6)
+           command=lambda: init_shoper_page_frame(search_engine, search_location, current_var_category)).place(
+        x=580, y=10, height=20)
     search_engine.bind("<Return>", lambda event: init_shoper_page_frame(search_engine, search_location,
                                                                         current_var_category))
 

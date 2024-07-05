@@ -5,7 +5,7 @@ from requests import codes
 from services.api.users import request_to_update_user_data
 
 
-def update_user(entry, label, hidden_password):
+def update_user(entry, label):
     """The function responsible for changing user data, validating the entered data, determining what the user wants
     to change, sending it to the backend and changing the value in the user object."""
     # Assigning the entered data to variables.
@@ -90,7 +90,7 @@ def update_user(entry, label, hidden_password):
                 config_data.logged_in_user_info.change_user_city(value)
 
             # Label update on the user's website.
-            if column == "password" and hidden_password:
+            if column == "password" and entry.cget('show') == '*':
                 label.config(text=f"{attribute} {'*'*len(value)}")
             else:
                 label.config(text=f"{attribute} {value}")

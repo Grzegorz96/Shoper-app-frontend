@@ -36,10 +36,13 @@ def create_buttons(page, x1, x2):
     """The function responsible for creating page change button objects for given page objects and returning them to
     the function."""
     # Creating buttons for a specific page and a specific x value.
-    button_previous = Button(page, text="Poprzednia", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
-    button_previous.place(x=x1, y=600, width=60, height=32)
-    button_next = Button(page, text="Następna", font=("Arial", 8), borderwidth=0, bg="#D3D3D3")
-    button_next.place(x=x2, y=600, width=60, height=32)
+    button_previous = Button(page, image=config_data.images["arrows"][2], text="Poprzednia", font=("Arial", 8),
+                             borderwidth=0, bg="#A9A9A9")
+
+    button_previous.place(x=x1, y=600, width=60)
+    button_next = Button(page, image=config_data.images["arrows"][3], text="Następna", font=("Arial", 8),
+                         borderwidth=0, bg="#A9A9A9")
+    button_next.place(x=x2, y=600, width=60)
 
     # Returning button objects.
     return button_previous, button_next
@@ -86,14 +89,67 @@ def loading_images():
     static graphic files and assigning them to the global dictionary."""
     # The program tries to load photos from your computer.
     try:
-        config_data.images["arrows"] = [ImageTk.PhotoImage(Image.open("./assets/images/left.png").resize((50, 50))),
-                                        ImageTk.PhotoImage(Image.open("./assets/images/right.png").resize((50, 50)))]
+        config_data.images["arrows"] = [ImageTk.PhotoImage(Image.open(
+                                            "./assets/images/image_left.png").resize((50, 50))),
+                                        ImageTk.PhotoImage(Image.open(
+                                            "./assets/images/image_right.png").resize((50, 50))),
+                                        ImageTk.PhotoImage(Image.open(
+                                            "./assets/images/announcement_left.png").resize((40, 30))),
+                                        ImageTk.PhotoImage(Image.open(
+                                            "./assets/images/announcement_right.png").resize((40, 30)))]
     # If an error occurs while loading, the program will assign the value None to the dictionary keys.
     except FileNotFoundError:
-        config_data.images["arrows"] = [None, None]
+        config_data.images["arrows"] = [None, None, None, None]
+
+    try:
+        config_data.images["eyes"] = [ImageTk.PhotoImage(Image.open("./assets/images/eye.png").resize((16, 16))),
+                                      ImageTk.PhotoImage(Image.open("./assets/images/hidden.png").resize((16, 16)))]
+
+    except FileNotFoundError:
+        config_data.images["eyes"] = [None, None]
 
     try:
         config_data.images["camera_icon"] = ImageTk.PhotoImage(Image.open(
             "./assets/images/camera_icon.png").resize((50, 50)))
     except FileNotFoundError:
         config_data.images["camera_icon"] = None
+
+    try:
+        config_data.images["close"] = ImageTk.PhotoImage(Image.open(
+            "./assets/images/close.png").resize((10, 10)))
+    except FileNotFoundError:
+        config_data.images["close"] = None
+
+    try:
+        config_data.images["logout"] = ImageTk.PhotoImage(Image.open(
+            "./assets/images/logout.png").resize((20, 16)))
+    except FileNotFoundError:
+        config_data.images["logout"] = None
+
+    try:
+        config_data.images["logo"] = ImageTk.PhotoImage(Image.open(
+            "./assets/images/shoper-logo.png").resize((220, 60)))
+    except FileNotFoundError:
+        config_data.images["logo"] = None
+
+    try:
+        config_data.images["delete"] = ImageTk.PhotoImage(Image.open(
+            "./assets/images/delete.png").resize((20, 20)))
+    except FileNotFoundError:
+        config_data.images["delete"] = None
+
+
+def toggle_password(entry_password, toggle_button, password_label=None):
+    """The function responsible for changing the visibility of the password in the entry object.
+    The function is called"""
+    if entry_password.cget('show') == '*':
+        entry_password.config(show='')
+        toggle_button.config(image=config_data.images["eyes"][0])
+        if password_label:
+            password_label.config(text=f"Hasło: {config_data.logged_in_user_info.password}")
+
+    else:
+        entry_password.config(show='*')
+        toggle_button.config(image=config_data.images["eyes"][1])
+        if password_label:
+            password_label.config(text=f"Hasło: {'*' * len(config_data.logged_in_user_info.password)}")
