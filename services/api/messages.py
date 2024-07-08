@@ -6,7 +6,7 @@ def request_to_get_messages(announcement_id=None, conversation_id=None):
     """Function responsible for requesting to download a message using the conversation id or announcement id."""
     # Creating url, request_body and calling GET method on this endpoint.
     try:
-        url = f"{constants.backend_url}/users/{config_data.logged_in_user_info.user_id}/messages"
+        url = f"{constants.backend_url}/messages/users/{config_data.logged_in_user_info.user_id}"
         if conversation_id:
             request_body = {
                 "conversation_id": conversation_id
@@ -31,7 +31,7 @@ def request_to_send_message(content, is_user_customer, conversation_id=None, ann
     """Function responsible for requesting to send a message."""
     # Creating url, request_body and calling POST method on this endpoint.
     try:
-        url = f"{constants.backend_url}/users/{config_data.logged_in_user_info.user_id}/messages"
+        url = f"{constants.backend_url}/messages/users/{config_data.logged_in_user_info.user_id}"
         if conversation_id:
             request_body = {
                 "conversation_id": conversation_id,
@@ -61,7 +61,7 @@ def request_to_get_conversations(customer_flag, page):
     the buyer or seller and the page."""
     # Creating url, parameters and calling GET method on this endpoint.
     try:
-        url = f"{constants.backend_url}/users/{config_data.logged_in_user_info.user_id}/conversations"
+        url = f"{constants.backend_url}/conversations/users/{config_data.logged_in_user_info.user_id}"
         params = {
             "customer_flag": customer_flag,
             "page": page,

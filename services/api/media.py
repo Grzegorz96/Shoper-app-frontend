@@ -11,7 +11,7 @@ def request_to_get_images(announcement_id):
     """Function responsible for requesting to download images from the server."""
     # Creating url and calling GET method on this endpoint.
     try:
-        url = f"{constants.backend_url}/announcements/{announcement_id}/media"
+        url = f"{constants.backend_url}/media/download/announcements/{announcement_id}"
         response = get(url)
 
     # If cant connect with endpoint, making response object with 404 status code and return response.
@@ -28,7 +28,7 @@ def request_to_upload_images(announcement_id, images):
     """Function responsible for requesting to upload photos to the server."""
     # Creating url, request_body, files and calling POST method on this endpoint.
     try:
-        url = f"{constants.backend_url}/media/upload/{config_data.logged_in_user_info.user_id}"
+        url = f"{constants.backend_url}/media/upload/users/{config_data.logged_in_user_info.user_id}"
 
         request_body = {
             "announcement_id": announcement_id
@@ -80,7 +80,7 @@ def request_to_delete_images(images_to_delete):
        the database."""
     # Creating url, request body and calling DELETE method on this endpoint.
     try:
-        url = f"{constants.backend_url}/media/delete/{config_data.logged_in_user_info.user_id}"
+        url = f"{constants.backend_url}/media/delete/users/{config_data.logged_in_user_info.user_id}"
 
         # Creating a list of images to delete.
         request_body = {
@@ -109,7 +109,7 @@ def request_to_switch_images(request_body):
     adding to another and vice versa."""
     # Creating url and calling PUT method on this endpoint.
     try:
-        url = f"{constants.backend_url}/media/switch/{config_data.logged_in_user_info.user_id}"
+        url = f"{constants.backend_url}/media/switch/users/{config_data.logged_in_user_info.user_id}"
 
         response = put(url, json=request_body)
 

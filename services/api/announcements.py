@@ -57,7 +57,7 @@ def request_to_get_user_announcements(active_flag, page):
     """The function responsible for downloading user's announcements when the active flag and page are specified."""
     # Creating url, parameters and calling GET method on this endpoint.
     try:
-        url = f"{constants.backend_url}/users/{config_data.logged_in_user_info.user_id}/announcements"
+        url = f"{constants.backend_url}/announcements/users/{config_data.logged_in_user_info.user_id}"
         params = {
             "active_flag": active_flag,
             "per_page": 4,
@@ -79,7 +79,7 @@ def request_to_add_the_announcement(title, location, category_id, state, price, 
     """Function responsible for requesting to add a new announcement."""
     # Creating url, request_body and calling POST method on this endpoint.
     try:
-        url = f"{constants.backend_url}/users/{config_data.logged_in_user_info.user_id}/announcements"
+        url = f"{constants.backend_url}/announcements/users/{config_data.logged_in_user_info.user_id}"
         request_body = {
             "title": title,
             "description": description,
@@ -158,7 +158,7 @@ def request_to_get_user_favorite_announcements(active_flag, page, per_page):
     page and per page params."""
     # Creating url, params and calling GET method on this endpoint.
     try:
-        url = f"{constants.backend_url}/users/{config_data.logged_in_user_info.user_id}/favorite-announcements"
+        url = f"{constants.backend_url}/favorite-announcements/users/{config_data.logged_in_user_info.user_id}"
         params = {
             "active_flag": active_flag,
             "page": page,
@@ -180,7 +180,7 @@ def request_to_add_announcement_to_favorite(announcement_id):
     """Function responsible for requesting that a selected announcement be added to the user's favorites_management."""
     # Creating url, request_body and calling POST method on this endpoint.
     try:
-        url = f"{constants.backend_url}/users/{config_data.logged_in_user_info.user_id}/favorite-announcements"
+        url = f"{constants.backend_url}/favorite-announcements/users/{config_data.logged_in_user_info.user_id}"
         request_body = {
             "announcement_id": announcement_id
         }
