@@ -21,7 +21,6 @@ def init_main_window():
 
     try:
         root.wm_iconphoto(False, PhotoImage(file="./assets/images/home_icon.png"))
-        pass
     except TclError:
         pass
 

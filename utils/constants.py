@@ -3,8 +3,8 @@ categories = ("Elektronika", "Do domu", "Do ogrodu", "Sport i turystyka", "Motor
 
 states = ("Nowe", "Używane", "Uszkodzone")
 
-backend_url = "http://127.0.0.1:5000"
-# backend_url = "http://mrgrzechu96.pythonanywhere.com"
+# backend_url = "http://127.0.0.1:5000"
+backend_url = "http://mrgrzechu96.pythonanywhere.com"
 
 days = tuple(str(day) for day in range(1, 32))
 
