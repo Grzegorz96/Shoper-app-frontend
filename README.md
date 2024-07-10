@@ -37,10 +37,10 @@ The SHOPER.app is an original project that allows users to sell their products a
 ### Logic:
 /logic:
 - The logic folder in the SHOPER application plays a key role as a central point for managing the logic and functionality of the system. It is divided into four main subfolders: announcements, media, messages and users, each of which is responsible for a specific area of ​​operation in the application.
-**The announcements** subfolder contains the functions and logic needed to manage announcements, such as adding, editing, deleting announcements, and displaying them.
-##### The media subfolder deals with the manipulation of media files used on the system, such as images and other graphical resources. It includes the integration and management of these resources in the context of announcements.
-##### The messages subfolder contains the logic for handling messages between application users. It is responsible for the functions of sending, receiving and managing messages, ensuring communication between users.
-##### The users subfolder contains functions related to application user management. Includes registration, login and user account management processes.
+###### The announcements subfolder contains the functions and logic needed to manage announcements, such as adding, editing, deleting announcements, and displaying them.
+###### The media subfolder deals with the manipulation of media files used on the system, such as images and other graphical resources. It includes the integration and management of these resources in the context of announcements.
+###### The messages subfolder contains the logic for handling messages between application users. It is responsible for the functions of sending, receiving and managing messages, ensuring communication between users.
+###### The users subfolder contains functions related to application user management. Includes registration, login and user account management processes.
 
 ### Models:
 /models:
