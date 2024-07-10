@@ -32,11 +32,11 @@ The SHOPER.app is an original project that allows users to sell their products a
 
 ### Pages:
 /pages:
-- The pages folder contains modules that are responsible for creating views for the user. Each of these modules plays a key role in the functioning of the SHOPER application, providing users with access to various functions, such as managing announcements, viewing messages or editing the user profile. Thanks to these modules, the application can effectively handle user interactions and provide full functionality of the advertising website.
+- The pages folder contains modules that are responsible for creating views for the user. Each of these modules plays a key role in the functioning of application, providing users with access to various functions, such as managing announcements, viewing messages or editing the user profile. Thanks to these modules, the application can effectively handle user interactions and provide full functionality of the advertising website.
 
 ### Logic:
 /logic:
-- The logic folder in the SHOPER application plays a key role as a central point for managing the logic and functionality of the system. It is divided into four main subfolders: announcements, media, messages and users, each of which is responsible for a specific area of ​​operation in the application.
+- The logic folder plays a key role as a central point for managing the logic and functionality of the system. It is divided into four main subfolders: announcements, media, messages and users, each of which is responsible for a specific area of ​​operation in the application.
 ###### The announcements subfolder contains the functions and logic needed to manage announcements, such as adding, editing, deleting announcements, and displaying them.
 ###### The media subfolder deals with the manipulation of media files used on the system, such as images and other graphical resources. It includes the integration and management of these resources in the context of announcements.
 ###### The messages subfolder contains the logic for handling messages between application users. It is responsible for the functions of sending, receiving and managing messages, ensuring communication between users.
@@ -44,7 +44,7 @@ The SHOPER.app is an original project that allows users to sell their products a
 
 ### Models:
 /models:
-- The models folder in SHOPER contains classes that represent key objects and data structures used in the system. The files in this folder define the following classes: Announcement, Message, Conversation, LoggedUser, UserFavoriteAnnouncement, PhotoButton. These classes are central to the data structure and logic of the application, enabling the management of announcements, messages, users, and multimedia operations. Thanks to properly defined classes, the application can effectively handle all aspects of the operation of the advertising website, providing users with a convenient and comprehensive experience of using the application.
+- The models folder contains classes that represent key objects and data structures used in the system. The files in this folder define the following classes: Announcement, Message, Conversation, LoggedUser, UserFavoriteAnnouncement, PhotoButton. These classes are central to the data structure and logic of the application, enabling the management of announcements, messages, users, and multimedia operations. Thanks to properly defined classes, the application can effectively handle all aspects of the operation of the advertising website, providing users with a convenient and comprehensive experience of using the application.
 
 ### Services:
 /services:
