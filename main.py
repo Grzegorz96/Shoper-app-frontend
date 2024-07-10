@@ -17,5 +17,4 @@ if __name__ == "__main__":
     # First initialization of shoper_page_frame.
     init_shoper_page_frame()
     # Calling the mainloop method on the root object.
-    # root.mainloop(
     config_data.root.mainloop()
