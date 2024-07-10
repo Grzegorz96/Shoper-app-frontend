@@ -4,7 +4,25 @@
 The SHOPER.app is an original project that allows users to sell their products and services. Registered users can create announcements and communicate with other users via the application. The user can also upload and download graphic files from the server. The search engine algorithm will allow the user to find exactly what he need. The implemented like system will improve the display of announements that the user is interested in. The application has many useful functions and solutions. It also has its own server application and database. The client application was written for the Windows operating system.
 
 
+## Table of Contents
+
+- [Description of folders and modules](#Description-of-folders-and-modules)
+- [Features](#Features)
+- [Technology used](#Technology-used)
+- [Installation](#Installation)
+- [Lessons learned](#Lessons-learned)
+- [Authors](#Authors)
+- [Contact](#Contact)
+- [License](#License)
+- [Screnshoots](#Screnshoots)
+
+
 ## Description of the modules
+
+### Core:
+/main.py:
+- main.py is responsible for initializing the main components of the application and starting the main loop of the application, which allows it to run continuously.
+
 
 The program consists of 6 modules, each of which plays a unique role in the functioning of the application. Below is a brief description of each module:
 
