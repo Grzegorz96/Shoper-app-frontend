@@ -57,8 +57,7 @@ def login_user(entry_login_or_email, entry_password, top_panel_frame):
 
             # If it returns a status of 400, a message about the lack of a user in the database will be displayed.
             elif response_for_login_user.status_code == codes.bad_request:
-                messagebox.showwarning("Nie ma takiego użytkownika.",
-                                       "Użytkownik o podanych danych nie istnieje.")
+                messagebox.showwarning("Błędne dane logowania.", "Wprowadzone dane logowania są nieprawidłowe.")
 
             # If a status other than 200 or 400 is returned, an error message will be displayed.
             else:

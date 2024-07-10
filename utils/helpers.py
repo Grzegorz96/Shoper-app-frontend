@@ -128,7 +128,7 @@ def loading_images():
 
     try:
         config_data.images["logo"] = ImageTk.PhotoImage(Image.open(
-            "./assets/images/shoper-logo.png").resize((220, 60)))
+            "./assets/images/shoper_logo.png").resize((220, 60)))
     except FileNotFoundError:
         config_data.images["logo"] = None
 
@@ -140,8 +140,7 @@ def loading_images():
 
 
 def toggle_password(entry_password, toggle_button, password_label=None):
-    """The function responsible for changing the visibility of the password in the entry object.
-    The function is called"""
+    """The function responsible for changing the visibility of the password in the entry object."""
     if entry_password.cget('show') == '*':
         entry_password.config(show='')
         toggle_button.config(image=config_data.images["eyes"][0])

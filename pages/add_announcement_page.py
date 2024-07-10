@@ -63,7 +63,7 @@ def init_add_announcement_page_frame():
     Label(add_announcement_page, text="Wpisz minimum 80 znaków", borderwidth=0, font=("Arial", 11),
           bg="#A9A9A9").place(x=1050, y=47)
     # Init description_text for add_announcement_page.
-    description_text = Text(add_announcement_page, width=61, height=24, font=("Arial", 14), borderwidth=0)
+    description_text = Text(add_announcement_page, width=61, height=24, font=("Arial", 14), borderwidth=0, wrap="word")
     description_text.place(x=560, y=70)
     Label(add_announcement_page, text="*Pole wymagane", borderwidth=0, font=("Arial", 8), bg="#A9A9A9").place(
         x=40, y=600)

@@ -67,7 +67,8 @@ def init_edit_user_announcement_page_frame(announcement_object, init_user_page_f
     Label(edit_user_announcement_page, text="Opis", borderwidth=0, font=("Arial", 20), bg="#A9A9A9").place(x=1175, y=15)
     Label(edit_user_announcement_page, text="Wpisz minimum 80 znaków", borderwidth=0, font=("Arial", 11),
           bg="#A9A9A9").place(x=1050, y=47)
-    description_text = Text(edit_user_announcement_page, width=61, height=24, font=("Arial", 14), borderwidth=0)
+    description_text = Text(edit_user_announcement_page, width=61, height=24, font=("Arial", 14), borderwidth=0,
+                            wrap="word")
     description_text.insert(INSERT, announcement_object.description)
     description_text.place(x=560, y=70)
 

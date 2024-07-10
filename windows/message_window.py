@@ -45,7 +45,7 @@ def init_message_window(announcement_object):
                   font=("Arial", 8)).pack()
 
             # Init text object for displaying messages.
-            text = Text(message_window, width=57, height=26, bg="#D3D3D3")
+            text = Text(message_window, width=57, height=26, bg="#D3D3D3", wrap="word")
             text.pack(side=LEFT)
 
             # Init scrollbar object.

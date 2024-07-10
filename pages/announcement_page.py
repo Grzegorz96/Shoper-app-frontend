@@ -36,8 +36,8 @@ def init_announcement_page_frame(page, announcement_object, block_fav, block_mes
     ttk.Separator(tmp_page).place(x=987, y=125, width=250)
 
     # Init description_text for displaying description of announcement.
-    description_text = Text(tmp_page, width=45, height=18, font=("Arial", 14), borderwidth=0)
-    description_text.insert(INSERT, f"{announcement_object.description}")
+    description_text = Text(tmp_page, width=45, height=18, font=("Arial", 14), borderwidth=0, wrap="word")
+    description_text.insert(INSERT, announcement_object.description)
     description_text.place(x=740, y=180)
     description_text["state"] = "disabled"
 

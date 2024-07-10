@@ -148,7 +148,7 @@ def init_messages_page_frame():
         list_of_objects_to_destroy.clear()
 
         # Init text object for displaying messages and adding it to the list of objects.
-        text = Text(messages_page, width=67, height=30, bg="#D3D3D3", borderwidth=0, font=("Arial", 12))
+        text = Text(messages_page, width=67, height=30, bg="#D3D3D3", borderwidth=0, font=("Arial", 12), wrap="word")
         text.place(x=650, y=50)
         list_of_objects_to_destroy.append(text)
 
