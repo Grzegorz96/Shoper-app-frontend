@@ -21,37 +21,67 @@ The SHOPER.app is an original project that allows users to sell their products a
 
 ### Core:
 /main.py:
-- main.py is responsible for initializing the main components of the application and starting the main loop of the application, which allows it to run continuously.
+- The main.py module is the main entry point for the SHOPER application, responsible for initializing key components and starting the main application loop.
 
+### Layout:
+/layout/main_window.py:
+- The main_window.py module contains the code responsible for configuring the main window of the SHOPER application. This is a key element that ensures the proper appearance and functionality of the main user interface.
 
-The program consists of 6 modules, each of which plays a unique role in the functioning of the application. Below is a brief description of each module:
+/layout/top_panel.py:
+- The top_panel.py module defines the init_top_panel() function, which initializes the top panel of the SHOPER application. It is a key element of the user interface that allows the user to navigate and interact with the application
 
-Classes.py:
-- The Classes.py module contains object classes that are needed to create objects using retrieved JSON data. Objects make it much easier to later operate on data in other modules. The logged-in user class also has its setters for modifying the object's value. 
+### Pages:
+/pages:
+- The pages folder contains modules that are responsible for creating views for the user. Each of these modules plays a key role in the functioning of the SHOPER application, providing users with access to various functions, such as managing announcements, viewing messages or editing the user profile. Thanks to these modules, the application can effectively handle user interactions and provide full functionality of the advertising website.
 
-Config_data.py:
-- The Config_data.py module contains the necessary global variables that must be available for each module in the application. Data stored in variables is used throughout the entire duration of the program. 
+### Logic:
+/logic:
+- The logic folder in the SHOPER application plays a key role as a central point for managing the logic and functionality of the system. It is divided into four main subfolders: announcements, media, messages and users, each of which is responsible for a specific area of ​​operation in the application.
+##### The announcements subfolder contains the functions and logic needed to manage announcements, such as adding, editing, deleting announcements, and displaying them.
+##### The media subfolder deals with the manipulation of media files used on the system, such as images and other graphical resources. It includes the integration and management of these resources in the context of announcements.
+##### The messages module contains the logic for handling messages between application users. It is responsible for the functions of sending, receiving and managing messages, ensuring communication between users.
+##### The users subfolder contains functions related to application user management. Includes registration, login and user account management processes.
 
-Backend_requests.py:
-- The Backend_requests.py module is used from the Functions.py module to directly make requests to the server. Using this module, all data is sent to and received from the server, invoking requests is additionally wrapped in a try, except block, so when an operation fails on the frontend side, the error will be handled appropriately.
+### Models:
+/models:
+- The models folder in SHOPER contains classes that represent key objects and data structures used in the system. The files in this folder define the following classes: Announcement, Message, Conversation, LoggedUser, UserFavoriteAnnouncement, PhotoButton. These classes are central to the data structure and logic of the application, enabling the management of announcements, messages, users, and multimedia operations. Thanks to properly defined classes, the application can effectively handle all aspects of the operation of the advertising website, providing users with a convenient and comprehensive experience of using the application.
 
-Functions.py:
-- The Functions.py module contains all the functions that the GUI.py module needs to work properly. Validates all data entered by the user, determines whether the request should proceed, and determines what to do with the received response object. This module creates user, announcements, user announcements, favorite announcements, messages and conversations objects. Features such as converting image files from binary to object and all photo modification features. The function module is a decision-making module and it mainly determines what the user can and cannot do and what to do with the received data. 
+### Services:
+/services:
+- The services folder contains the API subfolder, which contains modules responsible for communicating with the backend via API. Each of these modules (announcements, messages, users, media) contains functions that query the backend to retrieve, send, update or delete data related to announcements, messages, users and multimedia.
 
-GUI.py:
-- The GUI.py module is responsible for the graphical initialization of the application. Application windows and panels are created at its level. Data that was previously downloaded from the server is displayed from this module. This script contains functions for page pagination, also photoButton objects are created here, which are later used to identify changes made to photos while adding and editing announcement.
+### Windows:
+/windows/login_register_window.py:
+- the login_register_window module initializes a new window containing a login and registration form.
 
-Main.py:
-- The Main.py module is a file that is executed when the program is started, it is used to initialize the application window, static photos, top panel and the first page of the application.
+/windows/message_window.py
+- the message_window module initializes a new message window.
+
+### Utils:
+/utils/config_data.py:
+- Stores global data for the entire application, such as configuration settings.
+
+/utils/constants.py:
+- Contains constants used in the application, such as lists, tuples, constant configuration parameters.
+
+/utils/formating.py:
+- It is used to perform functions related to various formatting of files.
+
+/utils/helpers.py:
+- It contains various helper functions used in different parts of the application.
+
+### Assets:
+/assets/images:
+- Contains static files used in the application.
 
 
 ## Features
 
 - User registration.
-- user login.
+- User login.
 - User logout.
-- login verification.
-- password verification.
+- Login verification.
+- Password verification.
 - Destroying all created windows when logging in and out.
 - Modification of user data.
 - Displaying and pagination user's announcements separately for active ones and separately for completed ones.
@@ -73,9 +103,12 @@ Main.py:
 - Displaying the announcement page.
 - Announcement photo gallery
 - Validation of all data entered on the frontend.
-- Password hiding function from the user page.
+- Password hiding functions.
 - Displaying messages to the user on failures or successes.
-- Compressing the image file before sending to backend.
+- Deleting account.
+- Main photos of announcements received with announcements in base 64 format.
+- Image compression and zip packing before sending to the backend for better performance.
+- Receiving a package of images in zip form.
 
 
 ## Technology used
@@ -97,8 +130,8 @@ Main.py:
 ```bash
  git clone https://github.com/Grzegorz96/Shoper-app-frondend.git
 ```
-- Enter the directory Shoper-app-frondend/Shoper_app_exe.
-- If you want to move the Shoper_app.exe file, do it together with the Photos folder. You can also create a copy of the .exe file on your desktop.
+- Enter the directory Shoper-app-frondend/shoper_app_exe.
+- If you want to move the Shoper_app.exe file, do it together with the assets folder. You can also create a copy of the .exe file on your desktop.
 - Run Shoper_app.exe.
 
 
@@ -135,26 +168,23 @@ Main.py:
  pip install requests==2.31.0
  pip install urllib3==2.0.4
 ```
-- Run Main.py on Windows:
+- Run main.py on Windows:
 ```bash
- py .\Main.py
+ py .\main.py
 ```
 Program SHOPER.PL connects to the enpoints on the cloud server, you don't need to create a local backend server.
 
 
 ## Lessons learned
 
-It took me almost 2 months to work on this program and its backend and database. During this time, I had to solve a lot of problems related to these programs. The first version of the program did not include a backend and the connection to the database was made directly from the frontend. I had to rewrite the entire project and add an API to it and then combine it into a logical whole. I learned how to work with multimedia files on the server and I was trained in working with the http protocol. I had to come up with a messaging system so that everything worked correctly, without errors, and that users always received their messages. I have completed most of the functions I set for myself. A big challenge for me was creating a photo editing function - the user can change photos in various ways and each of these cases had to be handled correctly. Creating the necessary tables into the database and creating appropriate relationships between them was also a good test and learning experience. All information displayed to the user is downloaded directly from the server, so there is no fear that something is out of date. I have created a pagination system for displayed announcements and conversations, thanks to which users can create and download as many announcements and conversations as they want, there is no limit. I had a problem with file compression, i created a program to compress files on the backend but it was not a good idea because Flask on the server does not work asynchronously and with each delay, the next query has to wait. I solved this problem by creating compressions on the frontend just before sending the file. Making this project entirely by myself showed me how much work is needed to create a working application.
+It took me almost 3 months to work on this program and its backend and database. During this time, I had to solve a lot of problems related to these programs. The first version of the program did not include a backend and the connection to the database was made directly from the frontend. I had to rewrite the entire project and add an API to it and then combine it into a logical whole. I learned how to work with multimedia files on the server and I was trained in working with the http protocol. I had to come up with a messaging system so that everything worked correctly, without errors, and that users always received their messages. I have completed most of the functions I set for myself. A big challenge for me was creating a photo editing function - the user can change photos in various ways and each of these cases had to be handled correctly. Creating the necessary tables into the database and creating appropriate relationships between them was also a good test and learning experience. All information displayed to the user is downloaded directly from the server, so there is no fear that something is out of date. I have created a pagination system for displayed announcements and conversations, thanks to which users can create and download as many announcements and conversations as they want, there is no limit. I had a problem with file compression, i created a program to compress files on the backend but it was not a good idea because Flask on the server does not work asynchronously and with each delay, the next query has to wait. I solved this problem by creating compressions on the frontend just before sending the file. I had to improve the image file management logic on my platform. I improved the way these files were transferred from the server and optimized performance by reducing the number of queries. The main photos needed to display ads are now downloaded together with the ads themselves in Base64 format. However, photo lists are now downloaded and sent in ZIP format, allowing multiple files to be grouped into one archive. Making this project entirely by myself showed me how much work is needed to create a working application.
 
 
 ## Features to be implemented
 - Email verification function.
 - Password recovery and change function via a code sent to email.
-- Delete account function.
 - Filtering and sorting announcements function.
 - Function of displaying another user's account.
-- Function covering password characters (during registration and login).
-- Changing the download of graphic files to a package of files. Currently the files are downloaded separately. To perform 16 queries when downloading photos to the home page, after compression files it takes about 6 seconds.
 
  
 ## Authors
@@ -168,40 +198,39 @@ E-mail: grzesstrzeszewski@gmail.com
 
 
 ## License
-
-[MIT](https://github.com/Grzegorz96/Shopper-app-frontend/blob/master/LICENSE.md)
+[AGPL-3.0 license](https://github.com/Grzegorz96/Shoper-app-frontend/blob/master/LICENSE.md)
 
 
 ## Screnshoots
 ##### Screenshot of the home page
-![main_shoper](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/42f0e0c4-6b05-4bcf-b9d5-e05af3068f1c)
+![home_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/db29257a-2049-4388-b312-7b75cea5e590)
 ##### Screenshot of the user page
-![user_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/4296e23a-340c-4da4-85f8-b0602402740f)
-##### Screenshot of the favorite page
-![fav_ann](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/2e9e0caa-308d-472c-9438-91251cd881d1)
+![user_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/55295703-b1e4-41d1-929d-4d147c4e8cf2)
+##### Screenshot of the favorites page
+![favorites_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/1d221d7d-3bb8-41de-8b00-0d5c32475f9e)
 ##### Screenshot of the login/register window
-![login_window](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/9ddfd480-832a-424e-bef2-eaa72a1d3163)
-##### Screenshot of adding the announcement
-![add_ann](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/ad27a4e7-fb1a-449d-b8d8-e9370b193a51)
+![login_register_window](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/06db2c30-d5a7-4b05-8022-9b4ae2655adb)
+##### Screenshot of the add announcement page
+![add_announcement_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/f6d4cad5-3c22-47e5-9440-fed7d2e8629d)
 ##### Screenshot of the window for selecting an image file
-![add_ann_window](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/96b88d22-91aa-4180-a0ec-f3b02a2b367a)
-##### Screenshot of editing the announcement
-![edit_ann](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/eed330e2-99c0-4a2e-88dd-18957d72eceb)
+![add_announcement_window](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/5e9c5ea3-0b26-4f6e-ac1b-979b2c085090)
+##### Screenshot of the edit announcement page
+![edit_announcement_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/330a17a1-39ef-49a0-854b-36dde728f004)
 ##### Screenshot of selecting category in home page
-![main_category](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/79d1cd3f-2751-4e6a-ba88-b715e9273416)
-##### Screenshot of the message page
-![conversations](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/9f912607-7582-45b7-8138-193cf3845198)
+![home_category](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/5525fb23-5eb0-44ab-9337-1914984c14fb)
+##### Screenshot of the messages page
+![messages_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/9f62db15-4e5f-4eb0-991b-d3c5b2dc2782)
 ##### Screenshot of the announcement page
-![ann_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/cd3dc7c2-44ab-4476-94a4-20fa04511deb)
-##### Screenshot of the announcements page with message
-![ann_with_mess](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/6a020872-de6e-4283-aa18-16bb2d8b0caf)
-##### Screenshot of the home page with message
-![main_with_mess](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/27cc32bb-92a2-43cd-94af-aceb77ba4a25)
+![announcement_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/287bce5a-06bd-46a0-8ee1-77a51a6f3f7b)
+##### Screenshot of the announcements page with messages
+![announcement_with_messages](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/abdb7419-9da1-4d59-8916-b7f1ad9df8d8)
+##### Screenshot of the home page with messages
+![home_with_messages](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/df455371-8e5a-4d32-aba1-2eac72ef9600)
 ##### Screenshot of successfully restoring the announcement
-![restored](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/67b63f2d-fc9b-4eb5-80d1-876f78b77242)
+![restored](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/ac4c3f76-712c-46e7-8e59-3cf7525f4ffd)
 ##### Screenshot of successfully completing the announcement
-![completed](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/dc5b24c1-2593-4419-a828-ab429d62cccd)
+![completed](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/e5a53558-3ad7-45b6-8e94-e64ea2ff8626)
 ##### Screenshot of successfully adding the announcement
-![add_ann_success](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/e5f2e618-2016-4f00-97f6-a193e2ec1656)
+![add_announcement_success](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/d7743711-6aa6-4480-8a36-5c4f15107cd7)
 ##### Screenshot of successfully editing the announcement
-![edit_ann_success](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/7fe590d6-5f4e-44bf-b4d6-457e0184044a)
+![edit_announcement_success](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/69b82b02-9c2b-42c3-ba8f-c1683100c90b)
