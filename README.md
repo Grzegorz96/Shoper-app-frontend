@@ -1,6 +1,4 @@
-![shoperlogo]()
-![image](https://github.com/user-attachments/assets/773cba30-ba01-4045-8536-18c6b546d6f6)
-
+![shoperlogo](https://github.com/Grzegorz96/Shoper-app-frontend/blob/master/docs/readme-images/shoperlogo.png)
 
 # SHOPER.app
 
@@ -203,18 +201,19 @@ E-mail: grzesstrzeszewski@gmail.com
 ## License
 [AGPL-3.0 license](https://github.com/Grzegorz96/Shoper-app-frontend/blob/master/LICENSE.md)
 
+![home_page2](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/announcement_page.png?token=GHSAT0AAAAAACQAFWTJXKRIVPBVPSYWHKN2ZUVBJRQ)
 
 ## Screnshoots
 ##### Screenshot of the home page
-![home_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/db29257a-2049-4388-b312-7b75cea5e590)
+![home_page](https://github.com/Grzegorz96/Shoper-app-frontend/blob/master/docs/readme-images/home_page.png)
 ##### Screenshot of the user page
-![user_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/55295703-b1e4-41d1-929d-4d147c4e8cf2)
+![user_page](https://github.com/Grzegorz96/Shoper-app-frontend/blob/master/docs/readme-images/user_page.png)
 ##### Screenshot of the favorites page
-![favorites_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/1d221d7d-3bb8-41de-8b00-0d5c32475f9e)
+![favorites_page](https://github.com/Grzegorz96/Shoper-app-frontend/blob/master/docs/readme-images/favorites_page.png)
 ##### Screenshot of the login/register window
-![login_register_window](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/06db2c30-d5a7-4b05-8022-9b4ae2655adb)
+![login_register_window](https://github.com/Grzegorz96/Shoper-app-frontend/blob/master/docs/readme-images/login_register_window.png)
 ##### Screenshot of the add announcement page
-![add_announcement_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/f6d4cad5-3c22-47e5-9440-fed7d2e8629d)
+![add_announcement_page](https://github.com/Grzegorz96/Shoper-app-frontend/blob/master/docs/readme-images/announcement_page.png)
 ##### Screenshot of the window for selecting an image file
 ![add_announcement_window](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/5e9c5ea3-0b26-4f6e-ac1b-979b2c085090)
 ##### Screenshot of the edit announcement page
