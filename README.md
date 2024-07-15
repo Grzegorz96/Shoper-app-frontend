@@ -1,4 +1,6 @@
-![shoperlogo](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/48747f25-1032-4ce1-a5e6-3d175bd983be)
+![shoperlogo]()
+![image](https://github.com/user-attachments/assets/773cba30-ba01-4045-8536-18c6b546d6f6)
+
 
 # SHOPER.app
 
