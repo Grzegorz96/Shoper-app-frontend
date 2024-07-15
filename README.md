@@ -1,5 +1,4 @@
 ![shoperlogo](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/shoperlogo.png)
-![image](https://github.com/user-attachments/assets/991eec58-cdf5-4691-a80d-fcacc9093874)
 
 # SHOPER.app
 
@@ -202,38 +201,37 @@ E-mail: grzesstrzeszewski@gmail.com
 ## License
 [AGPL-3.0 license](https://github.com/Grzegorz96/Shoper-app-frontend/blob/master/LICENSE.md)
 
-![home_page2](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/announcement_page.png?token=GHSAT0AAAAAACQAFWTJXKRIVPBVPSYWHKN2ZUVBJRQ)
 
 ## Screnshoots
 ##### Screenshot of the home page
-![home_page](https://github.com/Grzegorz96/Shoper-app-frontend/blob/master/docs/readme-images/home_page.png)
+![home_page](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/home_page.png)
 ##### Screenshot of the user page
-![user_page](https://github.com/Grzegorz96/Shoper-app-frontend/blob/master/docs/readme-images/user_page.png)
+![user_page](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/user_page.png)
 ##### Screenshot of the favorites page
-![favorites_page](https://github.com/Grzegorz96/Shoper-app-frontend/blob/master/docs/readme-images/favorites_page.png)
+![favorites_page](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/favorites_page.png)
 ##### Screenshot of the login/register window
-![login_register_window](https://github.com/Grzegorz96/Shoper-app-frontend/blob/master/docs/readme-images/login_register_window.png)
+![login_register_window](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/login_register_window.png)
 ##### Screenshot of the add announcement page
-![add_announcement_page](https://github.com/Grzegorz96/Shoper-app-frontend/blob/master/docs/readme-images/announcement_page.png)
+![add_announcement_page](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/announcement_page.png)
 ##### Screenshot of the window for selecting an image file
-![add_announcement_window](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/5e9c5ea3-0b26-4f6e-ac1b-979b2c085090)
+![add_announcement_window](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/add_announcement_window.png)
 ##### Screenshot of the edit announcement page
-![edit_announcement_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/330a17a1-39ef-49a0-854b-36dde728f004)
+![edit_announcement_page](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/edit_announcement_page.png)
 ##### Screenshot of selecting category in home page
-![home_category](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/5525fb23-5eb0-44ab-9337-1914984c14fb)
+![home_category](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/home_category.png)
 ##### Screenshot of the messages page
-![messages_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/9f62db15-4e5f-4eb0-991b-d3c5b2dc2782)
+![messages_page](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/announcement_page.png)
 ##### Screenshot of the announcement page
-![announcement_page](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/287bce5a-06bd-46a0-8ee1-77a51a6f3f7b)
+![announcement_page](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/announcement_page.png)
 ##### Screenshot of the announcements page with messages
-![announcement_with_messages](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/abdb7419-9da1-4d59-8916-b7f1ad9df8d8)
+![announcement_with_messages](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/announcement_with_messages.png)
 ##### Screenshot of the home page with messages
-![home_with_messages](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/df455371-8e5a-4d32-aba1-2eac72ef9600)
+![home_with_messages](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/home_with_messages.png)
 ##### Screenshot of successfully restoring the announcement
-![restored](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/ac4c3f76-712c-46e7-8e59-3cf7525f4ffd)
+![restored](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/restored.png)
 ##### Screenshot of successfully completing the announcement
-![completed](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/e5a53558-3ad7-45b6-8e94-e64ea2ff8626)
+![completed](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/completed.png)
 ##### Screenshot of successfully adding the announcement
-![add_announcement_success](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/d7743711-6aa6-4480-8a36-5c4f15107cd7)
+![add_announcement_success](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/add_announcement_success.png)
 ##### Screenshot of successfully editing the announcement
-![edit_announcement_success](https://github.com/Grzegorz96/Shoper-app-frontend/assets/129303867/69b82b02-9c2b-42c3-ba8f-c1683100c90b)
+![edit_announcement_success](https://raw.githubusercontent.com/Grzegorz96/Shoper-app-frontend/master/docs/readme-images/edit_announcement_success.png)
